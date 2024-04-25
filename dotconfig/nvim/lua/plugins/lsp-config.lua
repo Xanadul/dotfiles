@@ -1,4 +1,3 @@
-
 return {
   {
     "williamboman/mason.nvim",
@@ -70,8 +69,9 @@ return {
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
       })
-      lspconfig.ltex.setup({
+      lspconfig.jdtls.setup({
         capabilities = capabilities,
+
       })
       lspconfig.clangd.setup({
         capabilities = capabilities,
@@ -79,13 +79,13 @@ return {
       lspconfig.ruff_lsp.setup({
         capabilities = capabilities,
       })
+      lspconfig.sqlls.setup({
+        capabilities = capabilities,
+      })
       lspconfig.pylsp.setup({
         capabilities = capabilities,
       })
       lspconfig.rust_analyzer.setup({
-        capabilities = capabilities,
-      })
-      lspconfig.java_language_server.setup({
         capabilities = capabilities,
       })
       lspconfig.gdscript.setup({
