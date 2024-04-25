@@ -1,0 +1,91 @@
+#!/usr/bin/bash
+
+cd ~/Git
+
+echo "Starting hyprwayland-scanner"
+if not [ -d hyprwayland-scanner ]; then
+  git clone https://github.com/hyprwm/hyprwayland-scanner
+fi
+cd hyprwayland-scanner
+git pull
+rm -rf ./build
+cmake -B build
+cmake --build build -j`nproc`
+sudo cmake --install build
+
+
+echo "Starting hyprlang"
+if not [ -d hyprlang ]; then
+  git clone https://github.com/hyprwm/hyprlang
+fi
+cd ../hyprlang
+git pull
+rm -rf ./build
+cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+cmake --build ./build --config Release --target hyprlang -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+sudo cmake --install ./build
+
+echo "Starting hyprcursor"
+if not [ -d hyprcursor ]; then
+  git clone https://github.com/hyprwm/hyprcursor
+fi
+cd ../hyprcursor
+git pull
+rm -rf ./build
+cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+sudo rm /usr/bin/hyprcursor-util
+sudo cmake --install ./build
+
+
+echo "Starting Hyprland"
+cd ../
+rm -rf Hyprland
+git clone --recursive https://github.com/hyprwm/Hyprland
+cd Hyprland
+make all && sudo make install
+
+echo "Starting hyprpicker"
+if not [ -d hyprpicker ]; then
+  git clone https://github.com/hyprwm/hyprpicker
+fi
+cd ../hyprpicker
+git pull
+rm -rf ./build
+cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+cmake --build ./build --config Release --target hyprpicker -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+sudo cmake --install ./build
+
+
+echo "Starting hyprpaper"
+if not [ -d hyprpaper ]; then
+  git clone https://github.com/hyprwm/hyprpaper
+fi
+cd ../hyprpaper
+git pull
+rm -rf ./build
+cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+cmake --build ./build --config Release --target hyprpaper -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+sudo cmake --install ./build
+
+#cd ../hypridle
+#git pull
+#cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -S . -B ./build
+#cmake --build ./build --config Release --target hypridle -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+#sudo cmake --install build
+
+
+echo "Starting hyprlock"
+if not [ -d hyprlock ]; then
+  git clone https://github.com/hyprwm/hyprlock
+fi
+cd ../hyprlock
+git pull
+rm -rf ./build
+cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -S . -B ./build
+cmake --build ./build --config Release --target hyprlock -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+sudo cmake --install build
+
+#cd ../hyprwayland-scanner
+
+
