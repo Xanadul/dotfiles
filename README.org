@@ -1,0 +1,4 @@
+#+title: Readme
+#+autor: Xanadul
+* Xanaduls Dotfiles
+Just the more important dotfiles of my desktop daily driver.

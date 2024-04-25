@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+hc() {
+    herbstclient "$@"
+}
+hc spawn picom &
+#hc spawn pkill '^redshift$' && sleep 10s && redshift-gtk -P &
+# set wallpaper either i use feh or nitrogen
+# hc spawn feh --bg-scale ~/walls/beach.jpg
+hc spawn nitrogen --restore &
+hc spawn sh $HOME/.config/polybar/launch.sh &
+hc spawn /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+#hc spawn plank
+hc spawn sxhkd &
+hc spawn setxkbmap de &
+hc spawn fcitx5 &
+hc spawn setxkbmap de &
+hc spawn xset s on & #screensaeer
+hc spawn xset +dpms #display power management signaling

@@ -1,0 +1,1 @@
+/home/xanadul/.config/barpyrus/config.py

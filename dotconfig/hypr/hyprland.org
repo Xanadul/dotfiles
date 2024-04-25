@@ -1,0 +1,754 @@
+#+title: Hyprland
+#+author: Xanadul
+#+property: header-args :tangle hyprland.conf
+#+startup: showeverything
+#+auto_tangle: t
+#+options: toc:4
+
+* :toc:
+- [[#inputoutput][Input/Output]]
+- [[#environment-variables][Environment Variables]]
+- [[#autostart][Autostart]]
+  - [[#plugins-hyprpm][Plugins (hyprpm)]]
+- [[#sections][Sections]]
+  - [[#general][General]]
+  - [[#colors][Colors]]
+    - [[#dracula][Dracula]]
+    - [[#elia][Elia]]
+  - [[#input][Input]]
+  - [[#gestures][Gestures]]
+  - [[#decoration][Decoration]]
+  - [[#animations][Animations]]
+  - [[#layouts][Layouts]]
+    - [[#dwindle][Dwindle]]
+    - [[#master][Master]]
+    - [[#hy3][hy3]]
+  - [[#misc][Misc]]
+- [[#windowrules][Windowrules]]
+- [[#keybinds][Keybinds]]
+  - [[#variables][Variables]]
+  - [[#hy3-1][Hy3]]
+  - [[#window-movement][Window movement]]
+  - [[#rezising][Rezising]]
+  - [[#media-and-stuff][Media and stuff]]
+  - [[#submaps-aka-groups][Submaps (aka. Groups)]]
+    - [[#screenshots][Screenshots]]
+    - [[#stuff-menu][Stuff Menu]]
+    - [[#hyprload][Hyprload]]
+- [[#pyprland][Pyprland]]
+  - [[#pavucontrol-scratchpad][Pavucontrol-Scratchpad]]
+  - [[#terminal-scratchpad][Terminal-Scratchpad]]
+  - [[#overview][Overview]]
+
+* Input/Output
+Hyprland uses the following config scheme for monitors:
+#+begin_src conf
+#monitor = name,     resolution,    position, scale
+#+end_src
+where "name" can be determined with: hyprctl monitors.
+More info: https://wiki.hyprland.org/Configuring/Monitors/
+#+begin_src conf
+#monitor=,preferred,auto,1 #Hotplug support
+monitor = HDMI-A-1, 3840x2160@60,  0x0,    1
+monitor = HDMI-A-3, 2560x1440@144,  3840x1080,   1
+monitor = HDMI-A-2, 1920x1080@60, 3840x0, 1
+monitor = eDP-1,    1920x1080@60,  0x0,      1
+exec-once = xrandr --output HDMI-A-1 --primary
+#+end_src
+
+
+
+* Environment Variables
+#+begin_src conf
+env = XCURSOR_SIZE,36
+env = QT_QPA_PLATFORMTHEME,qt5ct #Use qt6ct to control qt theme
+env = GTK_THEME,Dracula
+env = GDK_BACKEND,wayland,x11
+env = QT_QPA_PLATFORM,wayland;xcb
+#env = SDL_VIDEODRIVER,wayland
+env = CLUTTER_BACKEND,wayland
+env = XDG_SESSION_TYPE,wayland
+env = XDG_CURRENT_DESKTOP,Hyprland
+env = XDG_SESSION_DESKTOP,Hyprland
+env = QT_AUTO_SCREEN_SCALE_FACTOR,1
+env = QT_WAYLAND_DISABLE_WINDOWDECORATIONS,1
+env = XCURSOR_THEME,Breeze
+env = MOZ_ENABLE_WAYLAND,1
+env = XDG_CURRENT_DESKTOP,hyprland #Because for some reason, Laptop thinks it's sway....
+env = EDITOR,nvim
+env = VISUAL,emacsclient
+#env = MANPAGER,sh -c 'col -bx | bat -l man -p' # Needs bat-extras to be installed
+env = XKB_DEFAULT_LAYOUT,de #fixes gamescope using us layout
+
+env = PATH,"$HOME/.flutter/bin:/var/lib/flatpak/exports/bin:$PATH"
+
+env = GTK_IM_MODULE=fcitx
+env = QT_IM_MODULE=fcitx
+env = XMODIFIERS=@im=fcitx
+
+# from eww dots
+#env = XMODIFIERS, @im=ibus
+#env = GTK_IM_MODULE, ibus
+#env = QT_IM_MODULE, ibus
+#env = WLR_NO_HARDWARE_CURSORS, 1
+
+#+end_src
+
+* Autostart
+Autostarting parts of my "DesktopEnvironment". This includes:
+- waybar     a bar like Polybar
+- lxsession  for permitting root and gpg acces
+- wl-paste --watch cliphist store    which will monitor the clipboard and send it to cliphist, for later managment
+- dunst      for notifications
+- ydotoold   for autotyping and other ydotool stuff
+- hyprload.sh the hyprland plugin manager, for easier plugin... management. Loads a config from ~/.config/hypr/hyprload.toml
+- emacs daemon to access emacs quickly using emacsclient. Also reloading the config file, because otherwise (general-auto-unbind) gets ignored by emacs daemon for some reason
+#+begin_src conf
+exec-once = waybar
+exec-once = lxsession & wl-paste --watch cliphist store & dunst & ydotoold
+#exec-once = /home/xanadul/.local/bin/XanBackgrounds ~/Pictures/Wallpaper/Falcom wayland # & hyprpaper & firefox
+exec-once = mpvpaper -f -n 500 HDMI-A-3 /home/xanadul/Pictures/Wallpaper/stuff/StarryNight.mp4 & mpvpaper -f -n 500 HDMI-A-2 /home/xanadul/Pictures/Wallpaper/stuff/StarryNight.mp4 & mpvpaper -f -n 500 HDMI-A-1 /home/xanadul/Pictures/Wallpaper/stuff/StarryNight.mp4
+exec-once = emacs --daemon --init-directory=/home/xanadul/.config/emacs && sleep 15 && emacsclient -e "(reload-init-file)"
+exec-once = fcitx5 -d
+#exec-once = $HOME/.local/share/hyprload/hyprload.sh
+#exec-once = ianny #breaktime reminder
+#exec-once = pypr
+
+#from eww dots
+#exec-once = eww daemon && eww open bar && eww open bottomline # && eww open dynamic-bg
+#exec-once = ~/.config/eww/scripts/get_open_icons &
+#exec-once = hyprctl setcursor EliaStellaria 24
+exec-once = sleep 1 && dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+
+
+
+# Background
+#exec-once = swww init && swww img ~/.config/eww/images/wallpaper --transition-step 230 --transition-fps 60 --transition-type grow --transition-angle 30 --transition-duration 1
+
+# Status bar
+#exec-once = eww daemon && eww open bar && eww open bar1 && eww open bar0 #&& eww open bgdecor
+#+end_src
+
+** Plugins (hyprpm)
+Hyprlands plugin manager, hyprpm, needs to be started for plugins installed through it to work.
+#+begin_src conf
+	exec-once = hyprpm reload -n
+#+end_src
+
+* Sections
+** General
+Some of these options should probably be located in the Decoration section, but thats for the devs to decide.
+Also very important: We set the default layout, in this case to hy3, for the i3like manual tiling of the hy3 plugin.
+#+begin_src conf
+general {
+    # See https://wiki.hyprland.org/Configuring/Variables/ for more
+    #gaps_in = 30
+    #gaps_out = 60
+    border_size = 8
+    gaps_out = 20
+    gaps_in = 10
+    #col.active_border =   rgba(bd93f9ff) rgba(ff79c6ff) 45deg
+    #col.inactive_border = rgba(44475aff)
+    resize_on_border = true
+    layout = dwindle
+    #layout = hy3 #Activates the i3 like tiling of the hy3 plugin
+}
+#plugin:hyprload:hyprload_headers = /home/xanadul/Git/Hyprland/src
+#+end_src
+
+** Colors
+#+begin_src conf
+source=~/.config/hypr/colors.conf
+#+end_src
+
+*** Dracula
+#+begin_src conf :tangle colors-dracula.conf
+general:col.active_border = rgba(bd93f9ff) rgba(ff79c6ff) 45deg
+general:col.inactive_border = rgba(44475aff)
+group:col.border_active = rgba(FFB86Cff) rgba(F1FA8Cff) 45deg
+group:col.border_inactive = rgba(6272A499)
+group:groupbar:col.active = rgba(FFB86Cff)
+group:groupbar:col.inactive = rgba(6272a499)
+#+end_src
+
+*** Elia
+#+begin_src conf :tangle colors-elia.conf
+general:col.active_border = rgba(81678Eff) rgba(81678Eff) 44deg
+general:col.inactive_border = rgba(dccdd555)
+#+end_src
+
+
+** Input
+German keyboard, for using my Umlaute.
+follow_mouse is important for letting focus follow the mouse.
+#+begin_src conf
+input {
+    kb_layout = de
+
+    touchpad {
+    	     natural_scroll = true
+	             disable_while_typing = true
+		     clickfinger_behavior = true
+		     tap-to-click = true
+		     drag_lock = true
+    }
+    sensitivity = 0 # -1.0 - 1.0, 0 means no modification.
+    numlock_by_default = true 
+
+
+    follow_mouse = 1
+    mouse_refocus = 1
+    float_switch_override_focus = 2
+
+
+}
+device:generic-xp-pen-device {
+    output=HDMI-A-1
+}
+device:ugtablet-9-inch-pentablet {
+    output=HDMI-A-1
+}
+#+end_src
+
+** Gestures
+
+#+begin_src conf
+gestures {
+	     workspace_swipe = true
+   	     workspace_swipe_forever = true
+}
+#+end_src
+
+** Decoration
+
+#+begin_src conf
+decoration {
+    # See https://wiki.hyprland.org/Configuring/Variables/ for more
+
+    #rounding = 25
+    rounding = 0
+
+    drop_shadow = yes
+    shadow_range = 30
+    shadow_render_power = 3
+    col.shadow = rgba(1a1a1aee)
+    blur {
+       enabled = true
+       size = 0.5
+       passes = 4
+       new_optimizations = true
+       ignore_opacity = false
+    }
+    dim_inactive = false
+    dim_strength = 0.1
+    dim_special = 0
+     
+}
+
+#+end_src
+
+
+** Animations
+
+#+begin_src conf
+animations {
+    enabled = yes
+
+    # Some default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
+
+    bezier = myBezier, 0.05, 0.9, 0.1, 1.05
+
+    animation = windows, 1, 7, myBezier
+    animation = windowsOut, 1, 7, default, popin 80%
+    animation = border, 1, 10, default
+    animation = borderangle, 1, 8, default
+    animation = fade, 1, 7, default
+    animation = workspaces, 1, 6, default
+}
+
+#Other dotfiles, very thight animations
+#animations {
+#    enabled = yes
+#    # Animation curves
+#    
+#    bezier = md3_standard, 0.2, 0.0, 0, 1.0
+#    bezier = md3_decel, 0.05, 0.7, 0.1, 1
+#    bezier = md3_accel, 0.3, 0, 0.8, 0.15
+#    bezier = overshot, 0.05, 0.9, 0.1, 1.05
+#    bezier = hyprnostretch, 0.05, 0.9, 0.1, 1.0
+#    bezier = win10, 0, 0, 0, 1
+#    bezier = gnome, 0, 0.85, 0.3, 1
+#    bezier = funky, 0.46, 0.35, -0.2, 1.2
+#    # Animation configs
+#    animation = windows, 1, 2, md3_decel, slide
+#    animation = border, 1, 10, default
+#    animation = fade, 1, 0.0000001, default
+#    animation = workspaces, 1, 4, md3_decel, slide
+#}
+#+end_src
+
+** Layouts
+
+*** Dwindle
+
+#+begin_src conf
+dwindle {
+    # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
+    pseudotile = true # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
+    preserve_split = true # Should be like manual Tiling
+    permanent_direction_override = true #save split direction, even when changing windows
+    force_split = 2 #always down and right
+    smart_resizing = false
+}
+#+end_src
+
+*** Master
+
+#+begin_src conf
+master {
+    # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
+    new_is_master = false
+    orientation = center
+    always_center_master = true
+}
+#+end_src
+*** hy3
+#+begin_src conf
+plugin {
+  hy3 {
+    # disable gaps when only one window is onscreen
+    #no_gaps_when_only = <bool> # default: false
+
+    # policy controlling what happens when a node is removed from a group,
+    # leaving only a group
+    # 0 = remove the nested group
+    # 1 = keep the nested group
+    # 2 = keep the nested group only if its parent is a tab group
+    #node_collapse_policy = <int> # default: 2
+
+    # offset from group split direction when only one window is in a group
+    group_inset = 10 # default: 10
+
+    # tab group settings
+    tabs {
+      # height of the tab bar
+      #height = <int> # default: 15
+
+      # padding between the tab bar and its focused node
+      #padding = <int> # default: 5
+
+      # the tab bar should animate in/out from the top instead of below the window
+      #from_top = <bool> # default: false
+
+      # rounding of tab bar corners
+      #rounding = <int> # default: 3
+
+      # render the window title on the bar
+      #render_text = <bool> # default: true
+
+      # font to render the window title with
+      #text_font = <string> # default: Sans
+
+      # height of the window title
+      #text_height = <int> # default: 8
+
+      # left padding of the window title
+      #text_padding = <int> # default: 3
+
+      # active tab bar segment color
+      #col.active = <color> # default: 0xff32b4ff
+
+      # urgent tab bar segment color
+      #col.urgent = <color> # default: 0xffff4f4f
+
+      # inactive tab bar segment color
+      #col.inactive = <color> # default: 0x80808080
+
+      # active tab bar text color
+      #col.text.active = <color> # default: 0xff000000
+
+      # urgent tab bar text color
+      #col.text.urgent = <color> # default: 0xff000000
+
+      # inactive tab bar text color
+      #col.text.inactive = <color> # default: 0xff000000
+    }
+
+    # autotiling settings
+    autotile {
+      # enable autotile
+      #enable = false #<bool> # default: false
+
+      # make autotile-created groups ephemeral
+      #ephemeral_groups = <bool> # default: true
+
+      # if a window would be squished smaller than this width, a vertical split will be created
+      # -1 = never automatically split vertically
+      # 0 = always automatically split vertically
+      # <number> = pixel height to split at
+      #trigger_width = <int> # default: 0
+
+      # if a window would be squished smaller than this height, a horizontal split will be created
+      # -1 = never automatically split horizontally
+      # 0 = always automatically split horizontally
+      # <number> = pixel height to split at
+      #trigger_height = <int> # default: 0
+    }
+  }
+}
+#+end_src
+
+** Misc
+
+#+begin_src conf
+misc {
+     hide_cursor_on_touch = false
+}
+
+binds {
+     focus_preferred_method = 1
+     movefocus_cycles_fullscreen = false
+     focus_preferred_method = 1 #0 - history (recent have priority), 1 - length (longer shared edges have priority)
+}
+
+# Example per-device config
+# See https://wiki.hyprland.org/Configuring/Keywords/#executing for more
+#device:epic mouse V1 {
+#    sensitivity = -0.5
+#}
+#+end_src
+
+* Windowrules
+Actually, LinuxRules!
+Also, in wayland, we don't even have "Windows", but "Toplevels"
+# Example windowrule v1
+# windowrule = float, ^(kitty)$
+# Example windowrule v2
+# windowrulev2 = float,class:^(kitty)$,title:^(kitty)$
+# See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+#+begin_src conf
+#windowrulev2 = float,title:^(emacs-run-launcher)$
+windowrulev2 = stayfocused,title:^(emacs-run-launcher)$
+windowrulev2 = float,title:^(emacs-run-launcher)$
+windowrulev2 = minsize 1280 720,title:^(emacs-run-launcher)$
+windowrulev2 = center (1),title:^(emacs-run-launcher)$
+
+## From others dots
+#windowrule = float, ^(steam)$
+windowrule = float, ^(guifetch)$
+
+# Dialogs
+windowrule=float,title:^(Open File)(.*)$
+windowrule=float,title:^(Open Folder)(.*)$
+windowrule=float,title:^(Save As)(.*)$
+windowrule=float,title:^(Library)(.*)$ 
+windowrulev2 = rounding 17, floating:1
+
+######## Layer rules ########
+layerrule = blur, gtk-layer-shell
+layerrule = ignorezero, gtk-layer-shell
+layerrule = blur, notifications
+layerrule = ignorezero, notifications
+
+#+end_src
+
+* Keybinds
+Aww shit, here we go again... Well, here is the table:
+| Keybind                  | Action                             | Keychord  | Action                      |
+| Super+Return             | Runlauncher                        | Super+p   |                             |
+| Super+t                  | Terminal                           | ->p       | Password manager (Tessen)   |
+| Super+c                  | Closes focused Toplevel            | ->i       | Password insert (rofi-pass) |
+| Super+b                  | Main Browser                       | ->q       | Shutdown menu (XanLogout)   |
+| Super+Shift+b            | FallbackBrowser                    | ->l       | Lock session                |
+|                          |                                    | ->h       | SuspendToRam                |
+| Super+(1-9)              | Move workspace to focused output   |           |                             |
+| Super+Shift+(1-9)        | Move focused Toplevel to workspace |           |                             |
+| Super+(Arrows)           | Move the focus                     | Super+s   |                             |
+| Super+Shift+(Arrows)     | Move focused Toplevel in direction | ->r       | Screenshot region           |
+| Super+Control+(Arrows)   | Resize container                   | ->w       | Screenshot window           |
+|                          |                                    | ->a       | Screenshot all outputs      |
+| Super+I                  | Toggle Floating                    | ->Shift+r | Record region               |
+| Super+W                  | Toggle Pseudotiling and Focus      | ->Shift+w | Record window               |
+| Super+J                  | Toggle Split Direction             | ->k       | Stop Recording              |
+| Super+F                  | Toggle Fullscreen                  |           |                             |
+| Super+Shift+F            | Toggle Pseudo Fullscreen           |           |                             |
+| Super+Shift+Control+F    | Toggle Fake Fullscreen             |           |                             |
+|                          |                                    |           |                             |
+| Super+Shift+Vol[up/down] | Pypr Pavu Scratchpad               |           |                             |
+| Super+Shift+T            | Pypr Term Scratchpad               |           |                             |
+| Super+N                  | Pypr overview                      |           |                             |
+|                          |                                    |           |                             |
+| Super+M                  | Toggle Mangohud mode               |           |                             |
+
+
+** Variables
+#+begin_src conf
+# See https://wiki.hyprland.org/Configuring/Keywords/ for more
+$mainMod = SUPER
+$menu    = rofi -show drun
+$emenu = emacsclient -cF "((visibility . nil))" -e '(emacs-run-launcher)'
+$term    = wezterm
+$fallbackTerm = alacritty
+$fileman = emacsclient -c ~/
+$fallbackFileman = $term -e lf
+$browser = qutebrowser
+#$browser = dev.vieb.Vieb --interface-scale=2
+
+$fallbackBrowser = brave
+#+end_src
+
+
+#+begin_src conf
+# Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
+
+bind = $mainMod, W, exec, /home/xanadul/.local/bin/XanBuku
+bind = $mainMod SHIFT, W, exec, /home/xanadul/.local/bin/XanBuku Type
+bind = $mainMod CONTROL, W, exec, /home/xanadul/.local/bin/XanBuku Insert 
+bind = $mainMod, T, exec, $term -e zsh
+bind = $mainMod, E, exec, emacsclient -c
+bind = $mainMod, N, exec, $term -e nvim
+bind = $mainMod CONTROL, E, exec, emacs --init-directory=/home/xanadul/.config/emacs-straight
+bind = $mainMod, B, exec, $browser
+bind = $mainMod SHIFT, B, exec, $fallbackBrowser
+bind = $mainMod, C, killactive,
+bind = $mainMod SHIFT, Q, exit,
+bind = $mainMod SHIFT, RETURN, exec, $fileman
+bind = $mainMod, RETURN, exec, $menu
+#bind = $mainMod, RETURN, exec, $emenu
+
+#toggle waybar
+bind = $mainMod, L, exec, killall -SIGUSR1 waybar
+
+bind = $mainMod, I, togglefloating,
+#bind = $mainMod, W, pseudo, # dwindle/hy3
+#bind = $mainMod, W, fullscreen, 1
+bind = $mainMod, J, togglesplit, # dwindle
+bind = $mainMod, H, layoutmsg, preselect d
+bind = $mainMod, V, layoutmsg, preselect r
+bind = $mainMod, F, fullscreen, 0
+bind = $mainMod SHIFT, F, fullscreen, 1
+bind = $mainMod SHIFT CONTROL, F, fakefullscreen,
+
+# Clipboard history
+bind = $mainMod SHIFT CONTROL, V, exec, cliphist list | rofi -dmenu -i | cliphist decode | wtype -s 1 -
+
+# Move Windows with mainMod + shift + arrow keys
+bind = $mainMod SHIFT, left,  movewindoworgroup , l
+bind = $mainMod SHIFT, right, movewindoworgroup , r
+bind = $mainMod SHIFT, up,    movewindoworgroup , u
+bind = $mainMod SHIFT, down,  movewindoworgroup , d
+
+# Move focus with mainMod + arrow keys
+bind = $mainMod, left,  movefocus, l
+bind = $mainMod, right, movefocus, r
+bind = $mainMod, up,    movefocus, u
+bind = $mainMod, down,  movefocus, d
+#bind = $mainMod, left, exec, /home/xanadul/.local/bin/movefocus.sh l
+#bind = $mainMod, right, exec, /home/xanadul/.local/bin/movefocus.sh r
+#bind = $mainMod, up,  exec, /home/xanadul/.local/bin/movefocus.sh   u
+#bind = $mainMod, down,  exec, /home/xanadul/.local/bin/movefocus.sh d
+
+#bind = $mainMod, H, togglegroup
+bind = $mainMod, U, changegroupactive, f
+#+end_src
+
+** Hy3
+
+#+begin_src conf 
+## hy3
+#bind = $mainMod, H, hy3:makegroup, h
+#bind = $mainMod, V, hy3:makegroup, v
+#bind = $mainMod, A, hy3:changefocus, raise
+#bind = $mainMod, U, hy3:makegroup, tab
+#bind = $mainMod, C, hy3:killactive
+#
+### Move Windows with mainMod + shift + arrow keys
+#bind = $mainMod SHIFT, left,  hy3:movewindow , l
+#bind = $mainMod SHIFT, right, hy3:movewindow , r
+#bind = $mainMod SHIFT, up,    hy3:movewindow , u
+#bind = $mainMod SHIFT, down,  hy3:movewindow , d
+#
+### Move focus with mainMod + arrow keys
+#bind = $mainMod, left, exec, $HOME/.local/bin/XanHyprMove movefocus l 
+#bind = $mainMod, right,exec, $HOME/.local/bin/XanHyprMove movefocus r 
+#bind = $mainMod, up,   exec, $HOME/.local/bin/XanHyprMove movefocus u 
+#bind = $mainMod, down, exec, $HOME/.local/bin/XanHyprMove movefocus d 
+
+
+#bind = $mainMod, left, hy3:movefocus, l 
+#bind = $mainMod, right,hy3:movefocus, r 
+#bind = $mainMod, up,   hy3:movefocus, u 
+#bind = $mainMod, down, hy3:movefocus, d 
+
+
+# Move focus to monitor #Does not play well with $mainMod, direction  bindings...
+#bind = $mainMod BACKSPACE, left, focusmonitor, l
+#bind = $mainMod BACKSPACE, right, focusmonitor, r
+#bind = $mainMod BACKSPACE, up, focusmonitor, u
+#bind = $mainMod BACKSPACE, down, focusmonitor, d
+#+end_src
+
+** Window movement
+#+begin_src conf 
+# Switch workspaces with mainMod + [0-9]
+bind = $mainMod, 1, moveworkspacetomonitor, 1 current
+bind = $mainMod, 1, moveworkspacetomonitor, 1 current
+bind = $mainMod, 2, moveworkspacetomonitor, 2 current
+bind = $mainMod, 3, moveworkspacetomonitor, 3 current
+bind = $mainMod, 4, moveworkspacetomonitor, 4 current
+bind = $mainMod, 5, moveworkspacetomonitor, 5 current
+bind = $mainMod, 6, moveworkspacetomonitor, 6 current
+bind = $mainMod, 7, moveworkspacetomonitor, 7 current
+bind = $mainMod, 8, moveworkspacetomonitor, 8 current
+bind = $mainMod, 9, moveworkspacetomonitor, 9 current
+bind = $mainMod, 1, workspace, 1
+bind = $mainMod, 2, workspace, 2
+bind = $mainMod, 3, workspace, 3
+bind = $mainMod, 4, workspace, 4
+bind = $mainMod, 5, workspace, 5
+bind = $mainMod, 6, workspace, 6
+bind = $mainMod, 7, workspace, 7
+bind = $mainMod, 8, workspace, 8
+bind = $mainMod, 9, workspace, 9
+bind = $mainMod, 0, workspace, 10
+
+# Move active window to a workspace with mainMod + SHIFT + [0-9]
+bind = $mainMod SHIFT, 1, movetoworkspacesilent, 1
+bind = $mainMod SHIFT, 2, movetoworkspacesilent, 2
+bind = $mainMod SHIFT, 3, movetoworkspacesilent, 3
+bind = $mainMod SHIFT, 4, movetoworkspacesilent, 4
+bind = $mainMod SHIFT, 5, movetoworkspacesilent, 5
+bind = $mainMod SHIFT, 6, movetoworkspacesilent, 6
+bind = $mainMod SHIFT, 7, movetoworkspacesilent, 7
+bind = $mainMod SHIFT, 8, movetoworkspacesilent, 8
+bind = $mainMod SHIFT, 9, movetoworkspacesilent, 9
+bind = $mainMod SHIFT, 0, movetoworkspacesilent, 10
+
+# Scroll through existing workspaces with mainMod + scroll
+bind = $mainMod, mouse_down, workspace, e+1
+bind = $mainMod, mouse_up, workspace, e-1
+
+#+end_src
+
+** Rezising
+#+begin_src conf
+binde=$mainMod CONTROL,right, resizeactive, 30 0
+binde=$mainMod CONTROL,left,  resizeactive, -30 0
+binde=$mainMod CONTROL,up,    resizeactive, 0 30
+binde=$mainMod CONTROL,down,  resizeactive, 0 -30
+# Move/resize windows with mainMod + LMB/RMB and dragging
+bindm = $mainMod, mouse:272, movewindow
+bindm = $mainMod, mouse:273, resizewindow
+#+end_src
+
+** Media and stuff
+#+begin_src conf
+binde = ,XF86AudioRaiseVolume, exec, pamixer -i 2
+binde = ,XF86AudioLowerVolume, exec, pamixer -d 2
+
+bind = CONTROL, XF86AudioRaiseVolume, exec, ~/.local/bin/XanMute sink
+bind = CONTROL, XF86AudioLowerVolume, exec, ~/.local/bin/XanMute source
+
+binde = ,XF86MonBrightnessUp,   exec, xbacklight -inc 5
+binde = ,XF86MonBrightnessDown, exec, xbacklight -dec 5
+
+bind = $mainMod, M, exec, XanSwitchMango
+#+end_src
+
+** Submaps (aka. Groups)
+*** Screenshots
+#+begin_src conf
+bind = $mainMod, S, submap, Screenshot
+submap = Screenshot
+bind =, R, exec, ~/.local/bin/XanShoot region
+bind =, R, submap, reset
+bind = CONTROL, R, exec, ~/.local/bin/XanShoot region-edit
+bind = CONTROL, R, submap, reset
+bind =, S, exec, ~/.local/bin/XanShoot screen
+bind =, S, submap, reset
+bind =, P, exec, ~/.local/bin/XanShoot picker
+bind =, P, submap, reset
+bind =, W, exec, ~/.local/bin/XanShoot window
+bind =, W, submap, reset
+bind = SHIFT, R, exec, ~/.local/bin/XanShoot region-video
+bind = SHIFT, R, submap, reset
+bind = SHIFT, W, exec, ~/.local/bin/XanShoot window-video
+bind = SHIFT, W, submap, reset
+bind = SHIFT, K, exec, ~/.local/bin/XanShoot save-video
+bind = SHIFT, K, exec, ~/.local/bin/XanShoot save-video
+bind = , K, exec, ~/.local/bin/XanShoot save-video
+bind = , K, submap, reset
+bind = , C, exec, ~/.local/bin/XanPicker
+bind = , C, submap, reset
+bind =, escape, submap, reset
+submap = reset
+#+end_src
+
+*** Stuff Menu
+#+begin_src conf
+bind = $mainMod, P, submap, Menu
+submap = Menu
+bind =, C, exec, ~/.local/bin/XanQalc
+bind =, C, submap, reset
+bind =, K, exec, splatmoji --disable-emoji-db copy
+bind =, K, submap, reset
+bind =, P, exec, tessen -a autotype
+bind =, P, submap, reset
+bind =, I, exec, rofi-pass --insert
+bind =, I, submap, reset
+bind =, Q, exec, ~/.local/bin/XanLogout
+bind =, Q, submap, reset
+bind =, L, exec, ~/.local/bin/XanLock
+bind =, L, submap, reset
+bind =, H, exec, systemctl suspend
+bind =, H, submap, reset
+bind =, B, exec, ~/.local/bin/XanMark open
+bind =, B, submap, reset
+bind =, escape, submap, reset
+submap = reset
+#+end_src
+
+
+*** Hyprload
+#+begin_src conf
+#bind = $mainMod, Z, submap, Hyprload
+#submap = Hyprload
+#bind =, R, hyprload, reload
+#bind =, R, submap, reset
+#bind =, U, hyprload, update
+#bind =, U, submap, reset
+#bind =, I, hyprload, install
+#bind =, I, submap, reset
+#bind =, C, hyprload, clear
+#bind =, C, submap, reset
+#bind =, L, hyprload, load
+#bind =, L, submap, reset
+#bind =, escape, submap, reset
+#submap = reset
+#+end_src
+
+* Pyprland
+https://github.com/hyprland-community/pyprland/wiki/Getting-started
+Enable/configure plugins in ./pyprland.json
+** Pavucontrol-Scratchpad
+#+begin_src conf
+bind = $mainMod SHIFT, XF86AudioRaiseVolume, exec, pypr toggle volume
+bind = $mainMod SHIFT, XF86AudioLowerVolume, exec, pypr toggle volume
+windowrule = float, ^(pavucontrol)$
+windowrule = workspace special silent, ^(pavucontrol)$
+windowrule = size 1440 810, $^(pavucontrol)$
+#+end_src
+
+** Terminal-Scratchpad
+#+begin_src conf
+bind = $mainMod SHIFT,T , exec, pypr toggle term
+$dropterm = ^(wez-dropterm)$
+windowrule = float, $dropterm
+windowrule = workspace special silent, $dropterm
+windowrule = size 1440 810, $dropterm
+#+end_src
+
+** Overview
+#+begin_src conf
+#bind = $mainMod, N, exec, pypr expose
+#+end_src

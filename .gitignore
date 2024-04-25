@@ -1,0 +1,60 @@
+# ignore emacs autosaves (everything ending in ~)
+*~
+# And ignore whatever this is (created by emacs. Maybe backups from org-babel-tangle?)
+\#*\#
+
+# ignore emacs downloads/compiles/etc
+dotconfig/emacs/elpaca
+dotconfig/emacs/parinfer-rust
+dotconfig/emacs/recentf
+dotconfig/emacs/.cache
+dotconfig/emacs/.dap-breakpoints
+dotconfig/emacs/.images
+dotconfig/emacs/elpa
+dotconfig/emacs/tldr
+dotconfig/emacs/eln-cache
+dotconfig/emacs/elpaca
+dotconfig/emacs/tree-sitter
+dotconfig/emacs/emms
+dotconfig/emacs/irony
+dotconfig/emacs/straight
+dotconfig/emacs/tramp
+dotconfig/emacs/transient
+dotconfig/emacs/url
+dotconfig/emacs/projectile-bookmarks.eld
+dotconfig/emacs/recentf
+
+# ignore emacs recentf, bookmarks, history, etc.
+dotconfig/emacs/projectile-bookmarks.eld
+dotconfig/emacs/recentf
+dotconfig/emacs/auto-save-list
+
+# Fcitx
+dotconfig/fcitx5
+
+# 
+
+# ignore qutebrowser nonconfigs
+dotconfig/qutebrowser/qsettings
+
+# ignore kde stuffs
+dotconfig/kde.org
+dotconfig/KDE
+
+# ignore zsh plugins
+dotconfig/zsh/plugins
+
+# more emacs
+/dotconfig/emacs-DIY/.dap-breakpoints
+/dotconfig/emacs-DIY/elpa/
+/dotconfig/emacs-DIY/dirvish/
+/dotconfig/emacs-DIY/tramp
+/dotconfig/emacs-DIY/transient/
+/dotconfig/emacs-DIY/.cache/
+/dotconfig/emacs-DIY/.lsp-session-v1
+/dotconfig/xournalpp/metadata/*.metadata
+
+# xournalpp
+dotconfig/xournalpp/autosave
+dotconfig/xournalpp/metadata
+dotconfig/xournalpp/plugins

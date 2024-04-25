@@ -1,0 +1,20 @@
+{
+  "pyprland": {
+    "plugins": [
+      "scratchpads",
+      "expose"
+    ]
+  },
+  "scratchpads": {
+    "term": {
+      "command": "wezterm start --class wez-dropterm -e zsh",
+      "animation": "fromTop",
+      "unfocus": "hide"
+    },
+    "volume": {
+      "command": "pavucontrol",
+      "unfocus": "hide",
+      "animation": "fromTop"
+    }
+  }
+}

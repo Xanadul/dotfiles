@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# unlock, just to be sure
+hc() {
+    herbstclient "$@"
+}
+hc unlock
+hc spawn sh .screenlayout/MainLayoutVega56.sh
+sleep 2
+hc detect_monitors

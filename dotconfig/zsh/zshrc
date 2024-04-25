@@ -1,0 +1,200 @@
+zstyle :compinstall filename '/home/xanadul/.zshrc'
+autoload -Uz compinit promptinit
+
+path+=('/home/xanadul/.bin')
+path+=('/home/xanadul/.local/bin')
+path+=('/home/xanadul/.emacs.d/bin')
+path+=('/home/xanadul/go/bin') #for software installed with "go install"
+path+=('/home/xanadul/.cargo/bin')
+path+=('/home/xanadul/.development/flutter/bin')
+path+=('/home/xanadul/.local/podman/bin')
+path+=('/var/lib/flatpak/exports/bin')
+path+=('/home/xanadul/.cabal/bin')
+path+=('/home/xanadul/.ghcup/bin')
+path+=('/home/xanadul/.dotnet/')
+
+export GEM_HOME="$(gem env user_gemhome)"
+path+=("$GEM_HOME/bin")
+
+ZSHCONFDIR="/home/xanadul/.config/zsh"
+function lf() { #yes, lf is a different program, but muscle memory dictates this name. Also, "ya" is a terrible combination on Colmak
+	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+
+alias rp="rsync -r --progress"
+alias ls="eza --group-directories-first --icons always"
+alias ll="eza --long --icons always --group-directories-first --dereference --links --git --time-style='+%Y年%b月%d日 %H時%M分%S秒 '"
+alias ld="eza --only-dirs --icons always"
+alias lla="eza --long --all --icons always --group-directories-first --dereference --links --git --time-style='+%Y年%b月%d日 %H時%M分%S秒 '"
+alias lt="eza --tree --level=2 --icons always"
+alias vim="nvim"
+
+#alias emacs="emacsclient -c -a 'emacs'"
+#alias emacst="emacsclient -c -a 'emacs' -t"
+alias dr="emacsclient ./"
+alias emacst="emacs -t"
+
+# Download a playlist into ./playlist-name/ and write metadata to files
+alias yt-dlp-p='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --write-description --write-info-json --write-playlist-metafiles'
+
+# Download a playlist into ./playlist-name/ , extract its audio to wav using best quality and write metadata to files
+alias yt-dlp-p-a='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --extract-audio --audio-format wav --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
+
+alias yt-dlp-a='yt-dlp -o "%(title)s" --extract-audio --audio-format wav --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
+
+alias bcrypt-hash='f() {htpasswd -nbBC 10 $1 $2};f'
+
+#eval "$(zoxide init --cmd cd zsh)"
+
+# from https://github.com/mdumitru/fancy-ctrl-z
+# suspend a program with ctrl-z and return to it using ctrl-z (as opposed to the fg command)
+fancy-ctrl-z () {
+  if [[ $#BUFFER -eq 0 ]]; then
+    BUFFER="fg"
+    zle accept-line -w
+  else
+    zle push-input -w
+    zle clear-screen -w
+  fi
+}
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
+
+
+bindkey "^[[3~" delete-char
+
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=10000
+setopt notify
+
+#If a new command line being added to the history list duplicates an older one, the older command is removed from the list (even if it is not the previous event).
+setopt HIST_IGNORE_ALL_DUPS
+
+#fix multi instance history
+setopt inc_append_history #save every command before it is executed to history.
+
+
+#source $ZSHCONFDIR/2liner.zsh
+
+[[ -f ~/Git/zsh-snap/znap.zsh ]] ||
+    git clone --depth 1 -- \
+        https://github.com/marlonrichert/zsh-snap.git ~/Git/zsh-snap
+
+source ~/Git/zsh-snap/znap.zsh  # Start Znap
+
+# p10k is nice, but since it puts content on the right edge, spams window on resize...
+#znap source romkatv/powerlevel10k
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+#[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+
+# Starship prompt
+eval "$(starship init zsh)"
+
+
+
+
+#znap source marlonrichert/zsh-autocomplete
+
+#bindkey "$terminfo[ht]" menu-complete "$terminfo[kcbt]" reverse-menu-complete
+
+#bindkey "$terminfo[ht]" menu-select "$terminfo[kcbt]" menu-select
+#bindkey -M menuselect "$terminfo[ht]" menu-complete "$terminfo[kcbt]" reverse-menu-complete
+
+# all Tab widgets
+#zstyle ':autocomplete:*complete*:*' insert-unambiguous yes
+
+# all history widgets
+#zstyle ':autocomplete:*history*:*' insert-unambiguous yes
+
+# ^S
+#zstyle ':autocomplete:menu-search:*' insert-unambiguous yes
+
+#zstyle ':autocomplete:*' default-context history-incremental-search-backward
+
+# Autocompletion
+#zstyle -e ':autocomplete:list-choices:*' list-lines 'reply=( $(( LINES / 3 )) )'
+
+# Override history search.
+#zstyle ':autocomplete:history-incremental-search-backward:*' list-lines 10
+
+# History menu.
+#zstyle ':autocomplete:history-search-backward:*' list-lines 10
+
+znap source zsh-users/zsh-autosuggestions
+
+znap source hlissner/zsh-autopair
+
+znap source unixorn/fzf-zsh-plugin # awesome history fuzzyfind, using ctrl+r
+
+znap source Aloxaf/fzf-tab
+
+# znap source jeffreytse/zsh-vi-mode
+
+#znap source fourdim/zsh-archlinux
+#pacman helper. Using pac [add remove upg upgrade list earch prune own tree why clean]
+
+znap source Junker/zsh-archlinux
+#| Alias        | Command                                | Description                                                      |
+#|--------------|----------------------------------------|------------------------------------------------------------------|
+#| pacin        | `sudo pacman -S`                       | Install packages from the repositories                           |
+#| pacndeps     | `sudo pacman -Sdd`                     | Install a package or packages without dependencies               |
+#| pacins       | `sudo pacman -U`                       | Install a package from a local file                              |
+#| pacinsd      | `sudo pacman -S --asdeps`              | Install packages as dependencies of another package              |
+#| paclean      | `sudo pacman -Sc`                      | Clean out old and unused caches and packages                     |
+#| pacloc       | `pacman -Qi`                           | Display information about a package in the local database        |
+#| paclocs      | `pacman -Qs`                           | Search for packages in the local database                        |
+#| paclr        | `sudo pacman -Scc`                     | Remove all files from the cache                                  |
+#| paclsorphans | `sudo pacman -Qdt`                     | List all orphaned packages                                       |
+#| pacmir       | `sudo pacman -Syy`                     | Force refresh of all package lists after updating mirrorlist     |
+#| pacre        | `sudo pacman -R`                       | Remove packages, keeping its settings and dependencies           |
+#| pacrem       | `sudo pacman -Rns`                     | Remove packages, including its settings and dependencies         |
+#| pacrep       | `pacman -Si`                           | Display information about a package in the repositories          |
+#| pacreps      | `pacman -Ss`                           | Search for packages in the repositories                          |
+#| pacrmorphans | `sudo pacman -Rs $(pacman -Qtdq)`      | Delete all orphaned packages                                     |
+#| pacupd       | `sudo pacman -Sy`                      | Update and refresh local package, ABS and AUR databases          |
+#| pacupg       | `sudo pacman -Syu`                     | Sync with repositories before upgrading packages                 |
+#| pacfileupg   | `sudo pacman -Fy`                      | Download fresh package databases from the server                 |
+#| pacfiles     | `pacman -F`                            | Search package file names for matching strings                   |
+#| pacls        | `pacman -Ql`                           | List files in a package                                          |
+#| pacown       | `pacman -Qo`                           | Show which package owns a file                                   |
+#| upgrade      | `sudo pacman -Syu`                     | Sync with repositories before upgrading packages                 |
+#|--------------|----------------------------------------|-------------------------------------------------------------------|
+#| parclean     | `paru -Sc`                     | Clean out old and unused caches and packages                      |
+#| parclr       | `paru -Scc`                    | Remove all files from the cache                                   |
+#| parin        | `paru -S`                      | Install packages from the repositories                            |
+#| parins       | `paru -U`                      | Install a package from a local file                               |
+#| parinsd      | `paru -S --asdeps`             | Install packages as dependencies of another package               |
+#| parloc       | `paru -Qi`                     | Display information about a package in the local database         |
+#| parlocs      | `paru -Qs`                     | Search for packages in the local database                         |
+#| parlst       | `paru -Qe`                     | List installed packages including from AUR (tagged as "local")    |
+#| parmir       | `paru -Syy`                    | Force refresh of all package lists after updating mirrorlist      |
+#| parre        | `paru -R`                      | Remove packages, keeping its settings and dependencies            |
+#| parrem       | `paru -Rns`                    | Remove packages, including its settings and unneeded dependencies |
+#| parrep       | `paru -Si`                     | Display information about a package in the repositories           |
+#| parreps      | `paru -Ss`                     | Search for packages in the repositories                           |
+#| parupd       | `paru -Sy`                     | Update and refresh local package, ABS and AUR databases           |
+#| parupg       | `paru -Syu`                    | Sync with repositories before upgrading packages                  |
+#| upgrade      | `paru -Syu`                    | Sync with repositories before upgrading packages                  |
+
+
+
+
+  
+
+znap source zsh-users/zsh-syntax-highlighting
+
+#source ~/.config/zsh/catppuccin_latte-zsh-syntax-highlighting.zsh
+source ~/.config/zsh/dracula-zsh-syntax-highlighting.sh
+#source ~/.config/zsh/catppuccin_latte-zsh-syntax-highlighting.zsh
+
+
+znap source zsh-users/zsh-history-substring-search
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
+

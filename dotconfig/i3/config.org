@@ -1,0 +1,259 @@
+#+title: Config
+
+* About this config
+This is a fork of my sway config, changed for i3.
+- [-] TODO [20%]
+  - [ ] Clipboard manager
+  - [-] XanTools [1/4]
+    - [X] XanShoot
+    - [X] XanBackgrounds
+    - [ ] XanSwayMove
+    - [ ] XanSwaySwitch
+  - [ ] Password manager
+  - [ ] Polybar and Polybar Toggle
+  - [X] Rounded Corners
+* :toc: TableOfContents
+
+* Variables
+#+begin_src conf :tangle config
+set $mod Mod4
+set $term alacritty
+set $menu rofi -show drun
+set $GOPATH "/home/xanadul/go/bin"
+set $wallpaper-path /home/xanadul/Pictures/Wallpaper/Falcom
+
+set $lobin "~/.local/bin"
+#+end_src
+
+* Input and Output configuration
+Since this general config should be used for 2 Systems (Laptop and Desktop), specific configuration gets tangled into different files, which can then be included as needed. Enables tap to click, 2-finger-tap rightclick, 3-finger-tap middle-click and correct 2-finger-scroll direction on the laptop touchpad.
+
+Common config for keyboard Layout:
+#+begin_src conf :tangle config
+exec "setxkbmap de"
+#+end_src
+
+Output configuration for the desktop config.
+#+begin_src conf :tangle config-desktop-specifics
+#exec "~/.screenlayout/MainLayoutVega56"
+#+end_src
+
+Output and Touchpad config for the laptop config:
+#+begin_src conf :tangle config-laptop-specifics
+#+end_src
+
+* Autostart
+#+begin_src conf :tangle config
+exec_always --no-startup-id "/home/xanadul/.config/i3/autostart.sh $wallpaper-path"
+#Automount network filesystem over sshfs with keypair
+exec "sshfs xanadul@mikoto.home:/mnt/Yukino/Data .Yukino"
+#+end_src
+
+* Keybinds
+Important Keybinds:
+| Keybind                | Action                                         | Keychord  | Action                       |
+| Super+Return           | Runlauncher (set in variables, default rofi)   | Super+p   |                              |
+| Super+t                | Terminal (set in variables), default alacritty | ->p       | Password manager (rofi-pass) |
+| Super+c                | Closes focused container                       | ->i       | Password insert (rofi-pass)  |
+| Super+Shift+r          | Reloads sway config                            | ->q       | Shutdown menu (XanLogout)    |
+| Super+Shift+q          | Closes sway                                    | ->l       | Lock session                 |
+| Super+(1-9)            | Move workspace to focused output               | ->h       | SuspendToRam                 |
+| Super+Shift+(1-9)      | Move focused container to workspace            |           |                              |
+| Super+(Arrows)         | Move the focus                                 | Super+s   |                              |
+| Super+Shift+(Arrows)   | Move focused container in direction            | ->r       | Screenshot region            |
+| Super+Control+(Arrows) | Resize container                               | ->w       | Screenshot window            |
+|                        |                                                | ->a       | Screenshot all outputs       |
+|                        |                                                | ->Shift+r | Record region                |
+|                        |                                                | ->Shift+w | Record window                |
+|                        |                                                | ->k       | Stop Recording               |
+** i3 Management
+#+begin_src conf :tangle config
+#bindsym $mod+Shift+q exec "i3-msg exit"
+bindsym $mod+Shift+q exit
+bindsym $mod+Shift+r restart
+
+#+end_src
+
+** Applications
+
+#+begin_src conf :tangle config
+#Application launching
+bindsym $mod+t exec $term
+bindsym $mod+Return exec $menu
+bindsym $mod+b exec "qutebrowser"
+bindsym $mod+Shift+b exec "librewolf"
+bindsym $mod+Shift+Return exec "dolphin"
+bindsym $mod+e exec "emacs"
+
+#Clipboard history
+#bindsym Control+Shift+v exec "cliphist list | rofi -dmenu -i | cliphist decode | wtype -s 1 -"
+#bindsym $mod+Control+v exec "$cliphist list | rofi -dmenu -i | cliphist delete"
+#bindsym $mod+Control+Shift+v exec "cliphist wipe"
+
+#Waybar toggle
+#bindsym $mod+l exec "killall -SIGUSR1 waybar"
+
+#+end_src
+** Window-Management
+#+begin_src conf :tangle config
+#Stuff
+bindsym $mod+c kill
+floating_modifier $mod
+
+#Focus
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+#Drawing tablet focus
+bindsym $mod+Shift+Control+Left  exec "~/.local/bin/XanFocusTab left"
+bindsym $mod+Shift+Control+Right exec "~/.local/bin/XanFocusTab right"
+
+#Move Container
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+#Resize Container
+bindsym $mod+Control+left  resize shrink   width   10px
+bindsym $mod+Control+down  resize grow     height  10px
+bindsym $mod+Control+up    resize shrink   height  10px
+bindsym $mod+Control+right resize grow     width   10px
+
+#Move Container to workspace
+bindsym $mod+Shift+Control+1 exec "~/.local/bin/XanSwayMove 1"
+bindsym $mod+Shift+Control+2 exec "~/.local/bin/XanSwayMove 2"
+bindsym $mod+Shift+Control+3 exec "~/.local/bin/XanSwayMove 3"
+bindsym $mod+Shift+Control+4 exec "~/.local/bin/XanSwayMove 4"
+bindsym $mod+Shift+Control+5 exec "~/.local/bin/XanSwayMove 5"
+bindsym $mod+Shift+Control+6 exec "~/.local/bin/XanSwayMove 6"
+bindsym $mod+Shift+Control+7 exec "~/.local/bin/XanSwayMove 7"
+bindsym $mod+Shift+Control+8 exec "~/.local/bin/XanSwayMove 8"
+bindsym $mod+Shift+Control+9 exec "~/.local/bin/XanSwayMove 9"
+bindsym $mod+Shift+Control+0 exec "~/.local/bin/XanSwayMove 0"
+
+#Pull workspace to current output
+bindsym $mod+1 exec "~/.local/bin/XanSwaySwitch 1 "
+bindsym $mod+2 exec "~/.local/bin/XanSwaySwitch 2"
+bindsym $mod+3 exec "~/.local/bin/XanSwaySwitch 3"
+bindsym $mod+4 exec "~/.local/bin/XanSwaySwitch 4"
+bindsym $mod+5 exec "~/.local/bin/XanSwaySwitch 5"
+bindsym $mod+6 exec "~/.local/bin/XanSwaySwitch 6"
+bindsym $mod+7 exec "~/.local/bin/XanSwaySwitch 7"
+bindsym $mod+8 exec "~/.local/bin/XanSwaySwitch 8"
+bindsym $mod+9 exec "~/.local/bin/XanSwaySwitch 9"
+bindsym $mod+0 exec "~/.local/bin/XanSwaySwitch 0"
+
+#Move Containe to workspace
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+#Layout commands
+bindsym $mod+h splith
+bindsym $mod+v splitv
+bindsym $mod+Shift+w layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+r layout toggle split
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+f fullscreen
+
+#Menus
+mode "Menu" {
+    # replace with rofi-pass: bindsym p mode "default" ; exec "tessen -a autotype"
+    bindsym i mode "default" ; exec "rofi-pass --insert"
+    bindsym q mode "default" ; exec "~/.local/bin/XanLogout"
+    bindsym l mode "default" ; exec "i3lock -u -c 000000"
+    bindsym h mode "default" ; exec "systemctl suspend"
+    bindsym Escape mode "default"
+}
+mode "Screenshot" {
+    bindsym r exec  --no-startup-id        '/home/xanadul/.local/bin/XanShoot' 'region'; mode "default"
+    bindsym a exec   --no-startup-id       '~/.local/bin/XanShoot' 'all'; mode "default"
+    bindsym w exec          '~/.local/bin/XanShoot' 'window'; mode "default"
+    bindsym Shift+w exec  --no-startup-id  '/home/xanadul/.local/bin/XanShoot' 'window-video'; mode "default"
+    bindsym Shift+r exec    '~/.local/bin/XanShoot' 'region-video'; mode "default"
+    bindsym k mode "default"; exec '~/.local/bin/XanShoot' 'save-video'#to stop and save a recording, sending SIGINT to recorder
+    bindsym Escape mode "default"
+}
+bindsym $mod+s mode "Screenshot"
+bindsym $mod+p mode "Menu"
+#+end_src
+
+** Media and stuff
+#+begin_src conf :tangle config
+bindsym XF86AudioRaiseVolume            exec "pamixer -i 2"
+bindsym XF86AudioLowerVolume            exec "pamixer -d 2"
+
+bindsym Control+XF86AudioRaiseVolume    exec "~/.local/bin/XanMute sink"
+bindsym Control+XF86AudioLowerVolume    exec "~/.local/bin/XanMute source"
+
+bindsym XF86MonBrightnessUp             exec "xbacklight -inc 5"
+bindsym XF86MonBrightnessDown           exec "xbacklight -dec 5"
+
+#Switch between a mangohud config on the fly
+bindsym $mod+M                          exec "~/.local/bin/XanSwitchMango"
+#+end_src
+
+* Settings
+#+begin_src conf :tangle config
+mouse_warping output
+popup_during_fullscreen smart
+workspace_auto_back_and_forth yes
+#+end_src
+
+* Theming
+Window borders get managed by xborder, to achieve rounded corners.
+#+begin_src conf :tangle config
+title_align center
+default_border pixel 4
+gaps inner 10
+#gaps outer 10
+smart_gaps off
+font pango:NotoMono 10
+
+#Colors
+#class                  border  backgr  text    indicator   child_border
+client.focused          #bd93f9 #bd93f9 #282a36 #ffffff     #bd93f9
+client.focused_inactive #6272a4 #6272a4 #f8f8f2 #ffffff     #6272a4
+client.unfocused        #44475a #44475a #f8f8f2 #ffffff     #44475a
+client.urgent           #ff5555 #ffff55 #282a36 #ffffff     #ffff55
+#+end_src
+
+* Bar
+Basic bar. Will get replaced with better alternative like polybar.
+#+begin_src conf :tangle config
+        bar {
+        status_command i3status
+        position top
+        tray_output none
+        separator_symbol "|"
+        colors {
+            background #282a36
+#                               border  bg      text
+            focused_workspace   #a585f2 #bd93f9 #282a36
+        }
+}
+#+end_src
+
+* Includes
+Useful for including the device specific config options. (Un)comment in tangled config as needed.
+#+begin_src conf :tangle config
+
+include ~/.config/i3/config-desktop-specifics
+#include ~/.config/i3/config-laptop-specifics
+
+#+end_src

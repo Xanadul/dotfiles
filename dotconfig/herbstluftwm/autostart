@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#Config based on Jan Lunges (Grüsse gehen raus) config, but heavily modified to suit my need. Also split into several files to maybe make stuff like live theme swapping possible.
+
+hc() {
+    herbstclient "$@"
+}
+
+hc emit_hook reload
+
+sh $HOME/.config/herbstluftwm/keybinds
+
+# Setup workspaces (aka tags)
+Mod=Mod4
+tag_names=( {1..9} )
+tag_keys=( {1..9} 0 )
+hc rename default "${tag_names[0]}" || true
+for i in ${!tag_names[@]} ; do
+    hc add "${tag_names[$i]}"
+    key="${tag_keys[$i]}"
+    if ! [ -z "$key" ] ; then
+        hc keybind "$Mod-$key" use_index "$i"
+        hc keybind "$Mod-Shift-$key" move_index "$i"
+    fi
+done
+
+sh $HOME/.config/herbstluftwm/theme
+
+sh $HOME/.config/herbstluftwm/display
+
+sh $HOME/.config/herbstluftwm/rules
+
+sh $HOME/.config/herbstluftwm/startupPrograms
+
+
