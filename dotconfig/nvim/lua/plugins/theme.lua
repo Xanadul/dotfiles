@@ -28,4 +28,20 @@ local catppuccinLatte = {
     --vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
   end
 }
-return { dracula }
+
+local tokyonight = {
+  "folke/tokyonight.nvim",
+  lazy = false,
+  priority = 1000,
+  opts = {},
+  config = function ()
+    require("tokyonight").setup({
+      style = "moon", --used by eg. lualine 
+      light_style = "day",
+      transparent = true,
+      vim.cmd.colorscheme "tokyonight-moon",
+    })
+  end
+}
+
+return { tokyonight }

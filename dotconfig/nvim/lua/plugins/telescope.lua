@@ -33,7 +33,8 @@ return {
           f = { builtin.find_files, "Files" },
           g = { builtin.live_grep, "Grep" },
           b = { builtin.buffers, "Buffers" },
-          h = { builtin.help_tags, "Help Tags"}
+          h = { builtin.help_tags, "Help Tags"},
+          c = { builtin.commands, "Command"}
         },
         b = {
           name = "Buffer",
