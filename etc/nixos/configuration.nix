@@ -37,66 +37,66 @@ networking.hostId = "f81a04b9";
 #systemd.services.zfs-mount.enable = false;
 
 #for zfs-legacy mountpoints (like fstab):
-fileSystems."/mnt/Yukino" = {
-  device = "Yukino";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data" = {
-  device = "Yukino/Data";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/Backups" = {
-  device = "Yukino/Data/Backups";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/Media" = {
-  device = "Yukino/Data/Media";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/Media/Anime" = {
-  device = "Yukino/Data/Media/Anime";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/Media/Anime/Ecchi" = {
-  device = "Yukino";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/Media/Appstuff" = {
-  device = "Yukino/Data/Media/Appstuff";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/Media/Documents" = {
-  device = "Yukino/Data/Media/Documents";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/Media/Downloads" = {
-  device = "Yukino/Data/Media/Downloads";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/Media/Music" = {
-  device = "Yukino/Data/Media/Music";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/Media/NSFW" = {
-  device = "Yukino/Data/Media/NSFW";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/Media/Pictures" = {
-  device = "Yukino/Data/Media/Pictures";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/Media/TV" = {
-  device = "Yukino/Data/Media/TV";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/Nextcloud" = {
-  device = "Yukino/Data/Nextcloud";
-  fsType = "zfs";
-};
-fileSystems."/mnt/Yukino/Data/University" = {
-  device = "Yukino/Data/University";
-  fsType = "zfs";
-};
+#fileSystems."/mnt/Yukino" = {
+#  device = "Yukino";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data" = {
+#  device = "Yukino/Data";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/Backups" = {
+#  device = "Yukino/Data/Backups";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/Media" = {
+#  device = "Yukino/Data/Media";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/Media/Anime" = {
+#  device = "Yukino/Data/Media/Anime";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/Media/Anime/Ecchi" = {
+#  device = "Yukino";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/Media/Appstuff" = {
+#  device = "Yukino/Data/Media/Appstuff";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/Media/Documents" = {
+#  device = "Yukino/Data/Media/Documents";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/Media/Downloads" = {
+#  device = "Yukino/Data/Media/Downloads";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/Media/Music" = {
+#  device = "Yukino/Data/Media/Music";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/Media/NSFW" = {
+#  device = "Yukino/Data/Media/NSFW";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/Media/Pictures" = {
+#  device = "Yukino/Data/Media/Pictures";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/Media/TV" = {
+#  device = "Yukino/Data/Media/TV";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/Nextcloud" = {
+#  device = "Yukino/Data/Nextcloud";
+#  fsType = "zfs";
+#};
+#fileSystems."/mnt/Yukino/Data/University" = {
+#  device = "Yukino/Data/University";
+#  fsType = "zfs";
+#};
 
 # Enable networking
 networking.networkmanager.enable = true;
@@ -175,11 +175,11 @@ services.pipewire = {
   };
 
 # Enable the X11 windowing system.
-services.xserver.enable = true;
+#services.xserver.enable = true;
 
 # Enable the KDE Plasma Desktop Environment.
-services.xserver.displayManager.sddm.enable = true;
-services.xserver.desktopManager.plasma5.enable = true;
+#services.xserver.displayManager.sddm.enable = true;
+#services.xserver.desktopManager.plasma5.enable = true;
 
 #programs.sway.enable = true;
 # Configure keymap in X11
@@ -225,6 +225,14 @@ services.printing.enable = true;
 
 services.flatpak.enable = true;
 
+programs.git = {
+  enable = true;
+  #userName = "xanadul";
+  #userEmail = "xanadul@protonmail.com";
+};
+
+
+
 programs.zsh.enable = true;
 #users.defaultUserShell = pkgs.zsh;
 
@@ -248,8 +256,9 @@ environment.systemPackages = with pkgs; [
   killall
   shadow
 
+  
+
   rlwrap
-  mpv
   mpvc
 
   git
@@ -261,19 +270,17 @@ environment.systemPackages = with pkgs; [
 
   vieb
   nodejs_20
-  rofi-wayland
-  rofi-calc
-  rofi-emoji
   libqalculate
   
   zsh
-  wtype
   gnupg
   pinentry-curses
   pinentry
   pinentry-rofi
   pinentry-qt
   tailscale
+
+  dolphin
 
   steam
   steam-run # needed for steam games 
@@ -298,8 +305,13 @@ packages = with pkgs; [
     kate
     libnotify
     dunst
+  rofi-wayland-unwrapped
+  rofi-calc
+  rofi-emoji
+  wtype
+  mpv
 
-    #rofi
+
     tessen
     wl-clipboard
     cliphist
