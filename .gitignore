@@ -58,3 +58,6 @@ dotconfig/zsh/plugins
 dotconfig/xournalpp/autosave
 dotconfig/xournalpp/metadata
 dotconfig/xournalpp/plugins
+
+#nvim lazylock
+*/lazy-lock.json
