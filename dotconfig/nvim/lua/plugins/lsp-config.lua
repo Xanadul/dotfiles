@@ -23,18 +23,18 @@ return {
       "stevearc/dressing.nvim",
     },
     config = function()
-      require("flutter-tools").setup{
+      require("flutter-tools").setup {
         widget_guides = {
           enabled = false,
         },
         closing_tags = {
           --highlight = "ErrorMsg", -- highlight for the closing tag
-          prefix = ">", -- character to use for close tag e.g. > Widget
+          prefix = ">",  -- character to use for close tag e.g. > Widget
           enabled = true -- set to false to disable
         },
         outline = {
           open_cmd = "30vnew", -- command to use to open the outline buffer
-          auto_open = false -- if true this will open the outline automatically when it is first populated
+          auto_open = false    -- if true this will open the outline automatically when it is first populated
         },
         lsp = {
           color = { -- show the derived colours for dart variables
@@ -59,32 +59,49 @@ return {
       }
     end,
   },
+  { "folke/neodev.nvim", opts = {}  }, -- Helps luals with the vim API
   {
     "neovim/nvim-lspconfig",
     lazy = false,
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
+      require("neodev").setup({
+      }) -- setup neodev before lspconfig!
       local lspconfig = require("lspconfig")
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
       })
       lspconfig.jdtls.setup({
         capabilities = capabilities,
-
       })
       lspconfig.clangd.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.ltex.setup({
         capabilities = capabilities,
       })
       lspconfig.ruff_lsp.setup({
         capabilities = capabilities,
       })
+      lspconfig.pyright.setup({
+        capabilities = capabilities,
+      })
       lspconfig.sqlls.setup({
         capabilities = capabilities,
       })
-      lspconfig.pylsp.setup({
-        capabilities = capabilities,
-      })
+      -- lspconfig.pylsp.setup({
+      --   capabilities = capabilities,
+      --   settings = {
+      --     pylsp = {
+      --       plugins = {
+      --         pycodestyle = {
+      --           ignore = { 'W391' },
+      --           maxLineLength = 100
+      --         }
+      --       }
+      --     }
+      --   },
+      -- })
       lspconfig.rust_analyzer.setup({
         capabilities = capabilities,
       })
@@ -96,28 +113,49 @@ return {
       lspconfig.hls.setup({
         capabilities = capabilities,
       })
+      lspconfig.cssls.setup({
+        capabilities = capabilities,
+      })
       lspconfig.jsonls.setup({
         capabilities = capabilities,
       })
       lspconfig.gopls.setup({
         capabilities = capabilities,
-        cmd = {"gopls"},
-        filetypes = {"go", "gomod", "gowork", "gotmpl"},
+        cmd = { "gopls" },
+        filetypes = { "go", "gomod", "gowork", "gotmpl" },
       })
       lspconfig.bashls.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.tsserver.setup({
         capabilities = capabilities,
       })
       local wk = require("which-key")
       wk.register({
         c = {
           a = { vim.lsp.buf.code_action, "Code Action" },
-          f = { function ()
-            vim.lsp.buf.format {async = true }
-          end, "Format"}
+          f = { function()
+            vim.lsp.buf.format { async = true }
+          end, "Format" }
         },
-    }, { prefix = "<leader>" })
-
+      }, { prefix = "<leader>" })
+      vim.diagnostic.config({
+        virtual_text = false, -- Inline diagnostics
+        signs = true,
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
+      })
+      vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+        group = vim.api.nvim_create_augroup("float_diagnostic_cursor", { clear = true }),
+        callback = function ()
+          vim.diagnostic.open_float(nil, {focus=false, scope="cursor"})
+        end
+      })
       vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
     end,
+  },
+  {
+    "mfussenegger/nvim-jdtls"
   },
 }
