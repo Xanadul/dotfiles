@@ -1,219 +1,273 @@
 {
-	"layer": "top",
-	"position": "top",
-    //"height": 30, // Waybar height (to be removed for auto height)
-    // "width": 1280, // Waybar width
-    "spacing": 0, // Gaps between modules (4px)
-	"modules-left": [
-		"sway/mode",
-		"wlr/workspaces",
-		"custom/arrow10",
-		"sway/window"
-	],
-
-	"modules-right": [
-		"custom/arrow9",
-		"pulseaudio",
-		"custom/arrow8",
-		"network",
-		"custom/arrow7",
-		"memory",
-		"custom/arrow6",
-		"cpu",
-		"custom/arrow5",
-		//"temperature",
-		//"custom/arrow4",
-		//"battery",
-		//"custom/arrow3",
-		//"sway/language",
-		//"custom/arrow2",
-		//"tray",
-		"clock#date",
-		"custom/arrow1",
-		"clock#time"
-	],
-
-	// Modules
-
-	"battery": {
-		"interval": 10,
-		"states": {
-			"warning": 30,
-			"critical": 15
-		},
-		"format-time": "{H}:{M:02}",
-		"format": "{icon} {capacity}% ({time})",
-		"format-charging": " {capacity}% ({time})",
-		"format-charging-full": " {capacity}%",
-		"format-full": "{icon} {capacity}%",
-		"format-alt": "{icon} {power}W",
-		"format-icons": [
-			"",
-			"",
-			"",
-			"",
-			""
-		],
-		"tooltip": false
-	},
-
-	"clock#time": {
-		"interval": 1,
-		"format": "{:%H時%M分%S秒}",
-		"tooltip": false
-	},
-
-	"clock#date": {
-		"interval": 20,
-		"format": "{:%Y年%m月%d日}",
-		"tooltip": false
-		//"tooltip-format": "{:%e %B %Y}"
-	},
-
-	"cpu": {
-		"interval": 5,
-		"tooltip": false,
-		"format": " {usage}%",
-		"format-alt": " {load}",
-		"states": {
-			"warning": 70,
-			"critical": 90
-		}
-	},
-
-	"sway/language": {
-		"format": " {}",
-		"min-length": 5,
-		"on-click": "swaymsg 'input * xkb_switch_layout next'",
-		"tooltip": false
-	},
-
-	"memory": {
-		"interval": 5,
-		"format": " {used:0.1f}G/{total:0.1f}G",
-		"states": {
-			"warning": 70,
-			"critical": 90
-		},
-		"tooltip": false
-	},
-
-	"network": {
-		"interval": 5,
-		"format-wifi": " {essid} ({signalStrength}%)",
-		"format-ethernet": " {ifname}",
-		"format-disconnected": "No connection",
-		"format-alt": " {ipaddr}/{cidr}",
-		"tooltip": false
-	},
-
-	"sway/mode": {
-		"format": "{}",
-		"tooltip": false
-	},
-
-	"sway/window": {
-		"format": "{}",
-		"max-length": 60,
-		"tooltip": false
-	},
-
-	"wlr/workspaces": {
-		"disable-scroll-wraparound": true,
-		"smooth-scrolling-threshold": 4,
-		"enable-bar-scroll": true,
-		"format": "{name}"
-	},
-
-	"pulseaudio": {
-        // "scroll-step": 1, // %, can be a float
-        "format": "{volume}% {icon} {format_source}",
-        "format-bluetooth": "{volume}% {icon} {format_source}",
-        "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": " {format_source}",
-        "format-source": "{volume}% ",
-        "format-source-muted": "",
-        "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": ["", "", ""]
-        },
-        "on-click": "$HOME/.bin/ToggleMute.sh sink",
-        "on-click-right": "$HOME/.bin/ToggleMute.sh source"
+  "layer": "top",
+  "position": "top",
+  //"height": 30, // Waybar height (to be removed for auto height)
+  // "width": 1280, // Waybar width
+  "spacing": 0, // Gaps between modules (4px)
+  "reload_style_on_change": true,
+  "modules-left": [
+    "hyprland/submap",
+    "battery",
+    //"custom/arrow11",
+    "custom/arrowR1",
+    "hyprland/workspaces",
+    //"custom/arrow10"
+    "custom/arrowRT",
+    "custom/star"
+  ],
+  "modules-center": [
+    "custom/star",
+    //"custom/arrow20",
+    "custom/arrowLT",
+    "hyprland/window",
+    //"custom/arrow21"
+    "custom/arrowRT",
+    "custom/star"
+  ],
+  "modules-right": [
+    "custom/star",
+    //"custom/arrow9",
+    "custom/arrowLT",
+    "pulseaudio",
+    //"custom/arrow8",
+    "custom/arrowL1",
+    "network",
+    //"custom/arrow7",
+    "custom/arrowL2",
+    "memory",
+    //"custom/arrow6",
+    "custom/arrowL1",
+    "cpu",
+    //"custom/arrow5",
+    "custom/arrowL2",
+    //"temperature",
+    //"custom/arrow4",
+    //"custom/arrow3",
+    //"sway/language",
+    //"custom/arrow2",
+    "tray",
+    "clock#date",
+    //"custom/arrow1",
+    "custom/arrowL1",
+    "clock#time",
+  ],
+  // Modules
+  "hyprland/window": {
+    "max-length": 200,
+    "separate-outputs": true,
+    "format": "  {}  ",
+  },
+  "hyprland/submap": {
+    "format": "{}",
+    "always-on": true
+  },
+  "battery": {
+    "interval": 10,
+    "bat": "BAT0",
+    "states": {
+      "warning": 30,
+      "critical": 15
     },
-
-	"temperature": {
-		"critical-threshold": 90,
-		"interval": 5,
-		"format": "{icon} {temperatureC}°",
-		"format-icons": [
-			"",
-			"",
-			"",
-			"",
-			""
-		],
-		"tooltip": false
-	},
-
-	"tray": {
-		"icon-size": 18
-		//"spacing": 10
-	},
-
-	"custom/arrow1": {
-		"format": "",
-		"tooltip": false
-	},
-
-	"custom/arrow2": {
-		"format": "",
-		"tooltip": false
-	},
-
-	"custom/arrow3": {
-		"format": "",
-		"tooltip": false
-	},
-
-	"custom/arrow4": {
-		"format": "",
-		"tooltip": false
-	},
-
-	"custom/arrow5": {
-		"format": "",
-		"tooltip": false
-	},
-
-	"custom/arrow6": {
-		"format": "",
-		"tooltip": false
-	},
-
-	"custom/arrow7": {
-		"format": "",
-		"tooltip": false
-	},
-
-	"custom/arrow8": {
-		"format": "",
-		"tooltip": false
-	},
-
-	"custom/arrow9": {
-		"format": "",
-		"tooltip": false
-	},
-
-	"custom/arrow10": {
-		"format": "",
-		"tooltip": false
-	}
+    "format-time": "{H}:{M:02}",
+    "format": "{icon} {capacity}% ({time})",
+    "format-charging": " {capacity}% ({time})",
+    "format-charging-full": " {capacity}%",
+    "format-full": "{icon} {capacity}%",
+    "format-alt": "{icon} {power}W",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "tooltip": false
+  },
+  "clock#time": {
+    "interval": 1,
+    "format": "{:%H時%M分%S秒}",
+    "tooltip": false
+  },
+  "clock#date": {
+    "interval": 20,
+    "format": "{:%Y年%m月%d日}",
+    "tooltip": false
+    //"tooltip-format": "{:%e %B %Y}"
+  },
+  "cpu": {
+    "interval": 2,
+    "tooltip": false,
+    "format": " {usage}%",
+    "format-alt": " {load}",
+    "states": {
+      "warning": 70,
+      "critical": 90
+    }
+  },
+  "sway/language": {
+    "format": " {}",
+    "min-length": 5,
+    "on-click": "swaymsg 'input * xkb_switch_layout next'",
+    "tooltip": false
+  },
+  "memory": {
+    "interval": 2,
+    "format": " {used:0.1f}G/{total:0.1f}G",
+    "states": {
+      "warning": 70,
+      "critical": 90
+    },
+    "tooltip": false
+  },
+  "network": {
+    "interval": 5,
+    "format-wifi": " {essid} ({signalStrength}%)",
+    "format-ethernet": " {ifname}",
+    "format-disconnected": "No connection",
+    "format-alt": " {ipaddr}/{cidr}",
+    "tooltip": false
+  },
+  "hyprland/mode": {
+    "format": "{}",
+    "tooltip": false
+  },
+  "hyprland/window": {
+    "format": "{}",
+    "max-length": 60,
+    "tooltip": false
+  },
+  "hyprland/workspaces": {
+    "disable-scroll-wraparound": true,
+    "smooth-scrolling-threshold": 4,
+    "enable-bar-scroll": false,
+    "all-outputs": true,
+    // // Currently not working...    
+    //    "persistent-workspaces": {
+    //	"*": 5, // 5 workspaces by default on every monitor
+    //	"HDMI-A-1": 3 // but only three on HDMI-A-1
+    //    },
+    "format": "{name}",
+    "on-click": "activate"
+  },
+  "pulseaudio": {
+    // "scroll-step": 1, // %, can be a float
+    "format": "{volume}% {icon} {format_source}",
+    "format-bluetooth": "{volume}% {icon} {format_source}",
+    "format-bluetooth-muted": " {icon} {format_source}",
+    "format-muted": " {format_source}",
+    "format-source": "{volume}% ",
+    "format-source-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "on-click": "$HOME/.bin/ToggleMute.sh sink",
+    "on-click-right": "$HOME/.bin/ToggleMute.sh source"
+  },
+  "temperature": {
+    "critical-threshold": 90,
+    "interval": 5,
+    "format": "{icon} {temperatureC}°",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "tooltip": false
+  },
+  "tray": {
+    "icon-size": 18
+    //"spacing": 10
+  },
+  "custom/star": {
+    "format": "🟊"
+  },
+  "custom/arrow1": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrowL1": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrowLT": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrowL2": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrowR1": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrowRT": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrowR2": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrow2": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrow3": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrow4": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrow5": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrow6": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrow7": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrow8": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrow9": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrow10": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrow11": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrow21": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/arrow20": {
+    "format": "",
+    "tooltip": false
+  }
 }
-
 // vi:ft=jsonc
