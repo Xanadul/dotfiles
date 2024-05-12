@@ -88,6 +88,7 @@ return {
       })
       lspconfig.sqlls.setup({
         capabilities = capabilities,
+        filetypes = {"sql", "mysql"}
       })
       -- lspconfig.pylsp.setup({
       --   capabilities = capabilities,
