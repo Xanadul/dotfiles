@@ -10,5 +10,5 @@ return {
     -- FIX:  this needs fixing
     -- WARNING: Oh no...
   },
-  vim.keymap.set("n", "<leader>tt", "<CMD>TodoTelescope<CR>", {})
+  vim.keymap.set("n", "<leader>td", "<CMD>TodoTelescope<CR>", {})
 }

@@ -159,4 +159,10 @@ return {
   {
     "mfussenegger/nvim-jdtls"
   },
+  {
+    "https://github.com/folke/trouble.nvim",
+    config = function ()
+      vim.keymap.set("n", "<leader>tt", "<CMD>TroubleToggle<CR>", {})
+    end 
+  }
 }
