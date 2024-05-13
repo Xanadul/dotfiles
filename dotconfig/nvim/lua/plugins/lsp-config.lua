@@ -160,6 +160,7 @@ return {
     "mfussenegger/nvim-jdtls"
   },
   {
+    -- HSplit showing list of errors/warnings in code.
     "https://github.com/folke/trouble.nvim",
     config = function ()
       vim.keymap.set("n", "<leader>tt", "<CMD>TroubleToggle<CR>", {})

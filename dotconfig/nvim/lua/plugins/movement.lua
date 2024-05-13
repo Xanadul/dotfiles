@@ -1,5 +1,6 @@
 return {
   {
+    -- better movement using f/F, and also adding similar movement using s. Treesitter selections using S
     "https://github.com/folke/flash.nvim",
     event = "VeryLazy",
     ---@type Flash.Config
