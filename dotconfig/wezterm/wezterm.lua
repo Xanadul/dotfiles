@@ -10,10 +10,9 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
-config.enable_wayland = true -- false to prevent crashes on startup in Hyprland. However, leads to compositor stuttering in wayland
-
-config.color_scheme = 'Dracula'
+--config.color_scheme = 'Dracula'
 --config.color_scheme = "Dracula (Official)" config.color_scheme_dirs = { '$HOME/.config/wezterm/colors' }
+config.color_scheme = "tokyonight_moon" config.color_scheme_dirs = { '$HOME/Git/tokyonight.nvim/extras/wezterm' }
 --config.color_scheme = "Catppuccin Latte"
 
 config.window_close_confirmation = 'NeverPrompt'

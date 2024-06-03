@@ -2288,9 +2288,3 @@ map f5 load_config_file
 #: }}}
 
 #: }}}
-
-
-# BEGIN_KITTY_THEME
-# Tokyo Night Moon
-include current-theme.conf
-# END_KITTY_THEME

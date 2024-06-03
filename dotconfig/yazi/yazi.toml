@@ -5,11 +5,11 @@
 [manager]
 ratio          = [ 1, 4, 3 ]
 sort_by        = "natural"
-sort_sensitive = true
+sort_sensitive = false
 sort_reverse   = false
 sort_dir_first = true
 linemode       = "none"
-show_hidden    = true
+show_hidden    = false
 show_symlink   = true
 
 [preview]
@@ -106,7 +106,7 @@ previewers = [
 	{ mime = "image/vnd.djvu", exec = "noop" },
 	{ mime = "image/*",        exec = "image" },
 	# Video
-	{ mime = "video/*", exec = "video" },
+  #{ mime = "video/*", exec = "video" },
 	# PDF
 	{ mime = "application/pdf", exec = "pdf" },
 	# Archive
