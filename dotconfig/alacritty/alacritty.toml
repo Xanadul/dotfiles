@@ -173,8 +173,10 @@ mods = "Shift"
 history = 5000
 
 [cursor]
-style = { shape = "Block", blinking = "Never"}
+style = { shape = "Block", blinking = "On"}
 vi_mode_style = {shape = "Block"}
+blink_interval = 750
+unfocused_hollow = true
 
 [shell]
 program = "/usr/bin/zsh"

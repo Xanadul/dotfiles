@@ -244,7 +244,7 @@ keymap = [
 	{ on = [ "~" ], exec = "help", desc = "Open help" }
 ]
 [[manager.prepend_keymap]]
-on   = [ "<C-n>" ]
+on   = [ "<C-d>" ]
 exec = '''shell 'dragon-drop -x -T "$@"' --confirm'''
 [[manager.prepend_keymap]]
 on   = [ "M", "p" ]

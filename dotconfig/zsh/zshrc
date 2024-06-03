@@ -1,4 +1,6 @@
 zstyle :compinstall filename '/home/xanadul/.zshrc'
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' #Case insensitive completion
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 autoload -Uz compinit promptinit
 
 path+=('/home/xanadul/.bin')
@@ -13,8 +15,12 @@ path+=('/home/xanadul/.cabal/bin')
 path+=('/home/xanadul/.ghcup/bin')
 path+=('/home/xanadul/.dotnet/')
 
-export GEM_HOME="$(gem env user_gemhome)"
-path+=("$GEM_HOME/bin")
+export LBIN=~/.local/bin
+export SCREENSHOTS=~/Pictures/Screenshots
+export CS=~/Documents/ComputerScience/SS-2024
+
+#export GEM_HOME="$(gem env user_gemhome)"
+#path+=("$GEM_HOME/bin")
 
 ZSHCONFDIR="/home/xanadul/.config/zsh"
 function lf() { #yes, lf is a different program, but muscle memory dictates this name. Also, "ya" is a terrible combination on Colmak
@@ -43,9 +49,12 @@ alias emacst="emacs -t"
 alias yt-dlp-p='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --write-description --write-info-json --write-playlist-metafiles'
 
 # Download a playlist into ./playlist-name/ , extract its audio to wav using best quality and write metadata to files
-alias yt-dlp-p-a='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --extract-audio --audio-format wav --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
+alias yt-dlp-p-aw='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --extract-audio --audio-format wav --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
+alias yt-dlp-p-aw='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --extract-audio --audio-format flac --embed-thumbnail --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
 
-alias yt-dlp-a='yt-dlp -o "%(title)s" --extract-audio --audio-format wav --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
+alias yt-dlp-aw='yt-dlp -o "%(title)s" --extract-audio --audio-format wav --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
+alias yt-dlp-af='yt-dlp -o "%(title)s" --extract-audio --audio-format flac --audio-quality 0 --embed-thumbnail --write-description --write-info-json --write-playlist-metafiles'
+
 
 alias bcrypt-hash='f() {htpasswd -nbBC 10 $1 $2};f'
 

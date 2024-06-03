@@ -15,15 +15,15 @@
     "custom/arrowRT",
     "custom/star"
   ],
-  "modules-center": [
-    "custom/star",
-    //"custom/arrow20",
-    "custom/arrowLT",
-    "hyprland/window",
-    //"custom/arrow21"
-    "custom/arrowRT",
-    "custom/star"
-  ],
+  // "modules-center": [
+    // "custom/star",
+    // //"custom/arrow20",
+    // "custom/arrowLT",
+    // "hyprland/window",
+    // //"custom/arrow21"
+    // "custom/arrowRT",
+    // "custom/star"
+  // ],
   "modules-right": [
     "custom/star",
     //"custom/arrow9",
