@@ -7,8 +7,8 @@ vim.g.mapleader = " "
 -- Tab / Indentation
 opt.tabstop = 2
 opt.softtabstop = 2
-opt.shiftwidth = 2
-opt.expandtab = true
+opt.shiftwidth = 2    -- use << or >> to inc/decrease indent
+opt.expandtab = false -- true enables spaces for indent
 opt.smartindent = true
 opt.wrap = false
 
@@ -30,9 +30,9 @@ opt.signcolumn = "yes"
 opt.guicursor = ""
 opt.nu = true
 opt.scrolloff = 8
-opt.completeopt = "menuone,noinsert,noselect"
+opt.completeopt = { "menuone", "noinsert", "noselect" }
 
--- Behaviour 
+-- Behaviour
 opt.swapfile = false
 opt.backup = false
 opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
@@ -62,8 +62,8 @@ keyset("n", "<c-Right>", ":wincmd l<CR>")
 
 vim.wo.number = true -- Relative line numbers
 
-keyset("v", "<S-Down>", ":m '>+1<CR>gv=gv", { desc = "Move Line Down" })
-keyset("v", "<S-Up>", ":m '<-2<CR>gv=gv", { desc = "Move Line Up" })
+keyset("v", "<S-Down>", ":m '>+1<CR>gv=gv", { desc = "Move Line Down", silent = true })
+keyset("v", "<S-Up>", ":m '<-2<CR>gv=gv", { desc = "Move Line Up", silent = true })
 keyset("n", "<leader>o", "o<esc>", { desc = "Newline on top" })
 keyset("n", "<leader>O", "O<esc>", { desc = "Newline below" })
 
@@ -74,11 +74,11 @@ keyset("n", "n", "nzzzv")
 keyset("n", "N", "Nzzzv")
 
 -- greatest remap ever
-keyset("x", "<leader>p", [["dP]], {desc = "Cut to Void"})
+keyset("x", "<leader>p", [["dP]], { desc = "Cut to Void" })
 
 -- next greatest remap ever : asbjornHaland
 keyset({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank to Clipboard" })
-keyset("n", "<leader>Y", [["+Y]], {desc = "Some kinda Yank"})
+keyset("n", "<leader>Y", [["+Y]], { desc = "Some kinda Yank" })
 
 keyset({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete to void" })
 
@@ -94,10 +94,10 @@ keyset("n", "Q", "<nop>")
 --keyset("n", "<leader>j", "<cmd>lprev<CR>zz")
 
 keyset(
-  "n",
-  "<leader>s",
-  [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-  { desc = "Replace Word in Doc" }
+	"n",
+	"<leader>s",
+	[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+	{ desc = "Replace Word in Doc" }
 )
 keyset("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "cmod +x" })
 

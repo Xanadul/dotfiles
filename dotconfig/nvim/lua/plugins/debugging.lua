@@ -3,6 +3,7 @@ return {
 	dependencies = {
 		"leoluz/nvim-dap-go",
 		"rcarriga/nvim-dap-ui",
+		"nvim-neotest/nvim-nio",
     "tpope/vim-fugitive",
 	},
 	config = function()
