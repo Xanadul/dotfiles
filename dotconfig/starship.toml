@@ -31,7 +31,7 @@ $line_break\
 $status\
 $character"""
 
-palette = 'tokionight'
+palette = 'myred'
 
 [palettes.dracula]
 color_fg0 = '#f8f8f2'
@@ -46,6 +46,13 @@ color_fg1 = '#e9e9ed'
 color_bg1 = '#2d3f76'
 color_bg2 = '#848cb5'
 color_red = '#9A3D2F'
+
+[palettes.myred]
+color_fg0 = '#e9e9ed'
+color_fg1 = '#e9e9ed'
+color_bg1 = '#a01f00'
+color_bg2 = '#d63913'
+color_red = '#FFFF2F'
 
 [palettes.elia]
 color_fg0 = '#FFFBFC'
@@ -179,7 +186,7 @@ format = '[[ $symbol( $context) ](fg:#83a598 bg:color_bg3)]($style)'
 
 [time]
 disabled = false
-time_format = "%R"
+time_format = "%R:%S"
 style = "bg:color_bg2"
 format = '[[  $time ](fg:color_fg0 bg:color_bg2)]($style)'
 

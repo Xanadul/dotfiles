@@ -12,8 +12,8 @@
     "custom/arrowR1",
     "hyprland/workspaces",
     //"custom/arrow10"
-    "custom/arrowRT",
-    "custom/star"
+    "custom/arrowRT"
+    // "custom/star"
   ],
   // "modules-center": [
     // "custom/star",
@@ -25,7 +25,7 @@
     // "custom/star"
   // ],
   "modules-right": [
-    "custom/star",
+    // "custom/star",
     //"custom/arrow9",
     "custom/arrowLT",
     "pulseaudio",

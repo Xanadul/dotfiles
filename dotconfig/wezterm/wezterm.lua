@@ -10,9 +10,11 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
+config.enable_wayland = false
 --config.color_scheme = 'Dracula'
 --config.color_scheme = "Dracula (Official)" config.color_scheme_dirs = { '$HOME/.config/wezterm/colors' }
-config.color_scheme = "tokyonight_moon" config.color_scheme_dirs = { '$HOME/Git/tokyonight.nvim/extras/wezterm' }
+-- config.color_scheme = "tokyonight_moon" config.color_scheme_dirs = { '$HOME/Git/tokyonight.nvim/extras/wezterm' }
+config.color_scheme = "monokai"
 --config.color_scheme = "Catppuccin Latte"
 
 config.window_close_confirmation = 'NeverPrompt'
@@ -26,12 +28,12 @@ config.tab_max_width = 35
 config.hide_mouse_cursor_when_typing = false
 
 
---config.window_background_opacity = 0.85
+config.window_background_opacity = 0.60
 config.text_background_opacity = 1
 
 config.window_padding = {
-  left = 2,
-  right = 2,
+  left = 0,
+  right = 0,
   top = 0,
   bottom = 0,
 }
