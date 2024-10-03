@@ -1,8 +1,7 @@
 return {
-  {
-		'echasnovski/mini.nvim',
-		config = function ()
-			      -- Better Around/Inside textobjects
+	"echasnovski/mini.ai",
+	    config = function()
+      -- Better Around/Inside textobjects
       --
       -- Examples:
       --  - va)  - [V]isually select [A]round [)]paren
@@ -34,6 +33,5 @@ return {
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
-		end
-  }
+    end,
 }

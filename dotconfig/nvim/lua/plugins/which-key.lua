@@ -1,16 +1,23 @@
 return {
-  "folke/which-key.nvim",
-  --event = "VeryLazy",
-  init = function()
-    vim.o.timeout = true
-    vim.o.timeoutlen = 300
-    local wk = require("which-key")
-    wk.register({
-      t = {
-        name = "Toggle",
-      }
-    }, {prefix = "<leader>"})
-  end,
-  opts = {
-  },
+	-- Useful plugin to show you pending keybinds.
+	'folke/which-key.nvim',
+	event = 'VimEnter',   -- Sets the loading event to 'VimEnter'
+	config = function()   -- This is the function that runs, AFTER loading
+		require('which-key').setup()
+
+		-- Document existing key chains
+		require('which-key').add {
+			{ '<leader>c', group = '[C]ode' },
+			{'<leader>cc', group = '[Code]/[C]alls'},
+			{'<leader>f', group = '[F]ind'},
+			{ '<leader>b', group = '[B]uffers'},
+{ '<leader>d', group = '[D]ocument' },
+			{ '<leader>r', group = '[R]ename' },
+			{ '<leader>s', group = '[S]earch' },
+			{ '<leader>w', group = '[W]orkspace' },
+			{ '<leader>t', group = '[T]oggle' },
+			{ '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+		}
+	end,
+
 }

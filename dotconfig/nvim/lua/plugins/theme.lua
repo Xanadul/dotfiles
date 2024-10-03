@@ -29,6 +29,22 @@ local catppuccinLatte = {
   end
 }
 
+local highlite = {
+	"Iron-E/nvim-highlite",
+	config = function(_, opts)
+      -- OPTIONAL: setup the plugin. See "Configuration" for information
+      require('highlite').setup {generator = {plugins = {vim = false}, syntax = false}}
+
+      -- or one of the alternate colorschemes (see the "Built-in Colorschemes" section)
+      vim.api.nvim_command 'colorscheme highlite-molokai'
+			vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+			vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+    end,
+    lazy = false,
+    priority = math.huge,
+    version = '^4.0.0',
+}
+
 local tokyonight = {
   "folke/tokyonight.nvim",
   lazy = false,
@@ -41,7 +57,9 @@ local tokyonight = {
       transparent = true,
       vim.cmd.colorscheme "tokyonight-moon",
     })
+		vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+		vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
   end
 }
 
-return { tokyonight }
+return { highlite }

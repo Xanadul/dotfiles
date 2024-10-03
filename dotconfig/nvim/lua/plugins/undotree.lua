@@ -7,12 +7,7 @@ return {
 --    { "<leader>u", "<cmd>lua require('undotree').toggle()<cr>" },
 --  },
   'mbbill/undotree',
-  config = function ()
-    local wk = require("which-key")
-    wk.register({
-      t = {
-        u = {vim.cmd.UndotreeToggle, "Undotree"}
-      }
-    }, {prefix = "<leader>"})
-  end
+	config= function()
+		vim.keymap.set('n', '<leader>tu', vim.cmd.UndotreeToggle, { desc = '[T]oggle [U]ndotree ' })
+	end
 }
