@@ -1,1 +1,0 @@
-/home/xanadul/.config/emacs/init.el
