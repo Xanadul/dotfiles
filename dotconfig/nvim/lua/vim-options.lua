@@ -31,17 +31,12 @@ opt.colorcolumn = "160"
 opt.signcolumn = "yes"
 opt.guicursor = ""
 opt.nu = true
-<<<<<<< HEAD
 opt.scrolloff = 10
 opt.completeopt = { "menuone", "noinsert", "noselect" }
 opt.list = true
 opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 opt.inccommand = 'split'
 opt.cursorline = true
-=======
-opt.scrolloff = 8
-opt.completeopt = { "menuone", "noinsert", "noselect" }
->>>>>>> 17f6aff60acca21940ff9dfc24e61a06da9d6d64
 
 -- Behaviour
 opt.swapfile = false
@@ -76,11 +71,8 @@ keyset("n", "<c-Right>", ":wincmd l<CR>")
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 17f6aff60acca21940ff9dfc24e61a06da9d6d64
 keyset("v", "<S-Down>", ":m '>+1<CR>gv=gv", { desc = "Move Line Down", silent = true })
 keyset("v", "<S-Up>", ":m '<-2<CR>gv=gv", { desc = "Move Line Up", silent = true })
 keyset("n", "<leader>o", "o<esc>", { desc = "Newline on top" })
@@ -97,7 +89,6 @@ keyset("x", "<leader>p", [["dP]], { desc = "Cut to Void" })
 
 -- next greatest remap ever : asbjornHaland
 keyset({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank to Clipboard" })
-<<<<<<< HEAD
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
@@ -110,8 +101,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
-=======
->>>>>>> 17f6aff60acca21940ff9dfc24e61a06da9d6d64
 keyset("n", "<leader>Y", [["+Y]], { desc = "Some kinda Yank" })
 
 keyset({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete to void" })
