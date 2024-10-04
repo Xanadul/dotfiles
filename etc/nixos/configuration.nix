@@ -1,380 +1,403 @@
-{ inputs, config, pkgs, ... }:
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
+
+{ config, pkgs, ... }:
 
 {
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
   imports =
-    [ # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix
+    [
+      # Include the results of the hardware scan.
+      ./hardware-configuration.nix
     ];
 
-boot.loader.systemd-boot.enable = true;
-boot.loader.efi.canTouchEfiVariables = true;
+  # Bootloader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  # ZFS
+  boot.supportedFilesystems = [ "zfs" ];
+  boot.zfs.forceImportRoot = false;
+  networking.hostId = "9358235d"; #Apparently, zfs needs a hostId...
+  boot.zfs.extraPools = [ "Yukino" ];
 
-time.timeZone = "Europe/Berlin";
+  networking.hostName = "hanako-nixos"; # Define your hostname.
+	
+  networking.extraHosts =
+    ''
+      100.92.39.66 hanako.ts
+    '';
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-i18n.defaultLocale = "en_GB.UTF-8";
+  # Configure network proxy if necessary
+  # networking.proxy.default = "http://user:password@proxy:port/";
+  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-i18n.extraLocaleSettings = {
-  LC_ADDRESS = "en_GB.UTF-8";
-  LC_IDENTIFICATION = "de_DE.UTF-8";
-  LC_MEASUREMENT = "de_DE.UTF-8";
-  LC_MONETARY = "de_DE.UTF-8";
-  LC_NAME = "de_DE.UTF-8";
-  LC_NUMERIC = "de_DE.UTF-8";
-  LC_PAPER = "de_DE.UTF-8";
-  LC_TELEPHONE = "de_DE.UTF-8";
-  LC_TIME = "de_DE.UTF-8";
-};
+  # Enable networking
+  networking.networkmanager.enable = true;
+  networking.firewall = {
+    enable = false;
+    allowPing = true;
+    allowedTCPPorts = [ 53317 ];
+    allowedUDPPortRanges = [
+      { from = 4000; to = 4007; }
+			{ from = 53317; to = 53317; }
+    ];
+  };
 
-# Configure console keymap
-console.keyMap = "de";
+	#Printing
+	services.printing.enable = true;
+	services.printing.drivers = [pkgs.hplipWithPlugin];
+	# hardware.printers = {
+	# 	ensurePrinters = [
+	# 		{
+	# 			name = "HP Officejet Pro 7720 Series";
+	# 			location = "Home";
+	# 			deviceUri = "hp:/net/OfficeJet_Pro_7720_series?ip=192.168.1.80";
+	# 			model = "OfficeJet_Pro_7720_series";
+	# 		}
+	# 	];
+	# };
 
-boot.supportedFilesystems = [ "zfs" ];
-boot.zfs.forceImportRoot = false;
-networking.hostId = "f81a04b9";
-#for zfs-native mountpoints:  Properly imports Yukino, and should theoretically mount, but doesn't mount
-#boot.zfs.extraPools = [ "Yukino" ];
-#systemd.services.zfs-mount.enable = false;
+	# Graphics driver
 
-#for zfs-legacy mountpoints (like fstab):
-#fileSystems."/mnt/Yukino" = {
-#  device = "Yukino";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data" = {
-#  device = "Yukino/Data";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/Backups" = {
-#  device = "Yukino/Data/Backups";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/Media" = {
-#  device = "Yukino/Data/Media";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/Media/Anime" = {
-#  device = "Yukino/Data/Media/Anime";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/Media/Anime/Ecchi" = {
-#  device = "Yukino";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/Media/Appstuff" = {
-#  device = "Yukino/Data/Media/Appstuff";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/Media/Documents" = {
-#  device = "Yukino/Data/Media/Documents";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/Media/Downloads" = {
-#  device = "Yukino/Data/Media/Downloads";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/Media/Music" = {
-#  device = "Yukino/Data/Media/Music";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/Media/NSFW" = {
-#  device = "Yukino/Data/Media/NSFW";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/Media/Pictures" = {
-#  device = "Yukino/Data/Media/Pictures";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/Media/TV" = {
-#  device = "Yukino/Data/Media/TV";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/Nextcloud" = {
-#  device = "Yukino/Data/Nextcloud";
-#  fsType = "zfs";
-#};
-#fileSystems."/mnt/Yukino/Data/University" = {
-#  device = "Yukino/Data/University";
-#  fsType = "zfs";
-#};
+  # Tailscale
+  services.tailscale.enable = true;
 
-# Enable networking
-networking.networkmanager.enable = true;
-# networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  virtualisation.docker.enable = true;
+	virtualisation.libvirtd.enable = true;
+	programs.virt-manager.enable = true;
 
-networking.hostName = "nixos"; # Define your hostname.
-networking.extraHosts =
-  ''
-    100.71.109.130 hanako.ts
-  '';
-
-# Enable the OpenSSH daemon.
-# services.openssh.enable = true;
-services.tailscale.enable = true;
-
-#Samba
-services.samba-wsdd.enable = true; # make shares visible for windows 10 clients
-services.samba = {
-  enable = true;
-  securityType = "user";
-  extraConfig = ''
-    workgroup = WORKGROUP
-    server string = smbnix
-    netbios name = smbnix
-    security = user 
-    #use sendfile = yes
-    #max protocol = smb2
-    # note: localhost is the ipv6 localhost ::1
-    hosts allow = 192.168.1. 127.0.0.1 localhost
-    hosts deny = 0.0.0.0/0
-    guest account = nobody
-    map to guest = bad user
-  '';
-  shares = {
-    anime = {
-      path = "/mnt/Yukino/Data/Media/Anime";
-      browseable = "yes";
-      "read only" = "yes";
-      "guest ok" = "no";
-      "valid users" = "xanadul";
+  services.samba = {
+    enable = true;
+    securityType = "user";
+    openFirewall = true;
+    extraConfig = ''
+      			workgroup = WORKGROUP
+      		'';
+    shares = {
+      Anime = {
+        path = "/mnt/Yukino/Data/Media/Anime";
+        browsable = "yes";
+        "read only" = "yes";
+        "guest ok" = "yes";
+      };
     };
   };
-};
+  services.samba-wsdd = { # Samba share discovery
+    enable = true;
+    openFirewall = true;
+  };
 
-networking.firewall.enable = true;
+  hardware.acpilight.enable = true;
+  # Set your time zone.
+  time.timeZone = "Europe/Berlin";
 
-networking.firewall.allowedTCPPorts = [
-  3080 #Git/Gogs
-  445 #SMB-Files
-  5357 # wsdd
-  32774 # nginx.legion774.net
-];
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_GB.UTF-8";
 
-networking.firewall.allowedUDPPorts = [ 
-  41641
-  3702 # wsdd
-];
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "de_DE.UTF-8";
+    LC_IDENTIFICATION = "de_DE.UTF-8";
+    LC_MEASUREMENT = "de_DE.UTF-8";
+    LC_MONETARY = "de_DE.UTF-8";
+    LC_NAME = "de_DE.UTF-8";
+    LC_NUMERIC = "de_DE.UTF-8";
+    LC_PAPER = "de_DE.UTF-8";
+    LC_TELEPHONE = "de_DE.UTF-8";
+    LC_TIME = "ja_JP.UTF-8";
+  };
 
-networking.firewall.checkReversePath = "loose";
+  # Configure keymap in X11
+  services.xserver.xkb = {
+    layout = "de";
+    variant = "";
+  };
 
-# Enable sound with pipewire.
-sound.enable = true;
-hardware.pulseaudio.enable = false;
-security.rtkit.enable = true;
-services.pipewire = {
+  # Configure console keymap
+  console.keyMap = "de";
+
+	# ADB/Fastboot
+	programs.adb.enable = true;
+
+  # Desktops
+	services.desktopManager.plasma6.enable = true;
+	services.desktopManager.plasma6.notoPackage = pkgs.noto-fonts;
+	programs.kdeconnect.enable = true;
+  programs.hyprland = {
+		enable = true;
+		xwayland.enable = true;
+	};
+	# Optional, hint electron apps to use wayland
+	environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
+  xdg.portal.enable = true;
+  services.displayManager = {
+		enable = true;
+    # gdm = {
+    #   enable = true;
+    #   banner = "Foo Bar";
+    #   wayland = true;
+    # };
+    sddm = {
+    	enable = true;
+    	wayland.enable = true;
+    	theme = "arch";
+    };
+  };
+
+	# Theming
+	qt.platformTheme = "qt5ct";
+
+  #Audio
+  services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
+		extraConfig.pipewire."92-low-latency" = {
+			"context.properties" = {
+				"default.clock.allowed-rates" = [ 44100 48000 88200 96000 ];
+				"default.clock.quantum" = 128;
+				"default.clock.min-quantum" = 64;
+				"default.clock.max-quantum" = 1024;
+			};
+		};
+  };
+	services.pipewire.extraConfig.pipewire-pulse."92-low-latency" = {
+		context.modules = [
+			{
+				name = "libpipewire-module-protocol-pulse";
+				args = {
+					pulse.min.req = "64/48000";
+					pulse.default.req = "128/48000";
+					pulse.max.req = "1024/48000";
+					pulse.min.quantum = "64/48000";
+					pulse.max.quantum = "1024/48000";
+				};
+			}
+		];
+		stream.properties = {
+			node.latency = "128/48000";
+			resample.quality = 1;
+		};
+	};
+  # Zsh
+  programs.zsh = {
+    enable = true;
   };
 
-# Enable the X11 windowing system.
-#services.xserver.enable = true;
-
-# Enable the KDE Plasma Desktop Environment.
-#services.xserver.displayManager.sddm.enable = true;
-#services.xserver.desktopManager.plasma5.enable = true;
-
-#programs.sway.enable = true;
-# Configure keymap in X11
-services.xserver = {
-  layout = "de";
-  xkbVariant = "";
-};
-
-programs.hyprland = {
-  enable = true;
-};
-programs.waybar = {
-  enable = true;
-  package = pkgs.waybar.overrideAttrs (oldAttrs: {
-    mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-  });
-};
-
-# Enable touchpad support (enabled default in most desktopManager).
-# services.xserver.libinput.enable = true;
+  programs.neovim.enable = true;
+  programs.neovim.defaultEditor = true;
 
 
-xdg.portal.enable = true;
-
-programs.steam = {
-  enable = true;
-  remotePlay.openFirewall = false; # Open ports in the firewall for Steam Remote Play
-  dedicatedServer.openFirewall = false; # Opens ports in the firewall for Source Dedicated Server
-};
-nixpkgs.overlays = [
-    (final: prev: {
-      steam = prev.steam.override ({ extraPkgs ? pkgs': [], ... }: {
-        extraPkgs = pkgs': (extraPkgs pkgs') ++ (with pkgs'; [
-          libgdiplus
-        ]);
-      });
-    })
+  fonts.packages = with pkgs; [
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-emoji
+    liberation_ttf
+    fira-code
+    fira-code-symbols
+    mplus-outline-fonts.githubRelease
+    dina-font
+    proggyfonts
+    jetbrains-mono
+    nerdfonts
   ];
-programs.java.enable = true;
 
-# Enable CUPS to print documents.
-services.printing.enable = true;
+  services.flatpak.enable = true;
 
-services.flatpak.enable = true;
+	programs.steam = {
+		enable = true;
+		remotePlay.openFirewall = true;
+		localNetworkGameTransfers.openFirewall = true;
+		gamescopeSession.enable = true;
+	};
 
-programs.git = {
-  enable = true;
-  #userName = "xanadul";
-  #userEmail = "xanadul@protonmail.com";
-};
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+	users.users.stu216622 = {
+		isNormalUser = true;
+		description = "Stu216622";
+		extraGroups = ["video" "wheel"];
+		packages = with pkgs; [
+			wezterm
+		];
+	};
+	users.users.xanadul = {
+			isNormalUser = true;
+			description = "xanadul";
+			extraGroups = [ "networkmanager" "wheel" "video" "docker" "adbusers"];
+			packages = with pkgs; [
 
+			# Media
+			zathura
+			mpv
+			obs-studio
+			ffmpeg
+			yt-dlp
+			krita
+			blender
+			k3b
+			nomacs
 
+			# DE Tools
+			xdragon #Though its not just for X
+			kdePackages.plasma-systemmonitor
+			waybar
+			dolphin
+			waybar
+			wl-clipboard
+			wtype
+			slurp
+			grim
+			rofi-wayland
+			pinentry
+			pinentry-qt
+			pavucontrol
+			cliphist
+			lxde.lxsession
 
-programs.zsh.enable = true;
-#users.defaultUserShell = pkgs.zsh;
+			# CLI
+			starship
+			yazi
+			eza
+			dunst
+			mako
+			unzip
+			unrar
+			pass
+			gopass
+			chafa #Terminal image viewer
+			bat
+			exiftool
+			tg #Telegram TUI https://github.com/paul-nameless/tg
+			fd
+			brightnessctl
+			swww
+			fastfetch
+			unimatrix
+			nvtopPackages.full
 
-# Allow unfree packages
-nixpkgs.config.allowUnfree = true;
+			# Theming
+			dracula-theme
+			themix-gui
+			xfce.xfce4-settings
+			lxappearance
 
-# List packages installed in system profile. To search, run:
-# $ nix search wget
-environment.systemPackages = with pkgs; [
-  bash
-  libsForQt5.qtstyleplugin-kvantum
-  libsForQt5.qt5ct
-  dracula-theme
-  vim
-  lsd
-  lf
-  ydotool
-  neovim
-  wget
-  btop
-  killall
-  shadow
+			# Coding
+			coreutils
+			stylua
+			python3
+			cargo
+			p7zip
+			lesspipe
+			emacs
+			libdbusmenu-gtk3 #NOTE: Needed?
+			dart-sass
+			#Dart and flutter in home.nix, because darts lsp server is bundled with dart
+			nodejs
+			nodePackages.npm
 
-  
+			# Web
+			firefox
+			qutebrowser
+			remmina
+			vieb
+			rustdesk
+			rustdesk-flutter
 
-  rlwrap
-  mpvc
+			# GUI
+			localsend
+			telegram-desktop
+			lutris
+			thunderbird
+			qalculate-qt
+			qalculate-gtk
+			xournalpp
+			libreoffice-qt6
 
-  git
-  emacs
-  ripgrep
-  coreutils
-  fd
-  clang
+			# gaming
+			protonup-qt
+			prismlauncher
 
-  vieb
-  nodejs_20
-  libqalculate
-  
-  zsh
-  gnupg
-  pinentry-curses
-  pinentry
-  pinentry-rofi
-  pinentry-qt
-  tailscale
+			# Other
+			matugen
+			android-tools
+    ];
+  };
 
-  dolphin
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
 
-  steam
-  steam-run # needed for steam games 
-  #(steam.override { withJava = true; })
-
-  emacs-all-the-icons-fonts
-
-  docker
-  docker-compose
-  crun
-];
-
-# Define a user account. Don't forget to set a password with ‘passwd’.
-users.users.xanadul = {
-  isNormalUser = true;
-  description = "xanadul";
-  extraGroups = [ "networkmanager" "wheel"];
-
-packages = with pkgs; [
-    qutebrowser
-    firefox
-    kate
-    libnotify
-    dunst
-  rofi-wayland-unwrapped
-  rofi-calc
-  rofi-emoji
-  wtype
-  mpv
-
-
-    tessen
-    wl-clipboard
-    cliphist
-    wf-recorder
-    pass-wayland
-    slurp
-    grim
-    swaybg
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
+  environment.systemPackages = with pkgs; [
+		libsForQt5.partitionmanager
+		kdePackages.qtstyleplugin-kvantum #The actual kvantum GUI
+		libsForQt5.qtstyleplugin-kvantum
+		libsForQt5.qt5ct
+		gparted
+		lightly-boehs
+		protonvpn-gui
+		mcelog #Logging util for faulty hardware
+		networkmanager-fortisslvpn
+    acpilight
+		btrfs-progs
     pamixer
-    themechanger
-    alacritty
-    wezterm
-    kitty
-    lxde.lxsession
-    jetbrains-mono
     jq
-    cmake
-    gnumake
+    vim
+    kitty
+    wezterm
+    fzf
+    git
     gcc
-    python3
-    telegram-desktop
-    protonup-qt
-    lutris
-    thunderbird
-
-    emacsPackages.lsp-dart
-    emacsPackages.dart-server
-    emacsPackages.dart-mode
-    emacsPackages.flutter
-    emacsPackages.lsp-pyright
-
-    flutter
-    dart
-
-
-    jetbrains-mono
-    ubuntu_font_family
-    emacsPackages.vterm
-
-    minetest #FOSS engine for Voxel-Games
-
-    #distrobox #I admit, it's great to use when NixOS is confusing me
+    cmake
+    zig
+    killall
+		hyprland
+		swaybg
+		hyprpaper
+		hyprlock
+    xdg-desktop-portal-hyprland
+    hyprland-protocols
+    hyprlandPlugins.hy3
+		fastfetch
+		btop
+		libqalculate
+		distrobox
+		tree
+		tre-command
+		tldr
+		bat
+		moar
+		nix-index
   ];
-};
 
-# Some programs need SUID wrappers, can be configured further or are
-# started in user sessions.
-# programs.mtr.enable = true;
-programs.gnupg.agent = {
-  enable = true;
-  pinentryFlavor = "qt";
-  enableSSHSupport = true;
-};
-services.pcscd.enable = true;
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+  # programs.mtr.enable = true;
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryPackage = pkgs.pinentry-qt;
+    enableSSHSupport = true;
+  };
 
-virtualisation.docker.enable = true;
-#virtualisation.docker.defaultNetwork.settings.dns_enabled = true;
+  # List services that you want to enable:
 
-#virtualisation.podman = {
-#  enable = true;
-#  #dockerCompat = true;
-#  defaultNetwork.settings.dns_enabled = true;
-#};
+  # Enable the OpenSSH daemon.
+  # services.openssh.enable = true;
 
-system.stateVersion = "23.05";
+  # Open ports in the firewall.
+  # networking.firewall.allowedTCPPorts = [ ... ];
+  # networking.firewall.allowedUDPPorts = [ ... ];
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
+
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "24.05"; # Did you read the comment?
+
 }
