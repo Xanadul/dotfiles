@@ -1,0 +1,101 @@
+" Options
+set adblocker=update
+set devtoolsposition=split
+set downloadmethod=ask
+set followchars=custom:tnseriao
+set guifontsize=16
+set mapsuggestposition=bottomleft
+set permissioncamera=ask
+set permissiondisplaycapture=ask
+set permissionmediadevices=allow
+set permissionmicrophone=ask
+set permissionpersistentstorage=allow
+set redirecttohttp
+set restoretabs=all
+set suspendonrestore=regular
+set tabclosefocus=left
+set tabreopenposition=right
+set useragent="%chrome electron"
+set windowtitle="%title - %app"
+set mousenewtabswitch=false
+colorscheme verticaltabs
+colorscheme verticaltabs
+set searchengine=["https://search.brave.com/search?q=%s&source=web"]
+" Mappings
+nmapclear!
+nmap wi <:devtools>
+nmap Sh <:history>
+nmap Ss <:help>
+nmap g0 <:b 0>
+nmap g$ <:b -1>
+nmap <C-Left> <toLeftSplitWindow>
+nmap <C-Down> <toBottomSplitWindow>
+nmap <C-Up> <toTopSplitWindow>
+nmap <C-Right> <toRightSplitWindow>
+nmap <Tab-Up> <previousTab>
+nmap <Tab-Down> <nextTab>
+nmap <S-Up> <moveTabBackward>
+nmap <S-Down> <moveTabForward>
+nmap <S-Left> <backInHistory>
+nmap <S-Right> <forwardInHistory>
+nmap D <:close>
+nmap u <reopenTab>
+nmap = <zoomReset>
+nmap + <zoomIn>
+nmap - <zoomOut>
+nmap <F1> <:help>
+nmap o <toExploreMode><BS>
+nmap / <toSearchMode><BS>
+nmap n <nextSearchMatch>
+nmap N <previousSearchMatch>
+nmap gg <scrollTop>
+nmap G <scrollBottom>
+nmap O <:tabnew><toExploreMode>
+nmap <Space>n <:tabnew><toExploreMode>
+nmap <Space>t <:tabnew><toExploreMode>
+nmap : <toCommandMode>
+nmap f <startFollowCurrentTab>
+nmap FF <startFollowNewTab>
+nmap Fh <startFollowNewSplit>
+nmap Fh <startFollowNewVerSplit>
+nmap <Space>h <:split>
+nmap <Space>v <:vsplit>
+nmap <Space>bb <toCommandMode>buffer<Space>
+nmap pp <openFromClipboard>
+nmap Pp <:tabnew><openFromClipboard>
+nmap yy <pageToClipboard>
+nmap r <refreshTab>
+nmap R <refreshTabWithoutCache>
+
+imap <C-e> <editWithVim>
+
+cmap <A-f> <C-Right>
+cmap <A-b> <C-Left>
+cmap <A-d> <C-S-Right><BS>
+cmap <A-BS> <C-S-Left><BS>
+cmap <C-?> <Del>
+cmap <C-h> <BS>
+cmap <C-b> <Left>
+cmap <C-f> <Right>
+cmap <C-k> <S-End><BS>
+cmap <C-u> <S-Home><BS>
+cmap <C-w> <C-S-Left><BS>
+cmap <C-e> <editWithVim>
+
+emap <C-e> <editWithVim>
+emap <C-Tab> <nextSuggestionSection>
+emap <C-S-Tab> <prevSuggestionSection>
+
+smap <C-e> <editWithVim>
+
+pmap c <toNormalMode>
+pmap e <p.moveFastRight>
+pmap H <p.scrollLeft>
+pmap L <p.scrollRight>
+pmap <Space> <p.startVisualSelect>
+
+vmap v <p.start>
+vmap <CR> <p.copyText>
+vmap <C-Space> <toNormalMode><p.start><p.startVisualSelect>
+
+" vim: ft=vim
