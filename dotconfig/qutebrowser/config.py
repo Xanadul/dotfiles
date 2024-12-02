@@ -78,6 +78,7 @@ config.set('content.javascript.enabled', True, 'chrome-devtools://*')
 config.set('content.javascript.enabled', True, 'devtools://*')
 config.set('content.javascript.enabled', True, 'chrome://*/*')
 config.set('content.javascript.enabled', True, 'qute://*/*')
+config.set('content.javascript.enabled', True, 'https://discord.com/*')
 
 config.set('content.javascript.enabled', True, 'https://192.168.1.2/3003')
 
@@ -189,16 +190,18 @@ config.unbind('tSh')
 config.unbind('tSu')
 config.unbind('tSH')
 
-config.bind('<Space><Space>', 'cmd-set-text -s :') #open in this tab
-config.bind('<Space>.', 'cmd-set-text -s :open ') #open in this tab
-config.bind('<Space>t', 'cmd-set-text -s :open -t') #open in new tab
-config.bind('<Space>n', 'cmd-set-text -s :open -t') #open in new tab
-config.bind('<Control+Down>', 'tab-next') #open in new tab
-config.bind('<Control+Up>', 'tab-prev') #open in new tab
+config.bind('<Space><Space>', 'cmd-set-text -s :')
+config.bind('<Space>.', 'cmd-set-text -s :open ')
+config.bind('<Space>t', 'cmd-set-text -s :open -t')
+config.bind('<Space>n', 'cmd-set-text -s :open -t')
+config.bind('<Control+Down>', 'tab-next')
+config.bind('<Control+Up>', 'tab-prev')
+config.bind('<Shift+Down>', 'tab-move +') 
+config.bind('<Shift+Up>', 'tab-move -') 
 
 config.bind('<Space>fm', 'hint links spawn umpv {hint-url}')
 config.bind('<Space>fM', 'hint links spawn mpv {hint-url}')
-config.bind('<Space>fy', 'hint links spawn alacritty -e yt-dlp {hint-url}')
+config.bind('<Space>fy', 'hint links spawn wl-copy "{hint-url}"')
 
 config.bind('<Space>ts', 'config-cycle statusbar.show never always')
 config.bind('<Space>tt', 'config-cycle tabs.show never always')

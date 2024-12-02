@@ -62,4 +62,4 @@ local tokyonight = {
   end
 }
 
-return { highlite }
+return { dracula }

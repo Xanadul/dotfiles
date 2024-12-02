@@ -5,4 +5,6 @@
 //@theme "/home/xanadul/.config/rofi/themes/EliaStellaria.rasi"
 //@theme "/home/xanadul/.config/rofi/themes/Arc-Xanadul.rasi"
 
-@theme "/home/xanadul/.config/rofi/themes/Elianoire.rasi"
+//@theme "/home/xanadul/.config/rofi/themes/Elianoire.rasi"
+
+@theme "/home/xanadul/.config/rofi/themes/Arc-Xanadul.rasi"

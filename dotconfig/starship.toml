@@ -31,7 +31,7 @@ $line_break\
 $status\
 $character"""
 
-palette = 'myred'
+palette = 'dracula'
 
 [palettes.dracula]
 color_fg0 = '#f8f8f2'

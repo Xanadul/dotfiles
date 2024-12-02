@@ -35,28 +35,35 @@
   # Enable networking
   networking.networkmanager.enable = true;
   networking.firewall = {
-    enable = false;
+    enable = true;
     allowPing = true;
-    allowedTCPPorts = [ 53317 ];
+    allowedTCPPorts = [ 53317 22 ];
     allowedUDPPortRanges = [
       { from = 4000; to = 4007; }
-			{ from = 53317; to = 53317; }
+			{ from = 53317; to = 53317; } 
+			{ from = 22; to = 22; } 
     ];
   };
 
 	#Printing
+	services.printing.drivers = [pkgs.gutenprint];
 	services.printing.enable = true;
-	services.printing.drivers = [pkgs.hplipWithPlugin];
-	# hardware.printers = {
-	# 	ensurePrinters = [
-	# 		{
-	# 			name = "HP Officejet Pro 7720 Series";
-	# 			location = "Home";
-	# 			deviceUri = "hp:/net/OfficeJet_Pro_7720_series?ip=192.168.1.80";
-	# 			model = "OfficeJet_Pro_7720_series";
-	# 		}
-	# 	];
-	# };
+	hardware.printers = {
+		ensurePrinters = [
+			# {
+			# 	name = "HP Officejet Pro 7720 Series";
+			# 	location = "Home";
+			# 	deviceUri = "hp:/net/OfficeJet_Pro_7720_series?ip=192.168.1.80";
+			# 	model = "OfficeJet_Pro_7720_series";
+			# }
+			{
+				name = "PIXMA-iP300x";
+				location = "Home";
+				deviceUri = "usb://Canon/iP3000?serial=12B4F8";
+				model = "gutenprint.5.3://bjc-PIXMA-iP3000/expert Canon PIXMA iP3000 - CUPS+Gutenprint v5.3.4";
+			}
+		];
+	};
 
 	# Graphics driver
 
@@ -69,19 +76,25 @@
 
   services.samba = {
     enable = true;
-    securityType = "user";
+		settings = {
+			global = {
+				"security" = "user";
+				"workgroup" = "WORKGROUP";
+			};
+			"Anime" = {
+				"path" = "/mnt/Yukino/Data/Media/Anime";
+				"browsable" = "yes";
+				"read only" = "yes";
+				"guest ok" = "yes";
+			};
+			"NSFW" = {
+				"path" = "/mnt/Yukino/Data/Media/NSFW/";
+				"browsable" = "yes";
+				"read only" = "yes";
+				"guest ok" = "no";
+			};
+		};
     openFirewall = true;
-    extraConfig = ''
-      			workgroup = WORKGROUP
-      		'';
-    shares = {
-      Anime = {
-        path = "/mnt/Yukino/Data/Media/Anime";
-        browsable = "yes";
-        "read only" = "yes";
-        "guest ok" = "yes";
-      };
-    };
   };
   services.samba-wsdd = { # Samba share discovery
     enable = true;
@@ -89,6 +102,12 @@
   };
 
   hardware.acpilight.enable = true;
+
+	# For zsa keyboard tools and udev settings
+	hardware.keyboard.zsa.enable = true;
+  hardware.keyboard.qmk.enable = true;
+
+
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
 
@@ -157,9 +176,9 @@
 		extraConfig.pipewire."92-low-latency" = {
 			"context.properties" = {
 				"default.clock.allowed-rates" = [ 44100 48000 88200 96000 ];
-				"default.clock.quantum" = 128;
-				"default.clock.min-quantum" = 64;
-				"default.clock.max-quantum" = 1024;
+				"default.clock.quantum" = 256;
+				"default.clock.min-quantum" = 128;
+				"default.clock.max-quantum" = 2048;
 			};
 		};
   };
@@ -168,11 +187,11 @@
 			{
 				name = "libpipewire-module-protocol-pulse";
 				args = {
-					pulse.min.req = "64/48000";
-					pulse.default.req = "128/48000";
-					pulse.max.req = "1024/48000";
-					pulse.min.quantum = "64/48000";
-					pulse.max.quantum = "1024/48000";
+					pulse.min.req = "128/48000";
+					pulse.default.req ="256/48000";
+					pulse.max.req = "2048/48000";
+					pulse.min.quantum = "128/48000";
+					pulse.max.quantum = "2048/48000";
 				};
 			}
 		];
@@ -192,7 +211,7 @@
 
   fonts.packages = with pkgs; [
     noto-fonts
-    noto-fonts-cjk
+    noto-fonts-cjk-sans
     noto-fonts-emoji
     liberation_ttf
     fira-code
@@ -236,14 +255,14 @@
 			yt-dlp
 			krita
 			blender
-			k3b
+			# k3b
 			nomacs
 
 			# DE Tools
 			xdragon #Though its not just for X
 			kdePackages.plasma-systemmonitor
 			waybar
-			dolphin
+			kdePackages.dolphin
 			waybar
 			wl-clipboard
 			wtype
@@ -266,16 +285,17 @@
 			unrar
 			pass
 			gopass
-			chafa #Terminal image viewer
+			# chafa #Terminal image viewer
 			bat
 			exiftool
 			tg #Telegram TUI https://github.com/paul-nameless/tg
 			fd
 			brightnessctl
-			swww
+			# swww
 			fastfetch
-			unimatrix
-			nvtopPackages.full
+			# unimatrix
+			# nvtopPackages.full
+			# qmk
 
 			# Theming
 			dracula-theme
@@ -302,8 +322,6 @@
 			qutebrowser
 			remmina
 			vieb
-			rustdesk
-			rustdesk-flutter
 
 			# GUI
 			localsend
@@ -317,11 +335,17 @@
 
 			# gaming
 			protonup-qt
+			gamemode
 			prismlauncher
 
 			# Other
-			matugen
-			android-tools
+			hugo
+
+			# matugen
+			# android-tools
+			orca-slicer
+			qmk
+			usbutils
     ];
   };
 
@@ -332,13 +356,14 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
 		libsForQt5.partitionmanager
+		kdePackages.print-manager
 		kdePackages.qtstyleplugin-kvantum #The actual kvantum GUI
 		libsForQt5.qtstyleplugin-kvantum
 		libsForQt5.qt5ct
 		gparted
 		lightly-boehs
 		protonvpn-gui
-		mcelog #Logging util for faulty hardware
+		# mcelog #Logging util for faulty hardware
 		networkmanager-fortisslvpn
     acpilight
 		btrfs-progs
@@ -359,7 +384,7 @@
 		hyprlock
     xdg-desktop-portal-hyprland
     hyprland-protocols
-    hyprlandPlugins.hy3
+    # hyprlandPlugins.hy3
 		fastfetch
 		btop
 		libqalculate
@@ -367,9 +392,10 @@
 		tree
 		tre-command
 		tldr
-		bat
+		# bat
 		moar
 		nix-index
+		pmbootstrap
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -384,7 +410,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

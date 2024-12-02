@@ -67,6 +67,15 @@ keyset("n", "<c-Down>", ":wincmd j<CR>")
 keyset("n", "<c-Up>", ":wincmd k<CR>")
 keyset("n", "<c-Right>", ":wincmd l<CR>")
 
+keyset("n", "<leader>wh", ':vsplit<CR>', {desc = "Split right"})
+keyset("n", "<leader>wv", ':split<CR>', {desc = "Split down"})
+keyset("n", "<leader>wc", ':quit<CR>', {desc = "Close split"})
+keyset("n", "<C-S-Up>", ':resize +1<CR>', {desc = "Increase H Split Size"}) -- TODO: Make this position aware via lua
+keyset("n", "<C-S-Down>", ':resize -1<CR>', {desc = "Decrease H Split Size"}) -- TODO: Make this position aware via lua
+keyset("n", "<C-S-Left>", ':vertical resize -1<CR>', {desc = "Decrease V Split Size"}) -- TODO: Make this position aware via lua
+keyset("n", "<C-S-Right>", ':vertical resize +1<CR>', {desc = "Increase V Split Size"}) -- TODO: Make this position aware via lua
+
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -101,12 +110,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
-keyset("n", "<leader>Y", [["+Y]], { desc = "Some kinda Yank" })
-
+keyset("n", "<leader>Y", [["+Y]], { desc = "Yank to system Clipboard" })
 keyset({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete to void" })
-
--- This is going to get me cancelled
-keyset("i", "<C-c>", "<Esc>")
 
 keyset("n", "Q", "<nop>")
 

@@ -1,5 +1,5 @@
 " Options
-set adblocker=update
+set adblocker=off
 set devtoolsposition=split
 set downloadmethod=ask
 set followchars=custom:tnseriao
@@ -15,10 +15,9 @@ set restoretabs=all
 set suspendonrestore=regular
 set tabclosefocus=left
 set tabreopenposition=right
-set useragent="%chrome electron"
+set useragent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/6.8.0 Chrome/122.0.6261.171 Safari/537.36"
 set windowtitle="%title - %app"
 set mousenewtabswitch=false
-colorscheme verticaltabs
 colorscheme verticaltabs
 set searchengine=["https://search.brave.com/search?q=%s&source=web"]
 " Mappings
@@ -44,7 +43,7 @@ nmap = <zoomReset>
 nmap + <zoomIn>
 nmap - <zoomOut>
 nmap <F1> <:help>
-nmap o <toExploreMode><BS>
+nmap <space>o <toExploreMode><BS>
 nmap / <toSearchMode><BS>
 nmap n <nextSearchMatch>
 nmap N <previousSearchMatch>
