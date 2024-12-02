@@ -1,0 +1,1388 @@
+#+TITLE:Xanaduls GNU Emacs Config
+#+AUTHOR:Xanadul
+#+STARTUP: showeverything
+#+OPTIONS: toc:4
+
+* Table Of Contents                                                     :toc:
+- [[#important-programs-to-load-first][Important programs to load first]]
+  - [[#straight-package-manager][Straight Package Manager]]
+  - [[#load-evil-mode][Load Evil Mode]]
+    - [[#custom-evil-colon-commands][Custom Evil Colon Commands]]
+  - [[#generalel-keybindings][General.el Keybindings]]
+- [[#buffer-move][Buffer-Move]]
+- [[#sane-defaults][Sane Defaults]]
+  - [[#backups][Backups]]
+- [[#gui-tweaks][GUI Tweaks]]
+  - [[#scrolling][Scrolling]]
+  - [[#theme][Theme]]
+  - [[#tldr][TLDR]]
+  - [[#rainbow-delimiters][Rainbow Delimiters]]
+  - [[#transparency][Transparency]]
+  - [[#html-colors][HTML-Colors]]
+  - [[#fonts][Fonts]]
+    - [[#zooming][Zooming]]
+  - [[#disable-menubar-toolbar-and-scrollbars][Disable Menubar, Toolbar and Scrollbars]]
+  - [[#display-line-numbers-and-truncated-lines][Display Line Numbers and Truncated Lines]]
+  - [[#ligatures][Ligatures]]
+- [[#app-launcher][App-Launcher]]
+- [[#dashboard][Dashboard]]
+- [[#sudo-edit][Sudo Edit]]
+- [[#org-caldav][Org-Caldav]]
+- [[#which-key][Which-Key]]
+- [[#ivy--counsel][IVY + Counsel]]
+- [[#alltheicons][AllTheIcons]]
+- [[#org-mode][Org Mode]]
+  - [[#enabling-table-of-contents][Enabling Table of Contents]]
+  - [[#autotangle][Autotangle]]
+  - [[#enabling-org-bullets][Enabling org Bullets]]
+  - [[#disable-electric-indent][Disable Electric Indent]]
+  - [[#easy-source-quote-etc-blocks][Easy (Source, Quote, etc) Blocks]]
+  - [[#publishing][Publishing]]
+- [[#diminish][Diminish]]
+- [[#magit][Magit]]
+- [[#ledger][Ledger]]
+- [[#minibuffer-escape][Minibuffer Escape]]
+- [[#languages][Languages]]
+  - [[#lsp][LSP]]
+    - [[#lsp-mode][LSP-mode]]
+    -  [[#lsp-bridge][LSP-Bridge]]
+  - [[#company][Company]]
+  - [[#flycheck][Flycheck]]
+  - [[#code-evaluation][Code Evaluation]]
+  - [[#c][C]]
+  - [[#qml][QML]]
+  - [[#haskell][Haskell]]
+  - [[#javascript][JavaScript]]
+  - [[#rust][Rust]]
+    - [[#rust-analyzer][rust-analyzer]]
+    - [[#rustic][rustic]]
+  - [[#json][Json]]
+  - [[#yuck][Yuck]]
+  - [[#python][Python]]
+    - [[#pyimport][Pyimport]]
+    - [[#lsp-pyright][lsp-pyright]]
+  - [[#dart][Dart]]
+    - [[#flutter][Flutter]]
+  - [[#lisp][Lisp]]
+    - [[#parinfer][Parinfer]]
+  - [[#nix-config][Nix Config]]
+    - [[#nix-mode][Nix-mode]]
+    - [[#nix-drv-mode][Nix-drv-mode]]
+    - [[#nix-repl][Nix-repl]]
+    - [[#nix-shell][Nix-shell]]
+- [[#shells-and-terminals][Shells and Terminals]]
+  - [[#eshell][Eshell]]
+  - [[#vterm][Vterm]]
+  - [[#vterm-toggle][Vterm-toggle]]
+- [[#dired][Dired]]
+  - [[#wdired][Wdired]]
+  - [[#drag-and-drop][Drag and Drop]]
+  - [[#hide-dotfiles][Hide Dotfiles]]
+  - [[#dired-open][Dired Open]]
+  - [[#dired-previews][Dired-Previews]]
+  - [[#dired-rainbow][Dired-Rainbow]]
+  - [[#dirvish][Dirvish]]
+- [[#highlight-todo][Highlight TODO]]
+- [[#indent-guide][Indent Guide]]
+- [[#minimap][Minimap]]
+- [[#nice-modeline][Nice Modeline]]
+- [[#imenu-list][Imenu-list]]
+- [[#multimedia][Multimedia]]
+  - [[#emms][EMMS]]
+  - [[#radio][Radio]]
+- [[#pophint][Pophint]]
+- [[#editorconfig][Editorconfig]]
+- [[#http-daemon][HTTP-daemon]]
+- [[#xan-functions][Xan-Functions]]
+- [[#reload-emacs][Reload Emacs]]
+- [[#maximize-emacs][Maximize Emacs]]
+
+* Important programs to load first
+** Straight Package Manager
+[[https://github.com/radian-software/straight.el][Straight.el]]
+NOTE: Moved to ./init.el for better compatibility with loading config as .org file
+
+
+** Load Evil Mode
+#+begin_src emacs-lisp
+(use-package evil
+  :straight t
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-vsplit-window-right t)
+  (setq evil-split-window-below t)
+  (evil-mode))
+(use-package evil-collection
+  :straight t
+  :after evil
+  :config
+  (setq evil-collection-mode-list '(dashboard dired ibuffer))
+  (evil-collection-init))
+(with-eval-after-load 'evil-maps
+  (define-key evil-motion-state-map (kbd "SPC") nil)
+  (define-key evil-motion-state-map (kbd "RET") nil)
+  (define-key evil-motion-state-map (kbd "TAB") nil)
+)
+(setq org-return-follows-link t)
+#+end_src
+
+*** Custom Evil Colon Commands
+I want to rebind :wq to wdired-finish-edit in the wdired mode. To do so, a custom function is needed that copies the original command list into a local variable, adds custom bindings and gets called by a hook when wdired mode gets activated.
+#+begin_src elisp
+(defun xan-remap-wdired-evil-ex ()
+  "Changes evil-ex-commands (colon commands) of wdired mode.\nAdds :wq for saving edit."
+  (make-local-variable 'evil-ex-commands)
+  (setq evil-ex-commands
+	  (mapcar (lambda (cmd) (cons (car cmd) (cdr cmd)))
+		  (default-value 'evil-ex-commands)))
+  (evil-ex-define-cmd "wq[uit]" 'wdired-finish-edit)
+  (evil-ex-define-cmd "w[rite]" 'wdired-finish-edit) ;; TODO: Should not write and quit, but just write. Can't find the command though
+  (evil-ex-define-cmd "q[uit]" 'wdired-exit)
+  (evil-ex-define-cmd "q![uit]" 'wdired-abort-changes)
+)
+(add-hook 'wdired-mode-hook 'xan-remap-wdired-evil-ex)
+#+end_src
+
+** General.el Keybindings
+#+begin_src emacs-lisp
+(use-package general
+  :straight t
+  :config
+  (general-evil-setup)
+  (general-auto-unbind-keys) ;; Automatically unbinds already bound keys if necessary. Prevents "Key sequence starts with a non-prefix key" errors
+
+ (general-create-definer xan/leader-keys
+    :states '(normal visual emacs man motion)
+    :keymaps 'override
+    :prefix "SPC" ;;set leader
+    :global-prefix "M-SPC") ;;access leader in insert mode
+
+ (xan/leader-keys
+    "b" '(:ignore t :wk "Buffer")
+    "b b" '(switch-to-buffer :wk "Switch Buffer")
+    "b i" '(ibuffer :wk "Ibuffer")
+    "b p" '(switch-to-prev-buffer :wk "Switch to previous buffer")
+    "b <up>" '(switch-to-prev-buffer :wk "Switch to previous buffer")
+    "b <down>" '(switch-to-prev-buffer :wk "Switch to next buffer")
+    "b k" '(kill-this-buffer :wk "Kill this Buffer")
+    "b r" '(revert-buffer :wk "Reload Buffer"))
+
+ (xan/leader-keys
+   "d" '(:ignore t :wk "Describe")
+   "d v" '(counsel-describe-variable :wk "Describe Variable")
+   "d f" '(counsel-describe-function :wk "Describe Function")
+   "d b" '(counsel-descbinds :wk "Describe Bindings")
+   "d s" '(counsel-describe-symbol :wk "Describe Symbol")
+   "d g" '(counsel-describe-face :wk "Describe Face (Gesicht)")
+ )
+
+ (xan/leader-keys
+    "e" '(:ignore t :wk "Evaluate/Eshell")
+    "e d" '(eval-defun :wk "Evaluate defun containing or after point")
+    "e e" '(eval-expression :wk "Evaluate and elisp expression")
+    "e l" '(eval-last-sexp :wk "Evaluate elisp expression before point")
+    "e r" '(eval-region :wk "Evaluate elisp in region")
+    "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
+    "e h" '(dante-eval-block :wk "Evaluate Haskell"))
+
+ (xan/leader-keys
+    "SPC" '(counsel-M-x :wk "Counsel M-x")
+    "." '(find-file :wk "Find File")
+    ":" '(sudo-edit-find-file :wk "Sudo find file")
+    "f c" '(:ignore t :wk "Edit configs")
+    "f c e" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit emacs config")
+    "f c q" '((lambda () (interactive) (find-file "~/.config/qutebrowser/config.org")) :wk "Edit Qutebrowser config")
+    "f c m" '((lambda () (interactive) (find-file "~/.config/mpv/mpv.conf")) :wk "Edit MPV config")
+    "f c h" '((lambda () (interactive) (find-file "~/.config/hypr/hyprland.org")) :wk "Edit Hyprland config")
+    "f c w" '(:ignore t :wk "Edit Waybar...")
+    "f c w c" '((lambda () (interactive) (find-file "~/.config/waybar/config.json")) :wk "Edit Waybar config")
+    "f c w s" '((lambda () (interactive) (find-file "~/.config/waybar/style.css")) :wk "Edit Waybar css")
+    "f c w t" '((lambda () (interactive) (find-file "~/.config/wezterm/wezterm.lua")) :wk "Edit wezterm config")
+    "f c z" '((lambda () (interactive) (find-file "~/.config/zsh/zshrc.org")) :wk "Edit zshrc config")
+    "f r" '(counsel-recentf :wk "Find recent files")
+    "f f" '(pophint:do :wk "Pophint do"))
+
+
+ (xan/leader-keys
+    "w" '(:ignore t :wk "Window")
+    ;; Window splits
+    "w h" '(split-window-horizontally :wk Split window horizontally)
+    "w v" '(split-window-vertically :wk Split window vertically)
+    "w c" '(evil-window-delete :wk Close current window)
+    ;; Window Motions
+    "w <left>" '(evil-window-left :wk Switch focus to the left)
+    "w <down>" '(evil-window-down :wk Switch focus downwards)
+    "w <up>" '(evil-window-up :wk Switch focus to upwards)
+    "w <right>" '(evil-window-right :wk Switch focus to the right)
+    "w w" '(evil-window-next :wk Switch focus to the next Window)
+    "w W" '(evil-window-prev :wk Switch focus to the previous Window)
+    ;; Window Moving
+    "w S-<left>" '(buf-move-left :wk Buffer move left)
+    "w S-<right>" '(buf-move-right :wk Buffer move right)
+    "w S-<up>" '(buf-move-up :wk Buffer move up)
+    "w S-<down>" '(buf-move-down :wk Buffer move down))
+
+ (xan/leader-keys
+    "m" '(:ignore t :wk "Media")
+    "m r" '(:ignore t :wk "Eradio")
+    "m r t" '(eradio-toggle :wk "Eradio toggle")
+    "m r s" '(eradio-play :wk "Eradio select"))
+
+ (xan/leader-keys
+    "h" '(:ignore t :wk "Help")
+    "h f" '(describe-function :wk "Describe function")
+    "h v" '(describe-variable :wk "Describve variable")
+    ;;"h r r" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "Reload emacs config")
+    "h r r" '(reload-init-file :wk "Reload emacs config"))
+
+ (xan/leader-keys
+    "t" '(:ignore t :wk "Toggle")
+    "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
+    "t t" '(visual-line-mode :wk "Toggle truncated lines")
+    "t v" '(vterm-toggle :wk "Toggle Vterm")
+    "t h" '(dired-hide-dotfiles-mode :wk "Dired Toggle dotfiles")
+    "t i" '(imenu-list-smart-toggle :wk "Toggle imenu-list")
+    "t c" '(org-toggle-checkbox :wk "Toggle org checkbox")
+    "t TAB" '(comment-line :wk "Comment lines"))
+ 
+ (xan/leader-keys
+    "o" '(:ignore t :wk "Org")
+    "o a" '(org-agenda :wk "Org agenda")
+    "o e" '(org-export-dispatch :wk "Org export dispatch")
+    "o i" '(org-toggle-item :wk "Org toggle item")
+    "o t" '(org-todo :wk "Org todo")
+    "o B" '(org-babel-tangle :wk "Org Babel Tangle")
+    "o T" '(org-todo-list :wk "Org todo list"))
+
+ (xan/leader-keys
+    "o b" '(:ignore t :wk "Tables")
+    "o b -" '(org-table-insert-hline :wk "Insert hline in table"))
+ (xan/leader-keys
+    "l" '(:ignore t :wk "Links")
+    "l c" '(org-insert-link :wk "Org edit link"))
+
+ (xan/leader-keys
+    "o d" '(:ignore t :wk "Date/dateline")
+    "o d t" '(org-time-stamp :wk "Time stamp"))
+ 
+(general-create-definer xan/dired-file-ops
+    :states '(normal)
+    :keymaps 'dired-mode-map
+    :prefix "y"
+    :global-prefix "M-y"
+    :wk "Dired file operations")
+(xan/dired-file-ops
+    "x" '(dirvish-move :wk "Move marked here")
+    "c" '(dirvish-rsync :wk "Copy marked here")
+    "l" '(dirvish-symlink :wk "Symlink marked here")
+    "L" '(dirvish-relative-symlink :wk "Relative Symlink marked here")
+    "h" '(dirvish-hardlink :wk "Hardlink marked here")
+    "r" '(dired-do-rename :wk "Rename file")
+    "k" '(dired-do-kill-lines :wk "Hide lines from view")
+    "e" '(:ignore t :wk "Dired edit file")
+    "e m" '(dired-do-chmod :wk "Chmod")
+    "e o" '(dired-do-chown :wk "Chown")
+    "e g" '(dired-do-chgrp :wk "Chgroup")
+    "e t" '(dired-do-chgrp :wk "Ch-timestamp")
+    "m" '(:ignore t :wk "Dired create")
+    "m d" '(make-directory :wk "create Directory")
+    "m f" '(make-empty-file :wk "Touch")
+    "Y" '(dirvish-copy-file-path :wk "Copy path")
+    "s" '(dirvish-ls-switches-menu :wk "Customize ls"
+    "m m" '(xan-mount-menu :wk "Mount blockdevice")) 
+    )
+
+
+(general-auto-unbind-keys) ;; Automatically unbinds already bound keys if necessary. Prevents "Key sequence starts with a non-prefix key" errors
+(general-create-definer xan/dired-open
+    :states '(normal)
+    :keymaps '(dired-mode-map)
+    :prefix "o"
+    ;;:global-prefix "M-o"
+    :wk "Dired open files")
+(xan/dired-open
+    "p" '(dired-dragon :wk "NonPersistent Dragon")
+    "m" '(xan-open-umpv :wk "Open mark in umpv"))
+
+(general-create-definer xan/dired-compress
+    :states '(normal)
+    :keymaps '(dired-mode-map)
+    :prefix "c"
+    :global-prefix "M-c"
+    :wk "Dired (un)compress files")
+(xan/dired-compress
+    "c" '(dired-do-compress :wk "(un)Compress here")
+    "C" '(dired-do-compress-to :wk "(un)Compress to..."))
+
+
+(general-create-definer xan/magit
+    :states '(normal)
+    :keymaps '(magit-mode-map)
+    :prefix "g"
+    :global-prefix "M-g"
+    :wk "Magit git operations")
+(xan/magit
+    "i" '(:ignore t :wk "Gitignore")
+    "i t" '(magit-gitignore-in-topdir :wk "Gitignore toplevel")
+    "i s" '(magit-gitignore-on-system :wk "Gitignore on system")
+    "i g" '(magit-gitignore-in-gitdir :wk "Gitignore in gitdir")
+    "C" '(dired-do-compress-to :wk "(un)Compress to...")))
+#+end_src
+
+
+
+* Buffer-Move
+#+begin_src elisp
+(require 'windmove)
+
+;;;###autoload
+(defun buf-move-up ()
+  (interactive)
+  (let* ((other-win (windmove-find-other-window 'up))
+         (buf-this-buf (window-buffer (selected-window))))
+      (if (null other-win)
+          (error "No window above this one")
+        ;; swap top with this one
+        (set-window-buffer (selected-window) (window-buffer other-win))
+        ;; move this one to top
+        (set-window-buffer other-win buf-this-buf)
+        (select-window other-win))))
+
+;;;###autoload
+(defun buf-move-down ()
+  (interactive)
+  (let* ((other-win (windmove-find-other-window 'down))
+         (buf-this-buf (window-buffer (selected-window))))
+      (if (or (null other-win) 
+              (string-match "^ \\*Minibuf" (buffer-name (window-buffer other-win))))
+          (error "No window under this one")
+        ;; swap top with this one
+        (set-window-buffer (selected-window) (window-buffer other-win))
+        ;; move this one to top
+        (set-window-buffer other-win buf-this-buf)
+        (select-window other-win))))
+
+;;;###autoload
+(defun buf-move-left ()
+  (interactive)
+  (let* ((other-win (windmove-find-other-window 'left))
+         (buf-this-buf (window-buffer (selected-window))))
+        (if (null other-win)
+           (error "No left split")
+           ;; swap top with this one
+           (set-window-buffer (selected-window) (window-buffer other-win))
+           ;; move this one to top
+           (set-window-buffer other-win buf-this-buf)
+           (select-window other-win))))
+
+;;;###autoload
+(defun buf-move-right ()
+  (interactive)
+  (let* ((other-win (windmove-find-other-window 'right))
+         (buf-this-buf (window-buffer (selected-window))))
+       (if (null other-win)
+         (error "No right split")
+          ;; swap top with this one
+         (set-window-buffer (selected-window) (window-buffer other-win))
+         ;; move this one to top
+         (set-window-buffer other-win buf-this-buf)
+         (select-window other-win))))
+#+end_src
+
+* Sane Defaults
+#+begin_src elisp
+(delete-selection-mode 1) ;; You can select text and delete by typing
+(electric-indent-mode -1) ;; Turn of emacs wierd auto indenting
+(electric-pair-mode 0) ;; Turn off auto parenthesis pairing
+
+;; Prevents <> from auto pairing when electric-pair-mode is on. Otherwise org-tempo is broken when trying <s TAB for source blocks
+(add-hook 'org-mode-hook (lambda ()
+           (setq-local electric-pair-inhibit-predicate
+                   `(lambda (c)
+                  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+(global-auto-revert-mode t) ;; Auto show changes if file changed
+(global-display-line-numbers-mode 1) ;; display line numbers
+(global-visual-line-mode t) ;; Truncated lines
+(menu-bar-mode -1) ;; Disable menu bar
+(scroll-bar-mode -1) ;; Disable scroll bar
+(tool-bar-mode -1) ;; Disable tool bar
+(setq org-edit-src-content-indentation 0) ;; Set src block auto indent to 0 instead of 2
+
+#+end_src
+
+** Backups
+
+#+begin_src elisp
+(setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
+
+#+end_src
+
+* GUI Tweaks
+** Scrolling
+Emacs 29 comes with support for pixel-based scrolling (instead of line based).
+#+begin_src elisp
+(pixel-scroll-precision-mode)
+(setq pixel-scroll-precision-use-momentum t)
+(setq pixel-scroll-precision-large-scroll-height 60.0)
+#+end_src
+
+Also, setting keyboard scroll steps:
+#+begin_src elisp
+(setq scroll-step 5)
+#+end_src
+
+And making scroll speed scale linear
+#+begin_src elisp
+(setq mouse-wheel-progressive-speed nil)
+#+end_src
+
+** Theme
+This white theme is starting to hurt my eyes, time for the highest vampire theme!
+#+begin_src elisp
+(use-package dracula-theme :straight t)
+;;(use-package catppuccin-theme)
+;;(setq catppuccin-flavor 'latte)
+;;(catppuccin-reload)
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
+;;(load-theme 'EliaStellaria t)
+(load-theme 'dracula t)
+;;(add-hook 'emacs-startup-hook (lambda () (load-theme 'dracula)))
+#+end_src
+
+** TLDR
+#+begin_src elisp
+(use-package tldr
+  :straight t)
+#+end_src
+
+** Rainbow Delimiters
+#+begin_src elisp
+(use-package rainbow-delimiters
+  :straight t
+  :hook ((emacs-lisp-mode .rainbow-delimiters-mode)
+         (clojure-mode . rainbow-delimiters-mode)
+         (prog-mode . rainbow-delimiters-mode))
+)
+
+#+end_src
+
+** Transparency
+#+begin_src elisp
+(add-to-list 'default-frame-alist '(alpha-background . 85))
+(set-frame-parameter nil 'alpha-background 85)
+#+end_src
+
+** HTML-Colors
+Will automaticall colorcode Hex colors in Emacs
+#+begin_src elisp
+(use-package rainbow-mode
+  :straight t
+  :hook org-mode prog-mode
+  :diminish t)
+#+end_src
+** Fonts
+#+begin_src elisp
+(set-face-attribute 'default nil
+                    :font "JetBrains Mono"
+                    :height 160
+                    :weight 'medium)
+(set-face-attribute 'fixed-pitch nil
+                    :font "JetBrains Mono"
+                    :height 160
+                    :weight 'medium)
+(set-face-attribute 'font-lock-comment-face nil
+                    :slant 'italic)
+(set-face-attribute 'font-lock-keyword-face nil
+                    :slant 'italic)
+
+(add-to-list 'default-frame-alist '(font . "JetBrains Mono-16"))
+
+;; uncomment it line spacing needs adjusting
+;;(setq-default line-spacing 0.12)
+#+end_src
+
+*** Zooming 
+Easy zooming with CTRL plus +/-, or CTRL plus mousewheel
+#+begin_src elisp
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
+(global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
+#+end_src
+
+
+** Disable Menubar, Toolbar and Scrollbars
+#+begin_src elisp
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+#+end_src
+
+** Display Line Numbers and Truncated Lines
+#+begin_src elisp
+(global-display-line-numbers-mode 1)
+(global-visual-line-mode t)
+#+end_src
+
+** Ligatures
+Ligatures make code look fancy. Eg. "less or equal" using the proper symbol, instead of "<" and then "="
+lambda 
+#+begin_src elisp
+(use-package ligature
+  :straight t
+  ;;:load-path "path-to-ligature-repo"
+  :config
+  ;; Enable the "www" ligature in every possible major mode
+  (ligature-set-ligatures 't '("www"))
+  ;; Enable traditional ligature support in eww-mode, if the 
+  ;; `variable-pitch' face supports it
+  (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
+  ;; Enable all Cascadia Code ligatures in programming modes
+  (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+                                       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+                                       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+                                       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+                                       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+                                       "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+                                       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+                                       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+                                       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+                                       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+                                       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+                                       "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+                                       "\\\\" "://"))
+  ;; And enable it for Org mode and its Source code blocks
+  (ligature-set-ligatures 'org-mode '("--" "---" "==" "===" "!=" "!==" "=!=" "=:=" "=/=" "<=" ">=" "&&" "&&&" "&=" "++" "+++" "***" ";;" "!!" "??" "???" "?:" "?." "?=" "<:" ":<" ":>" ">:" "<:<" "<>" "<<<" ">>>" "<<" ">>"
+                                      "||" "-|" "_|_" "|-" "||-" "|=" "||=" "##" "###" "####" "#{" "#[" "]#" "#(" "#?" "#_" "#_(" "#:" "#!" "#=" "^=" "<$>" "<$ $>" "<+>" "<+" "+>" "<*>" "<*" "*>" "</" "</>" "/>" "<!--" "<#--" "-->" "->" "->>" "<<-" "<-" "<=<" "=<<" "<<=" "<==" "<=>" "<==>" "==>" "=>" "=>>" ">=>" ">>=" ">>-" ">-" "-<" "-<<" ">->" "<-<" "<-|" "<=|" "|=>" "|->" "<->" "<<~" "<~~" "<~" "<~>" "~~" "~~>" "~>" "~-" "-~" "~@" "[||]" "|]" "[|" "|}" "{|" "[<" ">]" "|>" "<|" "||>" "<||" "|||>" "<|||" "<|>" "..." ".." ".=" "..<" ".?" "::" ":::" ":=" "::=" ":?" ":?>" "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__" "???" ";;;" "labmda"))
+
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
+  ;;(global-prettify-symbols-mode t) ;; Handling experssions like the word lambda
+#+end_src
+
+* App-Launcher
+TODO: Needs patching for straight
+##+begin_src elisp
+(use-package app-launcher
+ :elpaca '(app-launcher :host github :repo "SebastienWae/app-launcher"))
+(defun emacs-run-launcher ()
+  "Create and select a frame called emacs-run-launcher which consists only of a minibuffer and has specific dimensions. Runs app-launcher-run-app on that frame, which is an emacs command that prompts you to select an app and open it in a dmenu like behaviour. Delete the frame after that command has exited"
+  (interactive)
+  (with-selected-frame 
+    (make-frame '((name . "emacs-run-launcher")
+                  (minibuffer . only)
+                  (fullscreen . 0) ; no fullscreen
+                  (undecorated . t) ; remove title bar
+                  (auto-raise . t) ; focus on this frame
+                  ;;(tool-bar-lines . 0)
+                  ;;(menu-bar-lines . 0)
+                  (internal-border-width . 10)
+                  (width . 80)
+                  (height . 28)))
+                  (unwind-protect
+                    (app-launcher-run-app)
+                    (delete-frame))))
+##+end_src
+
+
+* Dashboard
+#+begin_src elisp
+(use-package dashboard
+  :straight t
+  :init
+  (setq initial-buffer-choice 'dashboard-open)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-banner-logo-title "Emacs is an Elisp Interpreter!")
+  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-center-content nil)
+  (setq dashboard-items '((recents . 5)
+                          (agenda . 5)
+                          (bookmarks . 3)
+                          (projects . 3)
+                          (registers .3)))
+  :config
+  (dashboard-setup-startup-hook)
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
+
+(use-package projectile
+  :straight t
+  :config
+  (projectile-mode 1))
+
+#+end_src
+
+* Sudo Edit
+#+begin_src elisp
+(use-package sudo-edit
+  :straight t
+  :config
+  (xan/leader-keys
+    "f u" '(sudo-edit-find-file :wk "Sudo find file")
+    "f U" '(sudo-edit :wk "Sudo edit this file")))
+
+#+end_src
+
+* Org-Caldav
+My calender in Org mode?
+##+begin_src elisp
+(use-package org-caldav
+:straight t
+:config
+(setq org-caldav-url "https://192.168.1.2:5232")
+)
+##+end_src
+
+* Which-Key
+#+begin_src elisp
+(use-package which-key
+  :straight t
+  :init
+  (which-key-mode 1)
+  :diminish t
+  :config
+  (setq
+   which-key-side-window-location 'bottom
+   which-key-sort-order #'which-key-key-order-alpha
+   which-key-sort-uppercase-first nil
+   which-key-add-column-padding 1
+   which-key-max-display-columns nil
+   which-key-min-display-lines 6
+   which-key-side-window-slot -10
+   which-key-side-window-max-height 0.25
+   which-key-idle-delay 0.8
+   which-key-max-description-length 25
+   which-key-allow-imprecise-window-fit nil
+   which-key-separator " -> "))
+#+end_src
+
+* IVY + Counsel
++ Ivy, a generic completion mechanism for Emacs.
++ Counsel, a collection of Ivy-enhanced versions of common emacs commands.
++ Ivy-rich allows us to add descriptions alongside the commands in M-x.
+#+begin_src elisp
+(use-package counsel
+  :straight t
+  :after ivy
+  :config (counsel-mode)
+  :diminish t)
+
+(use-package ivy
+  :straight t
+  :custom
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq enable-recursive-minibuffers t)
+  :config 
+  (ivy-mode)
+  (setq ivy-initial-inputs-alist nil)
+)
+
+(use-package all-the-icons-ivy-rich
+  :straight t
+  :init (all-the-icons-ivy-rich-mode 1))
+
+(use-package ivy-rich
+  :straight t
+  :after ivy
+  :init (ivy-rich-mode 1) ;; gets descripitons in M-x
+  :custom
+  (ivy-virtual-appeviate 'full
+			 ivy-rich-switch-buffer-align-virtual-buffer t
+			 ivy-rich-path-style 'abbrev)
+  :config
+  (ivy-set-display-transformer 'ivy-switch-buffer
+			       'ivy-rich-switch-buffer-transformer))
+#+end_src
+
+* AllTheIcons
+#+begin_src elisp
+(use-package all-the-icons
+  :straight t
+  :if (display-graphic-p))
+(use-package all-the-icons-dired
+  :straight t
+  :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
+#+end_src
+
+
+
+* Org Mode
+** Enabling Table of Contents
+#+begin_src elisp
+(use-package toc-org
+  :straight t
+  :commands toc-org-enable
+  :init (add-hook 'org-mode-hook 'toc-org-enable)
+  :config (setq toc-org-max-depth 4)) 
+#+end_src
+
+** Autotangle
+Because executing org-babel-tangle is tiresome, even with a keybind. And forgetting to execute it is even more tiresome
+#+begin_src elisp
+(use-package org-auto-tangle :straight t
+  :defer t
+  :hook (org-mode . org-auto-tangle-mode)
+)
+
+#+end_src
+
+** Enabling org Bullets
+Instead of * for headings, use Bullets
+#+begin_src elisp
+(add-hook 'org-mode-hook 'org-indent-mode)
+(use-package org-bullets
+  :straight t)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+end_src
+** Disable Electric Indent
+Org mode source blocks has weird and annoying indent behavior by default. This should fix it.
+#+begin_src elisp
+(electric-indent-mode -1)
+(setq org-edit-src-content-indentation 0)
+#+end_src
+
+** Easy (Source, Quote, etc) Blocks
+Create source code blocks with <s and then TAB
+| <c | center  | <E | Export       | 
+| <C | comment | <h | export html  | 
+| <e | example | <l | export latex | 
+| <q | quote   | <a | export ascii | 
+| <s | src     |    |              | 
+| <v | verse   |    |              |
+ 
+#+begin_src elisp
+(require 'org-tempo)
+#+end_src
+
+** Publishing
+##+begin_src elisp
+(use-package ox-publish )
+##+end_src
+
+* Diminish
+#+begin_src elisp
+(use-package diminish :straight t)
+#+end_src
+
+* Magit
+#+begin_src elisp
+(use-package magit :straight t)
+#+end_src
+
+* Ledger
+#+begin_src elisp
+(use-package ledger-mode :straight t)
+#+end_src
+
+* Minibuffer Escape
+#+begin_src elisp
+(global-set-key [escape] 'keyboard-escape-quit)
+#+end_src
+
+* Languages
+** LSP
+*** LSP-mode
+LSP support for all the languages.
+Correct the begin_src and end_src to use.
+#+begin_src elisp
+(use-package lsp-mode
+  :straight t
+  :init
+  ;;set prefix for lsp-command-keymap
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (
+         (python-mode . lsp-enable-which-key-integration)
+         (dart-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+(use-package lsp-ui :commands lsp-ui-mode :straight t
+  :config (setq lsp-ui-sideline-mode t)
+  :hook ((prog-mode . lsp-ui-mode))
+)
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol :straight t)
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list :straight t)
+
+#+end_src
+
+***  LSP-Bridge
+Alternative to lsp-mode, using python multithreading and optionally rusts orjson for super fast lsp completions.
+Has pip dependencies: epc orjson sexpdata six paramiko rapidfuzz
+Has elisp dependencies: markdown-mode yasnippet
+##+begin_src emacs-lisp
+(use-package yasnippet :straight t)
+(use-package markdown-mode :straight t)
+()
+(use-package lsp-bridge
+  :straight '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge"
+            :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
+            :build (:not compile))
+  :init
+  (global-lsp-bridge-mode)
+  :config
+  (setq lsp-bridge-enable-org-babel t)
+)
+
+##+end_src
+
+
+** Company
+Comp(lete)any(thing)
+#+begin_src elisp
+(use-package company
+ :straight t
+ :defer 2
+ :diminish
+ :custom
+ (company-begin-commands '(self-insert-command))
+ (company-idle-delay .1)
+ (company-minimum-prefix-length 2)
+ (company-show-numbers t)
+ (company-tooltip-align-annotations 't)
+ (global-company-mode t))
+
+(use-package company-box
+  :straight t
+ :after company
+ :diminish
+ :hook (company-mode . company-box-mode))
+
+(use-package pos-tip :straight t) ;; dependency of company-quickhelp
+(use-package company-quickhelp :straight t) ;; shows documentation snippets in company
+#+end_src
+
+** Flycheck
+On the fly syntac checking.
+Checks C and C++ with either c/c++-clang or c/c++-gcc, and then with c/c++-cppcheck.
+Checks Python with python-flake8 or python-pylint, and falls back to python-pycompile if neither of those is available.
+Checks Rust with rust-cargo in Cargo projects, or rust otherwise. Can also use Clipppy linter with rust-clippy
+Install python-pylint or python-flake8 via distro repos for flycheck ot work with python, etc
+#+begin_src elisp
+(use-package flycheck
+  :straight t
+ :defer t
+ :diminish t
+ :init (global-flycheck-mode))
+#+end_src
+
+** Code Evaluation
+#+begin_src elisp 
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (shell . t)
+   (haskell .t)
+   (C . t)
+   )
+)
+#+end_src
+
+** C
+Even though it seems lsp-bridge already works for C, I still want to use Irony.
+#+begin_src elisp
+(use-package irony 
+  :straight t
+  :config
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  
+)
+#+end_src
+
+** QML
+#+begin_src elisp
+(use-package company-qml :straight t)
+
+(use-package qml-mode
+  :straight t)
+
+#+end_src
+** Haskell
+#+begin_src elisp
+(use-package haskell-mode :straight t)
+(use-package flymake-flycheck :straight t)
+(use-package dante :straight t
+  :ensure t
+  :after haskell-mode
+  :commands 'dante-mode
+  :init
+  (add-hook 'haskell-mode-hook 'flymake-mode)
+  (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
+  (add-hook 'haskell-mode-hook 'dante-mode)
+  (add-hook 'haskell-mode-hook
+            (defun my-fix-hs-eldoc ()
+              (setq eldoc-documentation-strategy #'eldoc-documentation-default)))
+  :config
+  (require 'flymake-flycheck))
+#+end_src
+** JavaScript
+#+begin_src elisp
+;;(use-package js2-mode :straight t)
+(use-package indium :straight t)
+
+#+end_src
+
+** Rust
+*** rust-analyzer
+Works with lsp-bridge, does not need an elisp package, but the rust-analyzer bin in $PATH
+*** rustic
+#+begin_src elisp
+(use-package rustic :straight t)
+#+end_src
+
+** Json
+#+begin_src elisp
+(use-package json-mode :straight t)
+#+end_src
+
+** Yuck
+Config language of EWW
+#+begin_src elisp
+(use-package yuck-mode :straight t)
+
+#+end_src
+
+** Python
+*** Pyimport
+Fix missing imports, remove unused imports. Requires pyflakes to be on PATH
+#+begin_src elisp
+(use-package pyimport :straight t)
+#+end_src
+*** lsp-pyright
+#+begin_src elisp
+(use-package lsp-pyright :straight t
+ :hook (python-mode . (lambda ()
+                       (require 'lsp-pyright)
+                       (lsp))))
+#+end_src
+
+** Dart
+https://emacs-lsp.github.io/lsp-dart/
+Needs dart installed, and flutter to be located in ~/home/xanadul/.flutter
+#+begin_src elisp
+(use-package lsp-dart :straight t
+  :config
+  ;;(setq lsp-dart-sdk-dir "/home/xanadul/.flutter/bin/cache/dart-sdk")
+  ;;(defvar xan-dart-hook nil "Hook for setting my dart settings, since setting them in use-package does not properly work")
+  :hook (dart-mode . lsp)
+)
+(use-package dart-mode :straight t)
+#+end_src
+*** Flutter
+#+begin_src elisp
+(use-package flutter :straight t
+  :config 
+  (setq flutter-sdk-path "/home/xanadul/.flutter")
+  (setq lsp-dart-flutter-sdk-dir "/home/xanadul/.flutter")
+  (setq lsp-dart-flutter-widget-guides nil)
+  (setq lsp-dart-enable-sdk-formatter nil)
+  (setq gc-cons-threshold (* 100 1024 1024)
+        read-process-output-max (* 1024 1024))
+  (setq lsp-dart-line-length 320)
+  (setq lsp-dart-closing-labels nil)
+  (setq lsp-dart-outline nil)
+  (setq lsp-dart-flutter-outline nil)
+)
+#+end_src
+
+** Lisp
+*** Parinfer
+Plugin that aims to make writing lisp simple. Handles closing brackets ")" automatically.
+Disabled since it causes issues with electric-pair-mode (Which basically does the same anyway, but for every language)
+#+begin_src elisp
+;(use-package parinfer-rust-mode
+;  :hook emacs-lisp-mode
+;  :init (setq parinfer-rust-auto-download t))
+#+end_src
+
+** Nix Config
+Nix geht mehr...
+*** Nix-mode
+This is a major mode for editing Nix expressions. It provides syntax highlighting, sane defaults, and experimental indentation support.
+#+begin_src elisp
+(use-package nix-mode :straight t
+  :mode ("\\.nix\\'" "\\.nix.in\\'"))
+#+end_src
+
+*** Nix-drv-mode
+nix-drv-mode is a simple major mode for viewing Nix’s .drv files. If you have use-package installed, you can set it up to handle .drv files with this in your configuration file. 
+! Is not found by elpaca, therefore removed
+#+begin_src elisp
+;;(use-package nix-drv-mode :straight t
+;;  :mode "\\.drv\\'")
+#+end_src
+
+*** Nix-repl
+nix-shell provides a few interactive commands to make it easier to make calls to nix-shell from Emacs. Recommended configuration is provided below. See https://github.com/NixOS/nix-mode/blob/master/nix-mode.org for more info
+#+begin_src elisp
+;;(use-package nix-shell :straight t
+;;  :commands (nix-shell-unpack nix-shell-configure nix-shell-build))
+#+end_src
+
+*** Nix-shell
+nix-repl.el has two purposes. First, it provides an interface for completion, used by nix-company.el. Second, it provides an interactive function to open an repl. You can open this with: M-x nix-repl<RET>
+This is the same prompt you would get from running “nix repl” on the command line. 
+#+begin_src elisp
+;;(use-package nix-repl :straight t
+;;  :commands (nix-repl))
+#+end_src
+
+
+
+* Shells and Terminals
+** Eshell
+_#+begin_src elisp
+(use-package eshell-syntax-highlighting :straight t
+ :after esh-mode
+ :config (eshell-syntax-hightlighting-global-mode +1)
+;; eshell-syntax-hightlighting -- ads fish like syntax hightlighting
+;; eshell-rc-script -- profiel for sehell
+ (setq eshell-rc-script (concat user-emacs-directory "eshell/profile")
+  eshell-aliases-file (concat user-emacs-directory "eshell/aliases")
+  eshell-history-size 5000
+  eshell-buffer-maximum-lines 5000
+  eshell-hist-ignoredups t
+  eshell-scroll-to-bottom-on-input t
+  eshell-destroy-buffer-when-process-dies t
+  eshell-visual-commands'("bash" "fihs" "htop" "btop" "ssh" "top" "zsh")))
+_#+end_src
+
+** Vterm
+#+begin_src elisp
+
+;;(use-package vterm :straight t
+;; :config (setq shell-file-name "/usr/bin/zsh"
+;;          vterm-max-scrollback 5000))
+
+#+end_src
+** Vterm-toggle
+#+begin_src elisp
+
+;; (use-package vterm-toggle :straight t
+;;  :after vterm
+;;  :config (setq vterm-toggle-fullscreen-p nil)
+;;  (setq vterm-toggle-scope 'project)
+;;  (add-to-list 'display-buffer-alist
+;;   '((lambda (buffer-or-name _)
+;;      (let (( buffer (get-buffer buffer-or-name)))
+;;        (with-current-buffer buffer
+;;           (or (equal major-mode 'vterm-mode)
+;;             (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
+;;     (display-buffer-reuse-window display-buffer-at-bottom)
+;;     (reusable-frames . visible)
+;;     (window-height . 0.3))))
+
+#+end_src
+
+* Dired
+Dired is a powerful, built in, File Manager in Emacs. By default, it uses "ls -la" for showing files. If copying/renaming a file, Ivy might want to pick the top candidate and complete without the user wanting it, in this case use C-M-j (ivy-immediat-done) instead of RET. TODO: Fix Editable Dired wanting a filename for saving buffer.
+Here are some important keybinds:
+| Key      | Function                           |   | Key     | Function                   | Notes                             |   |
+|----------+------------------------------------+---+---------+----------------------------+------------------------------------+---|
+| RET      | Open file                          |   | m       | Toggle Selection           |                                    |   |
+| Del      | Dir up                             |   | t       | Invert Selection           |                                    |   |
+| Sift-RET | Open file new window               |   | U       | Unmark Everything          |                                    |   |
+| "/"      | Search                             |   | *       | Show mark commands         |                                    |   |
+|          |                                    |   |         |                            |                                    |   |
+| K        | Kill marked line (hides from view) |   | %       | Show Regex commands        |                                    |   |
+| g r      | Revert buffer (brings them back)   |   |         |                            |                                    |   |
+|          |                                    |   | Spc t h | Toggle Dotfiles visibility |                                    |   |
+| C        | Copy to ...                        |   | t h     | Toggle Dotfiles visibility |                                    |   |
+| S        | Create symlink to this             |   | t d    | Toggle Details             |                                    |   |
+| R        | Move to ...                        |   | H       | Toggle Dotfiles visibility |                                    |   |
+|          |                                    |   |         |                            |                                    |   |
+|          |                                    |   | Z       | (Un)Compress to tar.gz     |                                    |   |
+| D        | Delete file                        |   | C       | Compress to ...            | look at dired-compress-files-alist |   |
+| d        | Move to trash                      |   |         |                            |                                    |   |
+|          |                                    |   | y e t   | Change Timestamp           |                                    |   |
+| TAB      | Toggle subtree                     |   | y e m   | Change file mode           |                                    |   |
+| t Tab    | Toggle laout                       |   | y e m   | Change owner               |                                    |   |
+|          |                                    |   | y e g   | Change group               |                                    |   |
+#+begin_src elisp
+(setq dired-listing-switches "-gh --almost-all --group-directories-first") ;;sets ls arguments
+(setq dired-dwim-target t);;If another dired window is open, guesses copy/rename location to be that window
+(use-package dired-single :straight t ;;functions for not polluting Bufferlist when using dired
+ :config
+ (general-define-key
+  :states 'normal
+  :keymaps 'dired-mode-map
+  "DEL" 'dired-up-directory ;;since dired-open does not work with dired-single-buffer
+  "RET" 'dired-find-file
+  [left] 'dired-up-directory
+  [right] 'dired-find-file
+  ))
+  ;;"DEL" 'dired-single-up-directory ;;Equivalent of 'dired-up-directory
+  ;;"RET" 'dired-single-buffer)) ;;Equivalent of 'dired-find-file
+
+#+end_src
+** Wdired
+Writable Dired, for file editing.
+
+#+begin_src elisp
+;;(setq wdired-allow-to-change-permissions advanced)
+
+#+end_src
+
+** Drag and Drop
+#+begin_src elisp
+(load-file (expand-file-name "dired-dragon.el" user-emacs-directory))
+(setq dired-dragon-location "/usr/bin/dragon-drop")
+#+end_src
+
+** Hide Dotfiles
+#+begin_src elisp
+(use-package dired-hide-dotfiles :straight t
+ :hook (dired-mode . dired-hide-dotfiles-mode) 
+ :config
+ (general-define-key
+  :states 'normal
+  :keymaps 'dired-mode-map
+  "H" 'dired-hide-dotfiles-mode))
+
+#+end_src
+
+
+** Dired Open
+Configuring which program should open which file. If not specified, emacs will try to open it itself, as a buffer.
+#+begin_src elisp
+(use-package dired-open :straight t
+ :config
+ ;;(add-to-list 'dired-open-functions #'dired-open-xdg t) ;;Uses xdg to specify the program to use, however, it will use default FM for directories, which can interfere with dired.
+ ;; --OR--
+ (setq dired-open-extensions '(("png" . "nomacs") ;;Sets which extensions open in which programs
+                               ("jpg" . "nomacs")
+                               ("jpeg" . "nomacs")
+                               ("pdf" . "okular")
+                               ("xopp" . "xournalpp")
+                               ("mkv" . "mpv")
+                               ("mp3" . "mpv --force-window")
+                               ("flac" . "mpv --force-window")
+                               ("flv" . "mpv")
+                               ("mp4" . "mpv"))))
+
+#+end_src
+
+** Dired-Previews
+#+begin_src elisp
+(use-package dired-preview :straight t)
+
+(use-package peep-dired :straight t)
+
+#+end_src
+
+** Dired-Rainbow
+part of Dired-Hacks, sets dired colors per file extension. E.g. Green for .html and red for .png,.jpg
+https://github.com/Fuco1/dired-hacks#dired-rainbow
+
+** Dirvish
+[[./.images/dirvish.svg]]
+[[https://github.com/alexluigit/dirvish][Dirvish]] is an improved version of the Emacs inbuilt package Dired. It not only gives Dired an appealing and highly customizable user interface, but also comes together with almost all possible parts required for full usability as a modern file manager. Almost all Dired features/settings work in Dirvish too.
+
+#+begin_src elisp
+(use-package dirvish :straight t
+  :config
+  (dirvish-override-dired-mode)
+  (setq dirvish-preview-dispatchers '(image gif audio epub pdf archive)) ;; could also add video, but lets emacs freeze while ffmpegthumbnailer generates the preview
+  (dirvish-define-preview exa (file)
+    "Use `exa' to generate directory preview."
+    :require ("exa") ; tell Dirvish to check if we have the executable
+    (when (file-directory-p file) ; we only interest in directories here
+      `(shell . ("exa" "-al" "--icons"
+                 "--group-directories-first" ,file))))
+  (add-to-list 'dirvish-preview-dispatchers 'exa)
+  (setq dirvish-attributes
+        '(file-time file-size collapse subtree-state vc-state git-msg))
+  (setq dirvish-hide-details nil)
+  (general-define-key
+   :states 'normal
+   :keymaps 'dired-mode-map
+   "TAB" 'dirvish-subtree-toggle
+   "t d" 'dired-hide-details-mode
+   "t TAB" 'dirvish-layout-toggle)
+
+  ;(push '("m"  "/run/media/xanadul/"  "Udisksctl mounts") dirvish-quick-access-entries)
+
+)
+#+end_src
+
+* Highlight TODO
+use hl-todo https://github.com/tarsius/hl-todo
+#+begin_src elisp
+(use-package hl-todo :straight t
+  :hook ((org-mode . hl-todo-mode)
+         (prog-mode . hl-todo-mode))
+  :config
+  (setq hl-todo-highlight-punctuation ":")
+  (setq hl-todo-keyword-faces 
+        '(("TODO" warning bold)
+          ("FIXME" error bold)
+          ("BUG" error bold)
+          ("HACK" font-lock-constant-face bold)
+          ("REVIEW" font-lock-keyword-face bold)
+          ("NOTE" success bold)
+          ("DEPRECATED" font-lock-doc-face bold)
+	  ("INSERT" font-lock-constant-face bold)
+      ))
+)
+#+end_src
+  
+
+* Indent Guide
+https://github.com/DarthFennec/highlight-indent-guides
+#+begin_src elisp
+;;(use-package highlight-indent-guides :straight t
+;;:hook prog-mode)
+#+end_src
+
+* Minimap
+https://github.com/dengste/minimap
+
+* Nice Modeline
+https://github.com/seagle0128/doom-modeline
+
+#+begin_src elisp
+(use-package doom-modeline :straight t
+  :init (doom-modeline-mode 1))
+#+end_src
+
+* Imenu-list
+An improved Imenu. Gets toggled with "t i"
+#+begin_src elisp
+(use-package imenu-list :straight t
+  :config (setq imenu-list-focus-after-activation t))
+
+#+end_src
+
+* Multimedia
+** EMMS
+The EmacsMultiMediaSystem.
+#+begin_src elisp
+(use-package emms :straight t
+:init
+(require 'emms-setup)
+(require 'emms-mpris)
+(emms-all)
+(emms-default-players)
+(emms-mpris-enable)
+:config
+(setq emms-source-file-default-directory ews-music-directory)
+(setq emms-browser-covers #'emms-browser-cache-thumbnail-async)
+(setq emms-player-list '(emms-player-mpv))
+)
+
+#+end_src
+
+** Radio
+#+begin_src elisp
+(use-package eradio :straight t
+  :init
+  (setq eradio-player '("mpv" "--no-video" "--no-terminal" ))
+
+  :config
+  (setq eradio-channels '(
+			  ("Listen.moe JPop vorbis" . "https://listen.moe/stream")
+			  ("Listen.moe JPop opus" . "https://listen.moe/opus")
+			  ("Listen.moe KPop opus" . "https://listen.moe/kpop/opus")
+			  ))
+)
+
+
+#+end_src
+
+* Pophint
+Similar to qutebrowsers hinting, which I have bound to f
+Absolutely awesom for quick navigation/selection.
+https://github.com/aki2o/emacs-pophint
+
+#+begin_src elisp
+(use-package pophint :straight t
+  :config
+  (setq pophint:popup-max-tips 1000))
+
+#+end_src
+
+* Editorconfig
+https://github.com/editorconfig/editorconfig-emacs
+
+* HTTP-daemon
+When working on a website, its great to host it from emacs too, for debugging.
+#+begin_src elisp
+(use-package simple-httpd :straight t)
+#+end_src
+
+* Xan-Functions
+#+begin_src elisp
+(defun xan-open-umpv ()
+  "Open marked files in uMPV."
+  (interactive)
+  ;; If nothing is marked, (dired-get-marked-files) returns the current lines filepath
+  (dolist (element (dired-get-marked-files) value)
+    (start-process "umpv" nil "umpv" element)
+    (sleep-for 1)))
+
+;; WIP, does not currently work
+(defun xan-toggle-mark ()
+  "Toggles marked line in Dired. If line is marked, unmark it. And vice versa"
+  (interactive)
+  (dolist (element (dired-get-marked-files) value)
+    (if (eq element (dired-get-file-for-visit))
+        (dired-unmark)
+        (dired-mark))))
+
+(defun xan-mount-menu ()
+ "Prompt user to pick a blockdevice from a list. This will be put into udiskctl mount -b  to mount it in /run/media/xanadul/Label without root.
+ TODO: Move output of lsblk to variable and immediatley kill buffer, so user cancelation doesn't leave an open buffer!"
+ (interactive)
+ (start-process "lsblk" (get-buffer-create "lsblk") "lsblk" "-o" "PATH,SIZE,MOUNTPOINT")
+ (sleep-for 0.3)
+ (let ((choices (split-string (tramp-get-buffer-string "lsblk") "\n")))
+  (start-process "udisksctl" nil "udisksctl" "mount" "-b" (car (split-string (completing-read "Choose device:" choices) " "))))
+ (kill-buffer "lsblk"))
+  
+(defun xan-recolor-sub ()
+"Replaces the awful #FFFF00 color of subtitles in .srt files with pleasant #FFFFFF. Also note, .srt files are stupid and use #aabbggrr instead of #rrggbbaa" 
+(interactive)
+;;(query-replace "FFFF00" "FFFFFF")
+;;(query-replace "00FFFF" "FFFFFF")
+(query-replace 
+ "Style: def2,Arial,58,&H0000FFFF,&H00FFFF00,&H00000008,&H80000008,0,0,0,0,100,100,0,0,1,5.8,0,2,50,50,30,0"
+ "Style: def2,Arial,58,&H00FFFFFF,&H00FFFFFF,&H00000008,&H80000008,0,0,0,0,100,100,0,0,1,5.8,0,2,50,50,30,0")
+
+
+)
+
+(defun xan-dart-settings ()
+    "Setting my dart settings, since setting them in use-package gets reverted on dart-mode activation"
+     (interactive)
+     (setq lsp-dart-flutter-widget-guides nil)
+     (setq lsp-dart-enable-sdk-formatter nil)
+     (setq gc-cons-threshold (* 100 1024 1024)
+           read-process-output-max (* 1024 1024))
+     (setq lsp-dart-line-length 320)
+     (setq lsp-dart-closing-labels nil)
+     (setq lsp-dart-outline nil)
+     (setq lsp-dart-flutter-outline nil)
+     (lsp-dart-flutter-widget-guides-mode)
+     (run-hooks 'xan-dart-hook)
+)
+#+end_src
+
+* Reload Emacs
+This is just an example of how to create a simple function in Emacs.  Use this function to reload Emacs after adding changes to the config.  Yes, I am loading the user-init-file twice in this function, which is a hack because for some reason, just loading the user-init-file once does not work properly.
+This behaviour might get fixed by the devs of Elpaca sometime in the future.
+#+begin_src elisp
+(defun reload-init-file ()
+  (interactive)
+  (load-file user-init-file)
+  (load-file user-init-file))
+#+end_src
+
+* Maximize Emacs
+This is a workaround specifically for gamescope and the steamdeck. Optimally, it should check the OS or some ENV-Vars before maximizing, as to not maximize on desktop systems. 
+#+begin_src elisp
+;;(add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+end_src

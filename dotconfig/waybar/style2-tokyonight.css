@@ -1,0 +1,422 @@
+/* Keyframes */
+
+@keyframes blink-critical {
+  to {
+    /*color: @white;*/
+    background-color: @critical;
+  }
+}
+
+
+/* Styles */
+
+/* Colors (dracula) */
+
+/* @define-color bg #282a36;
+@define-color black #282a36;
+@define-color cl #44475a;
+@define-color fg #f8f8f2;
+@define-color comm #6272a4;
+@define-color cyan #8be9fd;
+@define-color green #50fa7b;
+@define-color orange #ffb86c;
+@define-color pink #ff79c6;
+@define-color purple #bd93f9;
+@define-color red #ff5555;
+@define-color yellow #bd93f9;
+@define-color white #f8f8f2;
+
+
+@define-color warning 	@orange;
+@define-color critical	@red;
+@define-color mode	@purple;
+@define-color unfocused	@comm;
+@define-color focused	@purple;
+@define-color inactive	@yellow;
+@define-color sound	@comm;
+@define-color network	@purple;
+@define-color memory	@comm;
+@define-color cpu	@purple;
+@define-color temp	@green;
+@define-color layout	@yellow;
+@define-color battery	@purple;
+@define-color date	@comm;
+@define-color brightness	@cl;
+@define-color time	@purple;
+@define-color title	@comm;
+
+@define-color arrow1    @purple;
+@define-color arrow2    @comm;
+*/
+
+/* Colors (tokyonight-moon) */
+@define-color redlight #f52a65;
+@define-color reddark #f7768e;
+@define-color pinklight #d20065;
+@define-color pinkdark #ff007c;
+@define-color purplelight #7847bd;
+@define-color purpledark #bb9af7;
+@define-color bluelight #2e7de9;
+@define-color bluedark #7aa2f7;
+@define-color blueverydark #2d3f76;
+@define-color teallight #118c74;
+@define-color tealdark #1abc9c;
+@define-color cyanlight #007197;
+@define-color cyandark #7dcfff;
+@define-color greenlight #387068;
+@define-color greendark #9ece6a;
+@define-color yellowlight #8c6c3e;
+@define-color yellowdark #e0af68;
+@define-color orangelight #b15c00;
+@define-color orangedark #ff9e64;
+@define-color accentlight #006a83;
+@define-color accentdark #29a4bd;
+@define-color grey050 #e9e9ed;
+@define-color grey100 #e1e2e7;
+@define-color grey150 #d2d2da;
+@define-color grey200 #c7c7d1;
+@define-color grey250 #bcbcc8;
+@define-color grey300 #b6b8cd;
+@define-color grey350 #aaacc5;
+@define-color grey400 #a9b1d6;
+@define-color grey450 #848cb5;
+@define-color grey500 #737aa2;
+@define-color grey550 #545c7e;
+@define-color grey600 #414868;
+@define-color grey650 #3b4261;
+@define-color grey700 #323449;
+@define-color grey750 #292e42;
+@define-color grey800 #1f2231;
+@define-color grey850 #24283b;
+@define-color grey900 #1d202f;
+@define-color grey950 #1a1b26;
+@define-color white #e9e9ed;
+@define-color black #24283b;
+
+@define-color bg @grey250;
+@define-color warning @orangedark;
+@define-color critical @reddark;
+@define-color mode @blueverydark;
+@define-color buttonunfocused @grey450;
+@define-color buttonfocused @blueverydark;
+@define-color buttoninactive @grey450;
+@define-color buttonvisible @blueverydark;
+@define-color sound @grey450;
+@define-color network @blueverydark;
+@define-color memory @grey450;
+@define-color cpu @blueverydark;
+@define-color temp @greenlight;
+@define-color layout @yellowlight;
+@define-color battery @blueverydark;
+@define-color date @grey450;
+@define-color brightness @yellowdark;
+@define-color time @blueverydark;
+@define-color title @grey450;
+@define-color window @grey450;
+
+@define-color fg1 @white;
+@define-color fg2 @white;
+@define-color arrow1 @blueverydark;
+@define-color arrow2 @grey450;
+
+@define-color buttonactivefg @fg1;
+@define-color buttonactive @grey450;
+@define-color buttonvisiblefg @fg1;
+@define-color buttonvisible @grey450;
+@define-color buttonfocusedfg @fg1;
+@define-color buttonfocused @blueverydark;
+
+
+
+
+/* Reset all styles */
+* {
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  text-shadow: none;
+  -gtk-icon-shadow: none;
+}
+
+/* The whole bar */
+#waybar {
+  /* background: rgba(30, 31, 41, 0.95); */
+  background: rgba(30, 31, 41, 0);
+  /* #282828e0 */
+  color: @white;
+  font-family: JetBrains Mono, Siji;
+  font-size: 13pt;
+  /*font-weight: bold;*/
+}
+
+/* Each module */
+#battery,
+#clock,
+#cpu,
+#language,
+#memory,
+#mode,
+#network,
+#pulseaudio,
+#temperature,
+#tray,
+#backlight,
+#idle_inhibitor,
+#disk,
+#user,
+#mpris {
+  padding-left: 8pt;
+  padding-right: 8pt;
+}
+
+/* Each critical module */
+#mode,
+#memory.critical,
+#cpu.critical,
+#temperature.critical,
+#battery.critical.discharging {
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-name: blink-critical;
+  animation-duration: 1s;
+}
+
+/* Each warning */
+#network.disconnected,
+#memory.warning,
+#cpu.warning,
+#temperature.warning,
+#battery.warning.discharging {
+  color: @warning;
+}
+
+/* And now modules themselves in their respective order */
+
+/* Current sway mode (resize etc) */
+#mode {
+  color: @modefg;
+  background: @mode;
+}
+
+/* Workspaces stuff */
+#workspaces button {
+  /*font-weight: bold;*/
+  padding-left: 2pt;
+  padding-right: 2pt;
+  color: @fg1;
+  background: @buttonunfocused;
+}
+
+/* Inactive (on unfocused output) */
+#workspaces button.visible {
+  color: @buttonvisiblefg;
+  background: @buttonvisible;
+}
+
+/* Active (on focused output) */
+#workspaces button.focused {
+  color: @buttonfocusedfg;
+  background: @buttonfocused;
+}
+
+/* And for Hyprland */
+#workspaces button.active {
+  color: @buttonactivefg;
+  background: @buttonactive;
+}
+
+/* Contains an urgent window */
+#workspaces button.urgent {
+  color: @buttonurgentfg;
+  background: @buttonurgent;
+}
+
+/* Style when cursor is on the button */
+#workspaces button:hover {
+  background: @black;
+  color: @white;
+}
+
+#window {
+  /* margin-right: 35pt; */
+  /* margin-left: 35pt; */
+  background: @window;
+}
+
+#pulseaudio {
+  background: @sound;
+  color: @white;
+}
+
+#network {
+  background: @network;
+  color: @fg2;
+}
+
+#memory {
+  background: @memory;
+  color: @white;
+}
+
+#cpu {
+  background: @cpu;
+  color: @fg2;
+}
+
+#temperature {
+  background: @temp;
+  color: @fg2;
+}
+
+#language {
+  background: @layout;
+  color: @fg2;
+}
+
+#battery {
+  background: @battery;
+  color: @fg2;
+}
+
+#tray {
+  background: @date;
+}
+
+#clock.date {
+  background: @date;
+  color: @white;
+}
+
+#clock.time {
+  background: @time;
+  color: @fg2;
+}
+
+#submap {
+  background: @arrow1;
+  color: @fg2;
+}
+
+#custom-star {
+  font-size: 20pt;
+  color: rgba(00, 00, 00, 0);
+  background: @fulltrans;
+}
+
+#custom-arrowL1 {
+  font-size: 24pt;
+  color: @arrow1;
+  background: @arrow2;
+}
+
+#custom-arrowLT {
+  font-size: 24pt;
+  color: @arrow2;
+  background: @fulltrans;
+}
+
+#custom-arrowL2 {
+  font-size: 24pt;
+  color: @arrow2;
+  background: @arrow1;
+}
+
+#custom-arrowR1 {
+  font-size: 24pt;
+  color: @arrow1;
+  background: @arrow2;
+}
+
+#custom-arrowRT {
+  font-size: 24pt;
+  color: @arrow2;
+  background: @fulltrans;
+}
+
+#custom-arrowR2 {
+  font-size: 18pt;
+  color: @arrow2;
+  background: @arrow1;
+}
+
+#custom-arrow1 {
+  font-size: 18pt;
+  color: @time;
+  background: @date;
+}
+
+#custom-arrow2 {
+  font-size: 18pt;
+  color: @date;
+  background: @layout;
+}
+
+#custom-arrow3 {
+  font-size: 18pt;
+  color: @date;
+  background: @battery;
+}
+
+#custom-arrow4 {
+  font-size: 18pt;
+  color: @battery;
+  background: @temp;
+}
+
+#custom-arrow5 {
+  font-size: 18pt;
+  color: @date;
+  background: @cpu;
+}
+
+#custom-arrow6 {
+  font-size: 18pt;
+  color: @cpu;
+  background: @memory;
+}
+
+#custom-arrow7 {
+  font-size: 18pt;
+  color: @memory;
+  background: @network;
+}
+
+#custom-arrow8 {
+  font-size: 18pt;
+  color: @network;
+  background: @sound;
+}
+
+#custom-arrow9 {
+  font-size: 18pt;
+  color: @sound;
+  background: transparent;
+}
+
+#custom-arrow10 {
+  font-size: 18pt;
+  color: @unfocused;
+  background: transparent;
+}
+
+#custom-arrow11 {
+  font-size: 18pt;
+  color: @battery;
+  background: @comm;
+}
+
+#custom-arrow20 {
+  font-size: 18pt;
+  color: @comm;
+  background: rgba(0, 0, 0, 0.0);
+}
+
+#custom-arrow21 {
+  font-size: 18pt;
+  color: @comm;
+  background: rgba(0, 0, 0, 0.0);
+}

@@ -12,9 +12,9 @@ end
 
 config.enable_wayland = false
 --config.color_scheme = 'Dracula'
---config.color_scheme = "Dracula (Official)" config.color_scheme_dirs = { '$HOME/.config/wezterm/colors' }
--- config.color_scheme = "tokyonight_moon" config.color_scheme_dirs = { '$HOME/Git/tokyonight.nvim/extras/wezterm' }
-config.color_scheme = "monokai"
+config.color_scheme = "Dracula (Official)" config.color_scheme_dirs = { '$HOME/.config/wezterm/colors' }
+--config.color_scheme = "tokyonight_moon" config.color_scheme_dirs = { '$HOME/Git/tokyonight.nvim/extras/wezterm' }
+-- config.color_scheme = "monokai"
 --config.color_scheme = "Catppuccin Latte"
 
 config.window_close_confirmation = 'NeverPrompt'
@@ -28,8 +28,8 @@ config.tab_max_width = 35
 config.hide_mouse_cursor_when_typing = false
 
 
-config.window_background_opacity = 0.60
-config.text_background_opacity = 1
+config.window_background_opacity = 0.80
+config.text_background_opacity = 0.4
 
 config.window_padding = {
   left = 0,
@@ -45,6 +45,7 @@ config.set_environment_variables = {
 }
 
 config.warn_about_missing_glyphs = false
+config.front_end = "WebGpu"
 
 
 config.harfbuzz_features = {'calt=1', 'clig=1', 'liga=1'} --enables ligatures

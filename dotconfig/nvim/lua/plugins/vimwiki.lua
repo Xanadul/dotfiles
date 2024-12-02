@@ -1,4 +1,4 @@
 return {
-  "https://github.com/vimwiki/vimwiki"
+  -- "https://github.com/vimwiki/vimwiki"
 
 }

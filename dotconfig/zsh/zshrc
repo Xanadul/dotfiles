@@ -17,7 +17,7 @@ path+=('/home/xanadul/.dotnet/')
 
 export LBIN=~/.local/bin
 export SCREENSHOTS=~/Pictures/Screenshots
-export CS=~/Documents/ComputerScience/SS-2024
+export CS=~/Documents/ComputerScience/WS-2024
 
 #export GEM_HOME="$(gem env user_gemhome)"
 #path+=("$GEM_HOME/bin")

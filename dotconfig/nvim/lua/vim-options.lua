@@ -8,9 +8,9 @@ vim.g.mapleader = " "
 opt.tabstop = 2
 opt.softtabstop = 2
 opt.shiftwidth = 2    -- use << or >> to inc/decrease indent
-opt.expandtab = false -- true enables spaces for indent
+opt.expandtab = true -- true enables spaces for indent
 opt.smartindent = true
-opt.wrap = false
+opt.wrap = true
 
 
 --opt.timeoutlen = 300
@@ -67,6 +67,17 @@ keyset("n", "<c-Down>", ":wincmd j<CR>")
 keyset("n", "<c-Up>", ":wincmd k<CR>")
 keyset("n", "<c-Right>", ":wincmd l<CR>")
 
+keyset("n", "<leader>wh", ':vsplit<CR>', {desc = "Split right"})
+keyset("n", "<leader>wv", ':split<CR>', {desc = "Split down"})
+keyset("n", "<leader>wc", ':quit<CR>', {desc = "Close split"})
+keyset("n", "<C-S-Up>", ':resize +1<CR>', {desc = "Increase H Split Size"}) -- TODO: Make this position aware via lua
+keyset("n", "<C-S-Down>", ':resize -1<CR>', {desc = "Decrease H Split Size"}) -- TODO: Make this position aware via lua
+keyset("n", "<C-S-Left>", ':vertical resize -1<CR>', {desc = "Decrease V Split Size"}) -- TODO: Make this position aware via lua
+keyset("n", "<C-S-Right>", ':vertical resize +1<CR>', {desc = "Increase V Split Size"}) -- TODO: Make this position aware via lua
+
+
+keyset("n", "<leader>bc", ':enew<bar>bd #<CR>', {desc = "[C]lose"})
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -75,6 +86,8 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 keyset("v", "<S-Down>", ":m '>+1<CR>gv=gv", { desc = "Move Line Down", silent = true })
 keyset("v", "<S-Up>", ":m '<-2<CR>gv=gv", { desc = "Move Line Up", silent = true })
+keyset("v", "<S-Right>", ">gv", { desc = "Move Line Right"})
+keyset("v", "<S-Left>", "<gv")
 keyset("n", "<leader>o", "o<esc>", { desc = "Newline on top" })
 keyset("n", "<leader>O", "O<esc>", { desc = "Newline below" })
 
@@ -101,12 +114,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
-keyset("n", "<leader>Y", [["+Y]], { desc = "Some kinda Yank" })
-
+keyset("n", "<leader>Y", [["+Y]], { desc = "Yank to system Clipboard" })
 keyset({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete to void" })
-
--- This is going to get me cancelled
-keyset("i", "<C-c>", "<Esc>")
 
 keyset("n", "Q", "<nop>")
 
@@ -125,6 +134,3 @@ keyset(
 keyset("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "cmod +x" })
 
 
---Easy indent usin > and <
-keyset("v", ">", ">gv")
-keyset("v", "<", "<gv")
