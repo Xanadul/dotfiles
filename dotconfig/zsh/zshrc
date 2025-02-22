@@ -17,7 +17,10 @@ path+=$HOME/.dotnet/
 
 export LBIN=~/.local/bin
 export SCREENSHOTS=~/Pictures/Screenshots
-export CS=~/Documents/ComputerScience/WS-2024
+export CS=~/University/ComputerScience/2024-WS/
+export FZF_DEFAULT_OPTS="--preview-window 'right:60%:nohidden'" #preview hidden by default?!?!
+export MANPAGER="nvim +Man!"
+
 
 #export GEM_HOME="$(gem env user_gemhome)"
 #path+=("$GEM_HOME/bin")
@@ -38,7 +41,13 @@ alias ll="eza --long --icons always --group-directories-first --dereference --li
 alias ld="eza --only-dirs --icons always"
 alias lla="eza --long --all --icons always --group-directories-first --dereference --links --git --time-style='+%Y年%b月%d日 %H時%M分%S秒 '"
 alias lt="eza --tree --level=2 --icons always"
+alias tree="eza --tree --icons always"
 alias vim="nvim"
+
+alias less="moar"
+
+alias lgit="lazygit"
+alias ldocker="lazydocker"
 
 #alias emacs="emacsclient -c -a 'emacs'"
 #alias emacst="emacsclient -c -a 'emacs' -t"
@@ -50,7 +59,8 @@ alias yt-dlp-p='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --wr
 
 # Download a playlist into ./playlist-name/ , extract its audio to wav using best quality and write metadata to files
 alias yt-dlp-p-aw='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --extract-audio --audio-format wav --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
-alias yt-dlp-p-aw='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --extract-audio --audio-format flac --embed-thumbnail --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
+alias yt-dlp-p-af='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --extract-audio --audio-format flac --embed-thumbnail --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
+alias yt-dlp-p-af-noIdx='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --extract-audio --audio-format flac --embed-thumbnail --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
 
 alias yt-dlp-aw='yt-dlp -o "%(title)s" --extract-audio --audio-format wav --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
 alias yt-dlp-af='yt-dlp -o "%(title)s" --extract-audio --audio-format flac --audio-quality 0 --embed-thumbnail --write-description --write-info-json --write-playlist-metafiles'
@@ -142,6 +152,7 @@ znap source hlissner/zsh-autopair
 znap source unixorn/fzf-zsh-plugin # awesome history fuzzyfind, using ctrl+r
 
 znap source Aloxaf/fzf-tab
+
 
 # znap source jeffreytse/zsh-vi-mode
 
