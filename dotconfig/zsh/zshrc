@@ -1,19 +1,19 @@
-zstyle :compinstall filename '/home/xanadul/.zshrc'
+zstyle :compinstall filename '/home/$HOME/.zshrc'
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' #Case insensitive completion
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 autoload -Uz compinit promptinit
 
-path+=('/home/xanadul/.bin')
-path+=('/home/xanadul/.local/bin')
-path+=('/home/xanadul/.emacs.d/bin')
-path+=('/home/xanadul/go/bin') #for software installed with "go install"
-path+=('/home/xanadul/.cargo/bin')
-path+=('/home/xanadul/.development/flutter/bin')
-path+=('/home/xanadul/.local/podman/bin')
-path+=('/var/lib/flatpak/exports/bin')
-path+=('/home/xanadul/.cabal/bin')
-path+=('/home/xanadul/.ghcup/bin')
-path+=('/home/xanadul/.dotnet/')
+path+=$HOME/.flutter
+path+=$HOME/.flutter/bin
+path+=$HOME/.bin
+path+=$HOME/.local/bin
+path+=$HOME/.emacs.d/bin
+path+=$HOME/go/bin #for software installed with "go install"
+path+=$HOME/.cargo/bin
+path+=$HOME/.local/podman/bin
+path+=$HOME/.cabal/bin
+path+=$HOME/.ghcup/bin
+path+=$HOME/.dotnet/
 
 export LBIN=~/.local/bin
 export SCREENSHOTS=~/Pictures/Screenshots
@@ -22,7 +22,7 @@ export CS=~/Documents/ComputerScience/WS-2024
 #export GEM_HOME="$(gem env user_gemhome)"
 #path+=("$GEM_HOME/bin")
 
-ZSHCONFDIR="/home/xanadul/.config/zsh"
+ZSHCONFDIR="$HOME/.config/zsh"
 function lf() { #yes, lf is a different program, but muscle memory dictates this name. Also, "ya" is a terrible combination on Colmak
 	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
 	yazi "$@" --cwd-file="$tmp"
