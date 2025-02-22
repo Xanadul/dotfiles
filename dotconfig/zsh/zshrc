@@ -21,7 +21,6 @@ export CS=~/University/ComputerScience/2024-WS/
 export FZF_DEFAULT_OPTS="--preview-window 'right:60%:nohidden'" #preview hidden by default?!?!
 export MANPAGER="nvim +Man!"
 
-
 #export GEM_HOME="$(gem env user_gemhome)"
 #path+=("$GEM_HOME/bin")
 
