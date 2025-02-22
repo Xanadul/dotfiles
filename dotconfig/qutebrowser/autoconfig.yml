@@ -10,6 +10,10 @@ settings:
     global:
     - https://easylist.to/easylist/easylist.txt
     - https://easylist.to/easylist/easyprivacy.txt
+  content.blocking.enabled:
+    global: true
+  content.blocking.method:
+    global: adblock
   content.desktop_capture:
     https://discord.com: true
   content.geolocation:
@@ -20,9 +24,11 @@ settings:
     https://discord.com: true
   content.notifications.enabled:
     https://aternos.org: false
+    https://community.oneplus.com: false
     https://eu.elegoo.com: false
     https://us.elegoo.com: false
     https://wetalk.informatik.uni-kiel.de: false
     https://www.elegoo.com: false
+    https://www.facebook.com: false
   content.register_protocol_handler:
     https://mail.proton.me#mailto=%25s: false
