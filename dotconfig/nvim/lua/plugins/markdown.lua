@@ -30,7 +30,7 @@ return {
 				workspaces = {
 					{
 						name = "personal",
-						path = "~/Git/quartz/content/"
+						path = "~/obsidian/"
 					}
 				}
 			})

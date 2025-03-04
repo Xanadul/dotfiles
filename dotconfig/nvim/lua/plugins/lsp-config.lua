@@ -7,6 +7,7 @@ return {
 	},
 
 	-- Autocompletion
+  -- if
 	{
 		'hrsh7th/nvim-cmp',
 		event = 'InsertEnter',
@@ -76,12 +77,17 @@ return {
 				},
 				sources = {
 					{
-						name = 'lazydev',
+						-- name = 'lazydev',
 						-- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
 						group_index = 0
 					},
 					{ name = 'luasnip' },
-					{ name = 'nvim_lsp' },
+          {
+            name = 'nvim_lsp',
+            entry_filter = function(entry, ctx)
+              return require('cmp.types').lsp.CompletionItemKind[entry:get_kind()] ~= 'Text'
+            end
+          },
 					{ name = 'path' }
 				},
 				mapping = cmp.mapping.preset.insert({
@@ -124,17 +130,23 @@ return {
 			-- if there is a language server active in the file
 			local lsp_attach = function(client, bufnr)
 				local opts = { buffer = bufnr }
-
-				vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-				vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-				vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
-				vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
-				vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
-				vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
-				vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
-				vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-				vim.keymap.set({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
-				vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+        -- TODO: Use this syntax throuhout wk config
+        local wk = require("which-key")
+        wk.register({
+          g = {
+            name = "+[G]o",
+            K = { '<cmd>lua vim.lsp.buf.hover<cr>', 'Information' },
+            d = { '<cmd>lua vim.lsp.buf.definition()<cr>', 'to [D]efinition' },
+				    D = { '<cmd>lua vim.lsp.buf.declaration()<cr>', 'to [D]eklaration' },
+				    i = { '<cmd>lua vim.lsp.buf.implementation()<cr>', 'to [I]mplementations'},
+            o = {'<cmd>lua vim.lsp.buf.type_definition()<cr>', 'to type definition'},
+            r={'<cmd>lua vim.lsp.buf.references()<cr>', 'to [R]efereces'},
+            s={'<cmd>lua vim.lsp.buf.signature_help()<cr>', 'to [Signature]'},
+            F2={'<cmd>lua vim.lsp.buf.rename()<cr>', 'Rename'},
+            F3={'<cmd>lua vim.lsp.buf.format({async = true})<cr>', 'Format'},
+            F4={'<cmd>lua vim.lsp.buf.code_action()<cr>', 'Code Action'},
+          }
+        })
 			end
 
 			lsp_zero.extend_lspconfig({
@@ -146,19 +158,20 @@ return {
 			-- These are just examples. Replace them with the language
 			-- servers you have installed in your system
 			require('lspconfig').ruff.setup({})
-			require('lspconfig').gopls.setup({})
+			-- require('lspconfig').gopls.setup({})
 			require('lspconfig').jdtls.setup({})
 			require('lspconfig').pyright.setup({})
-			require('lspconfig').nil_ls.setup({})
+			-- require('lspconfig').nil_ls.setup({})
 			require('lspconfig').lua_ls.setup({})
-			require('lspconfig').zls.setup({})
-			require('lspconfig').texlab.setup({})
-			require('lspconfig').clangd.setup({})
+			-- require('lspconfig').zls.setup({})
+			-- require('lspconfig').texlab.setup({})
+			-- require('lspconfig').clangd.setup({})
 			require('lspconfig').bashls.setup({})
-			require('lspconfig').hyprls.setup({})
-			require('lspconfig').ols.setup({})
-			require('lspconfig').kotlin_language_server.setup({})
-			require('lspconfig').openscad_lsp.setup({})
+			require('lspconfig').marksman.setup({})
+			-- require('lspconfig').hyprls.setup({})
+			-- require('lspconfig').ols.setup({})
+			-- require('lspconfig').kotlin_language_server.setup({})
+			-- require('lspconfig').openscad_lsp.setup({})
 			-- require('lspconfig').dartls.setup({})
 
 			vim.api.nvim_create_autocmd('LspAttach', {
@@ -218,28 +231,28 @@ return {
 					--
 					-- When you move your cursor, the highlights will be cleared (the second autocommand).
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
-					if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-						local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
-						vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-							buffer = event.buf,
-							group = highlight_augroup,
-							callback = vim.lsp.buf.document_highlight,
-						})
-
-						vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-							buffer = event.buf,
-							group = highlight_augroup,
-							callback = vim.lsp.buf.clear_references,
-						})
-
-						vim.api.nvim_create_autocmd('LspDetach', {
-							group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-							callback = function(event2)
-								vim.lsp.buf.clear_references()
-								vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
-							end,
-						})
-					end
+					-- if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+					-- 	local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+					-- 	vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+					-- 		buffer = event.buf,
+					-- 		group = highlight_augroup,
+					-- 		callback = vim.lsp.buf.document_highlight,
+					-- 	})
+					--
+					-- 	vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+					-- 		buffer = event.buf,
+					-- 		group = highlight_augroup,
+					-- 		callback = vim.lsp.buf.clear_references,
+					-- 	})
+					--
+					-- 	vim.api.nvim_create_autocmd('LspDetach', {
+					-- 		group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+					-- 		callback = function(event2)
+					-- 			vim.lsp.buf.clear_references()
+					-- 			vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+					-- 		end,
+					-- 	})
+					-- end
 				end
 			})
 		end
