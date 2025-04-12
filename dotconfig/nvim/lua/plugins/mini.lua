@@ -1,5 +1,5 @@
 return {
-  "echasnovski/mini.ai",
+  "echasnovski/mini.nvim",
   config = function()
     -- Better Around/Inside textobjects
     --
@@ -17,25 +17,11 @@ return {
     -- - sr)'  - [S]urround [R]eplace [)] [']
     require('mini.surround').setup()
 
-    -- Simple and easy statusline.
-    --  You could remove this setup call if you don't like it,
-    --  and try some other statusline plugin
-    -- local statusline = require 'mini.statusline'
-    -- set use_icons to true if you have a Nerd Font
-    -- statusline.setup { use_icons = vim.g.have_nerd_font }
-
-    -- You can configure sections in the statusline by overriding their
-    -- default behavior. For example, here we set the section for
-    -- cursor location to LINE:COLUMN
-    ---@diagnostic disable-next-line: duplicate-set-field
-    -- statusline.section_location = function()
-    --   return '%2l:%-2v'
-    -- end
-
-
     -- Trim Whitespaces with :lua MiniTrailspace.trim()
     require('mini.trailspace').setup()
-    vim.keymap.set('n', '<leader>rw', "<cmd>lua MiniTrailspace.trim()<cr>", { desc = '[R]emove Whitespaces' })
+    require('which-key').add {
+      { '<leader>ew', "<cmd>lua MiniTrailspace.trim()<cr>", desc = '[W]hitespaces remove', mode = 'n' },
+    }
 
     -- Use ga (or gA for preview) to start align mode.
     -- modifier presets: =  ,  |   space
@@ -50,14 +36,16 @@ return {
     require('mini.align').setup()
 
     -- toggle comments, eg.: gcc   gca{
-    require('mini.comment').setup()
+    -- Alternative to comment.lua
+    -- require('mini.comment').setup()
 
 
     -- highlight word under cursor in Buffer
     require('mini.cursorword').setup()
 
 
-    require('mini.pairs').setup()
+    -- Using autopair.lua
+    -- require('mini.pairs').setup()
 
 
 

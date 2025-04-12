@@ -1,30 +1,62 @@
-zstyle :compinstall filename '/home/$HOME/.zshrc'
+zstyle :compinstall filename "${HOME}/.zshrc"
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' #Case insensitive completion
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 autoload -Uz compinit promptinit
 
-path+=$HOME/.flutter
-path+=$HOME/.flutter/bin
-path+=$HOME/.bin
-path+=$HOME/.local/bin
-path+=$HOME/.emacs.d/bin
-path+=$HOME/go/bin #for software installed with "go install"
-path+=$HOME/.cargo/bin
-path+=$HOME/.local/podman/bin
-path+=$HOME/.cabal/bin
-path+=$HOME/.ghcup/bin
-path+=$HOME/.dotnet/
+# p10k is nice, but since it puts content on the right edge, spams window on resize...
+#znap source romkatv/powerlevel10k
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+#[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+
+# Starship prompt
+eval "$(starship init zsh)"
+
+################################################################################
+# Path
+################################################################################
+
+path+=("${HOME}/.local/bin")
+path+=("${HOME}/.emacs.d/bin")
+path+=("${HOME}/go/bin") #for software installed with "go install"
+path+=("${HOME}/.cargo/bin")
+path+=("${HOME}/.development/flutter/bin")
+path+=("${HOME}/.flutter")
+path+=("${HOME}/.flutter/bin")
+path+=("${HOME}/.local/podman/bin")
+path+=("${HOME}/.cabal/bin")
+path+=("${HOME}/.ghcup/bin")
+path+=("${HOME}/.dotnet/")
+path+=('/var/lib/flatpak/exports/bin')
+
+################################################################################
+# Environment Variables
+################################################################################
 
 export LBIN=~/.local/bin
 export SCREENSHOTS=~/Pictures/Screenshots
 export CS=~/University/ComputerScience/2024-WS/
-export FZF_DEFAULT_OPTS="--preview-window 'right:60%:nohidden'" #preview hidden by default?!?!
+# export FZF_DEFAULT_OPTS="--preview-window 'right:60%:nohidden'" #preview hidden by default?!?!
+export FZF_DEFAULT_OPTS="--preview '~/.config/fzf/preview.sh {}' --layout=reverse --inline-info --preview-window=nohidden"
 export MANPAGER="nvim +Man!"
+export ZSHCONFDIR="${HOME}/.config/zsh"
 
-#export GEM_HOME="$(gem env user_gemhome)"
-#path+=("$GEM_HOME/bin")
+################################################################################
+# Pyenv
+################################################################################
 
-ZSHCONFDIR="$HOME/.config/zsh"
+# ~/.zprofile (for login shells)
+# and ~/.zshrc (for interactive shells) :
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"
+
+# Restart your shell for the changes to take effect.
+
+################################################################################
+# Aliases
+################################################################################
+
 function lf() { #yes, lf is a different program, but muscle memory dictates this name. Also, "ya" is a terrible combination on Colmak
 	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
 	yazi "$@" --cwd-file="$tmp"
@@ -42,11 +74,17 @@ alias lla="eza --long --all --icons always --group-directories-first --dereferen
 alias lt="eza --tree --level=2 --icons always"
 alias tree="eza --tree --icons always"
 alias vim="nvim"
+# alias mpv="kitty mpv $1"
 
 alias less="moar"
 
 alias lgit="lazygit"
 alias ldocker="lazydocker"
+alias dragon="dragon-drop"
+which bat >/dev/null 2>/dev/null;
+if [[ $? != 0 ]]; then
+    alias bat="batcat"
+fi
 
 #alias emacs="emacsclient -c -a 'emacs'"
 #alias emacst="emacsclient -c -a 'emacs' -t"
@@ -59,13 +97,19 @@ alias yt-dlp-p='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --wr
 # Download a playlist into ./playlist-name/ , extract its audio to wav using best quality and write metadata to files
 alias yt-dlp-p-aw='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --extract-audio --audio-format wav --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
 alias yt-dlp-p-af='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --extract-audio --audio-format flac --embed-thumbnail --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
-alias yt-dlp-p-af-noIdx='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --extract-audio --audio-format flac --embed-thumbnail --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
+alias yt-dlp-p-af-noIdx='yt-dlp -o "%(playlist_title)s/%(title)s" --extract-audio --audio-format flac --embed-thumbnail --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
+alias yt-dlp-p-aw-noIdx='yt-dlp -o "%(playlist_title)s/%(title)s" --extract-audio --audio-format wav --embed-thumbnail --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
 
 alias yt-dlp-aw='yt-dlp -o "%(title)s" --extract-audio --audio-format wav --audio-quality 0 --write-description --write-info-json --write-playlist-metafiles'
 alias yt-dlp-af='yt-dlp -o "%(title)s" --extract-audio --audio-format flac --audio-quality 0 --embed-thumbnail --write-description --write-info-json --write-playlist-metafiles'
 
 
 alias bcrypt-hash='f() {htpasswd -nbBC 10 $1 $2};f'
+
+
+################################################################################
+# Usability Misc
+################################################################################
 
 #eval "$(zoxide init --cmd cd zsh)"
 
@@ -97,8 +141,9 @@ setopt HIST_IGNORE_ALL_DUPS
 #fix multi instance history
 setopt inc_append_history #save every command before it is executed to history.
 
-
-#source $ZSHCONFDIR/2liner.zsh
+################################################################################
+# Plugins
+################################################################################
 
 [[ -f ~/Git/zsh-snap/znap.zsh ]] ||
     git clone --depth 1 -- \
@@ -106,13 +151,6 @@ setopt inc_append_history #save every command before it is executed to history.
 
 source ~/Git/zsh-snap/znap.zsh  # Start Znap
 
-# p10k is nice, but since it puts content on the right edge, spams window on resize...
-#znap source romkatv/powerlevel10k
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-#[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
-
-# Starship prompt
-eval "$(starship init zsh)"
 
 
 
@@ -152,59 +190,31 @@ znap source unixorn/fzf-zsh-plugin # awesome history fuzzyfind, using ctrl+r
 
 znap source Aloxaf/fzf-tab
 
+# disable sort when completing `git checkout`
+zstyle ':completion:*:git-checkout:*' sort false
+# set descriptions format to enable group support
+# NOTE: don't use escape sequences (like '%F{red}%d%f') here, fzf-tab will ignore them
+zstyle ':completion:*:descriptions' format '[%d]'
+# set list-colors to enable filename colorizing
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
+zstyle ':completion:*' menu no
+# preview commands for various commands
+zstyle ':fzf-tab:complete:ls:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:vim:*' fzf-preview 'bat $realpath'
+zstyle ':fzf-tab:complete:nvim:*' fzf-preview 'bat $realpath'
+# custom fzf flags
+# NOTE: fzf-tab does not follow FZF_DEFAULT_OPTS by default
+# zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 #--bind=tab:accept
+# To make fzf-tab follow FZF_DEFAULT_OPTS.
+# NOTE: This may lead to unexpected behavior since some flags break this plugin. See Aloxaf/fzf-tab#455.
+zstyle ':fzf-tab:*' use-fzf-default-opts no
+# switch group using `<` and `>`
+zstyle ':fzf-tab:*' switch-group '<' '>'
+
 
 # znap source jeffreytse/zsh-vi-mode
-
-#znap source fourdim/zsh-archlinux
-#pacman helper. Using pac [add remove upg upgrade list earch prune own tree why clean]
-
-znap source Junker/zsh-archlinux
-#| Alias        | Command                                | Description                                                      |
-#|--------------|----------------------------------------|------------------------------------------------------------------|
-#| pacin        | `sudo pacman -S`                       | Install packages from the repositories                           |
-#| pacndeps     | `sudo pacman -Sdd`                     | Install a package or packages without dependencies               |
-#| pacins       | `sudo pacman -U`                       | Install a package from a local file                              |
-#| pacinsd      | `sudo pacman -S --asdeps`              | Install packages as dependencies of another package              |
-#| paclean      | `sudo pacman -Sc`                      | Clean out old and unused caches and packages                     |
-#| pacloc       | `pacman -Qi`                           | Display information about a package in the local database        |
-#| paclocs      | `pacman -Qs`                           | Search for packages in the local database                        |
-#| paclr        | `sudo pacman -Scc`                     | Remove all files from the cache                                  |
-#| paclsorphans | `sudo pacman -Qdt`                     | List all orphaned packages                                       |
-#| pacmir       | `sudo pacman -Syy`                     | Force refresh of all package lists after updating mirrorlist     |
-#| pacre        | `sudo pacman -R`                       | Remove packages, keeping its settings and dependencies           |
-#| pacrem       | `sudo pacman -Rns`                     | Remove packages, including its settings and dependencies         |
-#| pacrep       | `pacman -Si`                           | Display information about a package in the repositories          |
-#| pacreps      | `pacman -Ss`                           | Search for packages in the repositories                          |
-#| pacrmorphans | `sudo pacman -Rs $(pacman -Qtdq)`      | Delete all orphaned packages                                     |
-#| pacupd       | `sudo pacman -Sy`                      | Update and refresh local package, ABS and AUR databases          |
-#| pacupg       | `sudo pacman -Syu`                     | Sync with repositories before upgrading packages                 |
-#| pacfileupg   | `sudo pacman -Fy`                      | Download fresh package databases from the server                 |
-#| pacfiles     | `pacman -F`                            | Search package file names for matching strings                   |
-#| pacls        | `pacman -Ql`                           | List files in a package                                          |
-#| pacown       | `pacman -Qo`                           | Show which package owns a file                                   |
-#| upgrade      | `sudo pacman -Syu`                     | Sync with repositories before upgrading packages                 |
-#|--------------|----------------------------------------|-------------------------------------------------------------------|
-#| parclean     | `paru -Sc`                     | Clean out old and unused caches and packages                      |
-#| parclr       | `paru -Scc`                    | Remove all files from the cache                                   |
-#| parin        | `paru -S`                      | Install packages from the repositories                            |
-#| parins       | `paru -U`                      | Install a package from a local file                               |
-#| parinsd      | `paru -S --asdeps`             | Install packages as dependencies of another package               |
-#| parloc       | `paru -Qi`                     | Display information about a package in the local database         |
-#| parlocs      | `paru -Qs`                     | Search for packages in the local database                         |
-#| parlst       | `paru -Qe`                     | List installed packages including from AUR (tagged as "local")    |
-#| parmir       | `paru -Syy`                    | Force refresh of all package lists after updating mirrorlist      |
-#| parre        | `paru -R`                      | Remove packages, keeping its settings and dependencies            |
-#| parrem       | `paru -Rns`                    | Remove packages, including its settings and unneeded dependencies |
-#| parrep       | `paru -Si`                     | Display information about a package in the repositories           |
-#| parreps      | `paru -Ss`                     | Search for packages in the repositories                           |
-#| parupd       | `paru -Sy`                     | Update and refresh local package, ABS and AUR databases           |
-#| parupg       | `paru -Syu`                    | Sync with repositories before upgrading packages                  |
-#| upgrade      | `paru -Syu`                    | Sync with repositories before upgrading packages                  |
-
-
-
-
-  
 
 znap source zsh-users/zsh-syntax-highlighting
 
@@ -217,3 +227,4 @@ znap source zsh-users/zsh-history-substring-search
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
 
+if [ -e ${HOME}/.nix-profile/etc/profile.d/nix.sh ]; then source ${HOME}/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

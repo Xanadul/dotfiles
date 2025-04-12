@@ -1,8 +1,9 @@
 return {
-  -- Replaced with telescope-undo.nvim
- --  'mbbill/undotree',
-	-- config= function()
-	-- 	vim.keymap.set('n', '<leader>tu', vim.cmd.UndotreeToggle, { desc = '[T]oggle [U]ndotree ' })
-	-- end
+  'mbbill/undotree',
+  config = function()
+    require('which-key').add {
+      { '<leader>tu', vim.cmd.UndotreeToggle, desc = '[U]ndotree', mode = 'n' },
+    }
+  end
 
 }
