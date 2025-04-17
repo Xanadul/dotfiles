@@ -57,6 +57,8 @@ eval "$(pyenv init - zsh)"
 # Aliases
 ################################################################################
 
+alias s='source ~/.zshrc'
+
 function lf() { #yes, lf is a different program, but muscle memory dictates this name. Also, "ya" is a terrible combination on Colmak
 	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
 	yazi "$@" --cwd-file="$tmp"
@@ -66,17 +68,52 @@ function lf() { #yes, lf is a different program, but muscle memory dictates this
 	rm -f -- "$tmp"
 }
 
-alias rp="rsync -r --progress"
-alias ls="eza --group-directories-first --icons always"
-alias ll="eza --long --icons always --group-directories-first --dereference --links --git --time-style='+%Y年%b月%d日 %H時%M分%S秒 '"
-alias ld="eza --only-dirs --icons always"
-alias lla="eza --long --all --icons always --group-directories-first --dereference --links --git --time-style='+%Y年%b月%d日 %H時%M分%S秒 '"
-alias lt="eza --tree --level=2 --icons always"
-alias tree="eza --tree --icons always"
+alias rp="rsync -rah --info=progress2"
+
+
+which eza >/dev/null 2>/dev/null;
+if [[ $? == 0 ]]; then
+  alias ls="eza --group-directories-first --icons always"
+  alias la="eza --group-directories-first --icons always --all"
+  alias l.="eza -d .*"
+  alias ll="eza --long --icons always --group-directories-first --dereference --links --git --time-style='+%Y年%b月%d日 %H時%M分%S秒' --header"
+  alias ld="eza --only-dirs --icons always"
+  alias lla="eza --long --all --icons always --group-directories-first --dereference --links --git --time-style='+%Y年%b月%d日 %H時%M分%S秒 ' --header"
+  alias lt="eza --tree --level=2 --icons always"
+  alias tree="eza --tree --icons always"
+else
+  alias ls="ls --color=auto --group-directories-first"
+  alias l.="ls -d .*"
+  alias la="ls -a --group-directories-first"
+  alias ll="ls -l --group-directories-first --header"
+  alias lla="ls -la --group-directories-first --header"
+fi
+
+alias mkdir="mkdir --parents --verbose"
+
+take ()
+{
+  mkdir --parents --verbose "${1}"
+  cd "${1}"
+}
+
+alias ..='cd ..'
+alias ...='cd ../../../'
+alias ....='cd ../../../../'
+alias 4.='cd ../../../../'
+alias .....='cd ../../../../'
+alias 5.='cd ../../../../..'
+
+
 alias vim="nvim"
 # alias mpv="kitty mpv $1"
-
-alias less="moar"
+#
+which rg >/dev/null 2>/dev/null;
+if [[ $? == 0 ]]; then
+  alias grep='rg'
+else
+  alias grep="grep --color=auto"
+fi
 
 alias lgit="lazygit"
 alias ldocker="lazydocker"
@@ -86,10 +123,32 @@ if [[ $? != 0 ]]; then
     alias bat="batcat"
 fi
 
+_fancyDiff(){
+  diff -u "${@}" | diff-so-fancy
+}
+which diff-so-fancy >/dev/null 2>/dev/null;
+if [[ $? == 0 ]]; then
+  alias diff=_fancyDiff
+fi
+
+alias mount='mount | column -t'
 #alias emacs="emacsclient -c -a 'emacs'"
 #alias emacst="emacsclient -c -a 'emacs' -t"
 alias dr="emacsclient ./"
 alias emacst="emacs -t"
+
+# Show open Ports
+alias ports='netstat -tulanp'
+
+# Safety nets
+alias rm='rm -I --preserve-root'
+alias mv='mv -i'
+alias cp='cp -i'
+alias ln='ln -i'
+
+alias df='df -hT'
+alias du='du -ch'
+
 
 # Download a playlist into ./playlist-name/ and write metadata to files
 alias yt-dlp-p='yt-dlp -o "%(playlist_title)s/%(playlist_index)s-%(title)s" --write-description --write-info-json --write-playlist-metafiles'
