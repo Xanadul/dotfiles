@@ -176,12 +176,20 @@ return {
       require('lspconfig').nil_ls.setup({})
       require('lspconfig').lua_ls.setup({})
       require('lspconfig').marksman.setup({}) --Markdown
+      require('lspconfig').jsonls.setup({})   --https://github.com/hrsh7th/vscode-langservers-extracted
       require('lspconfig').zls.setup({})
-      require('lspconfig').texlab.setup({})
+      -- require('lspconfig').texlab.setup({})
       require('lspconfig').clangd.setup({})
       require('lspconfig').bashls.setup({})
       require('lspconfig').hyprls.setup({})
       require('lspconfig').ols.setup({})
+      require('lspconfig').ltex.setup({
+        settings = {
+          ltex = {
+            language = "en-GB",
+          },
+        },
+      })
       require('lspconfig').kotlin_language_server.setup({})
       require('lspconfig').openscad_lsp.setup({})
       -- require('lspconfig').dartls.setup({})
@@ -283,7 +291,7 @@ return {
       }
     end,
   },
-  
+
   -- Better inline diagnostics
   {
     "rachartier/tiny-inline-diagnostic.nvim",

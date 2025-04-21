@@ -44,10 +44,6 @@ return {
     require('mini.cursorword').setup()
 
 
-    -- Using autopair.lua
-    -- require('mini.pairs').setup()
-
-
 
     -- ... and there is more!
     --  Check out: https://github.com/echasnovski/mini.nvim

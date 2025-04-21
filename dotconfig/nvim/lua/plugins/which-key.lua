@@ -1,3 +1,23 @@
+local opt = vim.opt
+function toggleWrap()
+  if opt.wrap == true then
+    opt.nowrap = true
+  else
+    opt.wrap = true
+  end
+end
+
+function incTabWidth()
+  opt.tabstop = opt.tabstop + 1
+  opt.softtabstop = opt.softtabstop + 1
+  opt.shiftwidth = opt.shiftwidth + 1
+end
+
+function decTabWidth()
+  opt.tabstop = opt.tabstop - 1
+  opt.softtabstop = opt.softtabstop - 1
+  opt.shiftwidth = opt.shiftwidth - 1
+end
 return {
   -- Useful plugin to show you pending keybinds.
   'folke/which-key.nvim',
@@ -8,7 +28,7 @@ return {
     -- Document existing key chains
     require('which-key').add {
       { '<leader>c',   group = '[C]ode' },
-      { "<leader>ca",  '<cmd>lua vim.lsp.buf.code_action()<cr>',               desc = '[A]ction' },
+      { "<leader>ca",  '<cmd>lua vim.lsp.buf.code_action()<cr>', desc = '[A]ction' },
       { '<leader>cc',  group = '[Code]/[C]alls' },
       { '<leader>f',   group = '[F]ind' },
       { '<leader>b',   group = '[B]uffers' },
@@ -18,7 +38,7 @@ return {
       { '<leader>t',   group = '[T]oggle' },
       { "g",           group = "[G]o" },
       { "<leader>e",   group = "[E]dit" },
-      { '<leader>h',   group = 'Git [H]unk',                                   mode = { 'n', 'v' } },
+      { '<leader>h',   group = 'Git [H]unk',                     mode = { 'n', 'v' } },
 
       -- Navigate vim panes better
       { "<c-Left>",    ":wincmd h<CR>" },
@@ -31,47 +51,31 @@ return {
       { "<c-l>",       ":wincmd l<CR>" },
 
       -- Create and resize panes
-      { "<leader>wh",  ':vsplit<CR>',                                          desc = "Split right" },
-      { "<leader>wv",  ':split<CR>',                                           desc = "Split down" },
-      { "<leader>wc",  ':quit<CR>',                                            desc = "Close split" },
-      { "<C-S-Up>",    ':resize +1<CR>',                                       desc = "Increase H Split Size" },
-      { "<C-S-Down>",  ':resize -1<CR>',                                       desc = "Decrease H Split Size" },
-      { "<C-S-Left>",  ':vertical resize -1<CR>',                              desc = "Decrease V Split Size" },
-      { "<C-S-Right>", ':vertical resize +1<CR>',                              desc = "Increase V Split Size" },
-      { "<C-S-k>",     ':resize +1<CR>',                                       desc = "Increase H Split Size" },
-      { "<C-S-j>",     ':resize -1<CR>',                                       desc = "Decrease H Split Size" },
-      { "<C-S-h>",     ':vertical resize -1<CR>',                              desc = "Decrease V Split Size" },
-      { "<C-S-l>",     ':vertical resize +1<CR>',                              desc = "Increase V Split Size" },
+      { "<leader>wh",  ':vsplit<CR>',                            desc = "Split right" },
+      { "<leader>wv",  ':split<CR>',                             desc = "Split down" },
+      { "<leader>wc",  ':quit<CR>',                              desc = "Close split" },
+      { "<C-S-Up>",    ':resize +1<CR>',                         desc = "Increase H Split Size" },
+      { "<C-S-Down>",  ':resize -1<CR>',                         desc = "Decrease H Split Size" },
+      { "<C-S-Left>",  ':vertical resize -1<CR>',                desc = "Decrease V Split Size" },
+      { "<C-S-Right>", ':vertical resize +1<CR>',                desc = "Increase V Split Size" },
+      { "<C-S-k>",     ':resize +1<CR>',                         desc = "Increase H Split Size" },
+      { "<C-S-j>",     ':resize -1<CR>',                         desc = "Decrease H Split Size" },
+      { "<C-S-h>",     ':vertical resize -1<CR>',                desc = "Decrease V Split Size" },
+      { "<C-S-l>",     ':vertical resize +1<CR>',                desc = "Increase V Split Size" },
 
       -- Close Buffer (If saved)
-      { "<leader>bc",  ':enew<bar>bd #<CR>',                                   desc = "[C]lose" },
+      { "<leader>bc",  ':enew<bar>bd #<CR>',                     desc = "[C]lose" },
 
 
-      { "<leader>o",   "o<esc>",                                               desc = "Newline on top" },
-      { "<leader>O",   "O<esc>",                                               desc = "Newline below" },
+      { "<leader>o",   "o<esc>",                                 desc = "Newline on top",       silent = true },
+      { "<leader>O",   "O<esc>",                                 desc = "Newline below",        silent = true },
 
-      { "J",           "mzJ`z",                                                desc = "J but static cursor" },
-      { "<C-d>",       "<C-d>zz",                                              desc = "Half Page Jump" },
-      { "<C-u>",       "<C-u>zz",                                              desc = "Half Page Jump" },
-      { "n",           "nzzzv" },
-      { "N",           "Nzzzv" },
+      {"<leader>+", incTabWidth, desc = "Increase Tab Width" },
+      {"<leader>-", decTabWidth, desc = "Decrease Tab Width" },
+      {"<leader>tw", toggleWrap, desc = "Toggle linewrap" },
 
-      -- next greatest remap ever : asbjornHaland
-      { "<leader>p",   [["dP]],                                                desc = "Cut to Void" },
 
-      -- greatest remap ever
-      { "<leader>y",   [["+y]],                                                desc = "Yank to Clipboard" },
-      { "<leader>Y",   [["+Y]],                                                desc = "Yank to system Clipboard" },
 
-      -- delete to void
-      { "<leader>d",   [["_d]],                                                desc = "Delete to void",          mode = { "v", "n" } },
-      { "Q",           "<nop>",                                                mode = "v" },
-
-      -- Relace word in Document
-      { "<leader>s",   [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], desc = "Replace Word in Doc" },
-
-      -- Make executable
-      { "<leader>x",   "<cmd>!chmod +x %<CR>",                                 silent = true,                    desc = "cmod +x" },
     }
   end,
 }
