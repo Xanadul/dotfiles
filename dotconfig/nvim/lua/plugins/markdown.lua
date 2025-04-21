@@ -2,7 +2,7 @@ return {
   {
     'MeanderingProgrammer/markdown.nvim',
     main = "render-markdown",
-    opts = {},
+    opts = {render_modes = {'n', 'c', 't'}},
     name = 'render-markdown',
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons',
       {
@@ -26,17 +26,26 @@ return {
       -- Register markdown as the parser for vimwiki files
       vim.treesitter.language.register('markdown', 'vimwiki')
       -- Disable Obsidians markdown rendering
-      require('obsidian').setup({
-        ui = { enable = false },
-        workspaces = {
-          {
-            name = "personal",
-            path = "~/Git/quartz/content/"
-            -- path = "~/Notes/"
-          }
-        }
-      })
+      -- require('obsidian').setup({
+      --   ui = { enable = false },
+      --   workspaces = {
+      --     {
+      --       name = "personal",
+      --       path = "~/Git/quartz/content/"
+      --       -- path = "~/Notes/"
+      --     }
+      --   }
+      -- })
     end
+  },
+  {
+    'brianhuster/live-preview.nvim',
+    dependencies = {
+        -- You can choose one of the following pickers
+        'nvim-telescope/telescope.nvim',
+        -- 'ibhagwan/fzf-lua',
+        -- 'echasnovski/mini.pick',
+    },
   },
 
 }
