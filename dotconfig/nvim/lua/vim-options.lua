@@ -83,7 +83,7 @@ keyset({ "n", "v" }, "<leader>Y", [["+Y]], { desc = "Yank to system Clipboard" }
 keyset("n", "<leader>p", [["dP]], { desc = "Cut to Void" })
 
 -- Relace word in Document
-keyset("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace Word in Doc" })
+keyset("n", "<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace Word in Doc" })
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode

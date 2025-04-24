@@ -31,6 +31,7 @@ return {
       { "<leader>ca",  '<cmd>lua vim.lsp.buf.code_action()<cr>', desc = '[A]ction' },
       { '<leader>cc',  group = '[Code]/[C]alls' },
       { '<leader>f',   group = '[F]ind' },
+      { '<leader>h',   group = '[H]op' },
       { '<leader>b',   group = '[B]uffers' },
       { '<leader>d',   group = '[D]ocument' },
       { '<leader>r',   group = '[R]ename' },
