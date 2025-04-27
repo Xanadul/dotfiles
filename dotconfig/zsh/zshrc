@@ -34,6 +34,7 @@ path+=('/var/lib/flatpak/exports/bin')
 
 export LBIN=~/.local/bin
 export SCREENSHOTS=~/Pictures/Screenshots
+export PAGER=moar
 export CS=~/University/ComputerScience/2024-WS/
 # export FZF_DEFAULT_OPTS="--preview-window 'right:60%:nohidden'" #preview hidden by default?!?!
 export FZF_DEFAULT_OPTS="--preview '~/.config/fzf/preview.sh {}' --layout=reverse --inline-info --preview-window=nohidden"
@@ -164,6 +165,23 @@ alias yt-dlp-af='yt-dlp -o "%(title)s" --extract-audio --audio-format flac --aud
 
 
 alias bcrypt-hash='f() {htpasswd -nbBC 10 $1 $2};f'
+
+####
+#Git
+####
+alias gs='git status'
+alias gd="git diff --output-indicator-new=' ' --output-indicator-old=' '"
+alias gds="git diff --staged"
+alias ga="git add"
+alias gap="git add --patch"
+alias gc="git commit"
+alias gp="git pull"
+alias gP="git push"
+alias gl="git log --all --graph --pretty=format:'%C(magenta)%h %C(white) %an  %ar%C(auto)  %D%n%s%n'"
+alias gb="git branch"
+alias gcl="git clone"
+alias gco="git checkout"
+alias gsw="git switch"
 
 
 ################################################################################

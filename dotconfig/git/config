@@ -1,0 +1,82 @@
+[user]
+  name  = Sandro Stränsch
+  email = sandro.straensch@protonmail.com
+
+[core]
+  compression  = 9
+  whitespace   = error
+  preloadindex = true
+
+[status]
+  branch             = true
+  showStash          = true
+  showUntrackedFiles = all
+
+[diff]
+  context          = 3
+  renames          = copies
+  interHunkContext = 10
+
+[push]
+  default    = current
+  followTags = true
+
+[pull]
+  default = current
+  rebase  = true
+
+[rebase]
+  autoStash           = true
+  missingCommitsCheck = warn
+
+[log]
+  abbrevCommit = true
+  graphColors  = blue,yellow,cyan,magenta,green,red
+
+[color "decorate"]
+  HEAD         = red
+  branch       = blue
+  tag          = yellow
+  remoteBranch = magenta
+
+[color "branch"]
+  current  = magenta
+  local    = default
+  remote   = yellow
+  upstream = green
+  plain    = blue
+
+[branch]
+  sort = -committerdate
+
+[tag]
+  sort = -taggerdate
+
+[pager]
+  diff   = diff-so-fancy  | $PAGER
+  branch = true
+  tag    = true
+
+[color "diff"]
+  meta       = normal bold
+  frag       = magenta
+  context    = white
+  whitespace = yellow reverse
+  old        = red
+
+[diff-so-fancy]
+  markEmptyLines = false
+
+[interactive]
+  diffFilter = diff-so-fancy --patch
+  ; singlekey = true
+  ;
+[commit]
+  gpgSign = true
+
+[url "git@github.com:"]
+  insteadOf = "github:"
+
+[url "git@codeberg.com:"]
+  insteadOf = "gh:"
+
