@@ -60,7 +60,11 @@ dotconfig/xournalpp/metadata
 dotconfig/xournalpp/plugins
 
 #nvim lazylock
-*/lazy-lock.json
+dotconfig/nvim/lazy-lock.json
+
+# btop logs
+dotconfig/btop/btop.log
+
 
 
 # MangoHud
