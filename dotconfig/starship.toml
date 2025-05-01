@@ -196,7 +196,7 @@ disabled = false
 
 [status]
 disabled = false
-success_symbol = '‌' #Zero width non joiner, since exit code is only shown if this string is non empty
+success_symbol = '‌ '
 symbol = '⚡'
 format = '[$symbol$status]($style)'
 style = "bg:color_bg1"

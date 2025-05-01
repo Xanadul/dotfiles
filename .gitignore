@@ -61,3 +61,8 @@ dotconfig/xournalpp/plugins
 
 #nvim lazylock
 */lazy-lock.json
+
+
+# MangoHud
+dotconfig/MangoHud/MangoHud.conf
+dotconfig/MangoHud/state
