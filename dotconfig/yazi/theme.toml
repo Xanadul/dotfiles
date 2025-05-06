@@ -1,4 +1,7 @@
-# A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.
-# If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
 [flavor]
-use = "dracula-xanadul"
+dark = "dracula-xanadul"
+light = "dracula-xanadul"
+# dark = "flavor-template"
+# light = "flavor-template"
+# dark = "tokyo-night"
+# light = "tokyo-night"

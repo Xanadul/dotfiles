@@ -275,7 +275,7 @@ return {
             completeFunctionCalls = true,
             renameFilesWithClasses = "prompt", -- "always"
             enableSnippets = true,
-            lineLength = 160,
+            lineLength = 100,
             updateImportsOnRename = true, -- Whether to update imports and other directives when files are renamed. Required for `FlutterRename` command.
           }
         },

@@ -59,6 +59,7 @@ eval "$(pyenv init - zsh)"
 ################################################################################
 
 alias s='source ~/.zshrc'
+alias :q='exit'
 
 function lf() { #yes, lf is a different program, but muscle memory dictates this name. Also, "ya" is a terrible combination on Colmak
 	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
