@@ -23,6 +23,8 @@ return {
     event = 'InsertEnter',
     dependencies = {
       'L3MON4D3/LuaSnip',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-cmdline',
       dependencies = {
         "saadparwaiz1/cmp_luasnip",
         "rafamadriz/friendly-snippets",
@@ -92,6 +94,7 @@ return {
             -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
             group_index = 0
           },
+          -- { name = 'buffer' },
           { name = 'luasnip' },
           {
             name = 'nvim_lsp',
@@ -121,10 +124,21 @@ return {
           ['<C-d>'] = cmp.mapping.scroll_docs(4),
         }),
       })
+      cmp.setup.cmdline({ '/', '?' }, {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = { {name = 'buffer' }}
+      })
+      cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          {name = 'path'}
+        }, {{name = 'cmdline'}}),
+        matching = {disallow_symbol_nonprefix_matching = false}
+      })
     end
   },
 
-  -- LSP
+  -- SP
   {
     'neovim/nvim-lspconfig',
     cmd = 'LspInfo',
@@ -149,7 +163,10 @@ return {
         local opts = { buffer = bufnr }
         local wk = require("which-key")
         wk.add({
-          { "gK",         '<cmd>lua vim.lsp.buf.hover<cr>',             desc = 'Information' },
+          { "k",          '<cmd>lua vim.lsp.buf.hover()<cr>',           desc = 'Information' },
+          { "K",          '<cmd>lua vim.lsp.buf.hover()<cr>',           desc = 'Information' },
+          { "<leader>e",  '<cmd>lua vim.diagnostic.open_float()<cr>',   desc = 'Diagnostics' },
+          { "<leader>k",  '<cmd>lua vim.lsp.buf.signature_help()<cr>',  desc = 'Signature' },
           { "gd",         '<cmd>lua vim.lsp.buf.definition()<cr>',      desc = 'to [D]efinition' },
           { "gD",         '<cmd>lua vim.lsp.buf.declaration()<cr>',     desc = 'to [D]eklaration' },
           { "gi",         '<cmd>lua vim.lsp.buf.implementation()<cr>',  desc = 'to [I]mplementations' },
@@ -275,7 +292,7 @@ return {
             completeFunctionCalls = true,
             renameFilesWithClasses = "prompt", -- "always"
             enableSnippets = true,
-            lineLength = 100,
+            lineLength = 80,
             updateImportsOnRename = true, -- Whether to update imports and other directives when files are renamed. Required for `FlutterRename` command.
           }
         },
@@ -296,8 +313,8 @@ return {
   {
     "rachartier/tiny-inline-diagnostic.nvim",
     -- event = "LspAttach", -- Or `LspAttach`
-    lazy = false;
-    priority = 1000,    -- needs to be loaded in first
+    lazy = false,
+    priority = 1000, -- needs to be loaded in first
     config = function()
       require('tiny-inline-diagnostic').setup()
       vim.diagnostic.config({ virtual_text = false }) -- Only if needed in your configuration, if you already have native LSP diagnostics

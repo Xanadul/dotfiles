@@ -29,11 +29,11 @@ vim.g.have_nerd_font = true
 opt.termguicolors    = true
 opt.relativenumber   = true
 vim.wo.number        = true  -- Relative line numbers
-opt.colorcolumn      = "110" -- Line at character column 110, purely as indicator for long lines.
+opt.colorcolumn      = "80" -- Line at character column 110, purely as indicator for long lines.
 opt.signcolumn       = "yes"
 opt.guicursor        = ""
 opt.nu               = true
-opt.scrolloff        = 10 -- Always show 10 lines above/below cursor when scrolling
+-- opt.scrolloff        = 10 -- Always show 10 lines above/below cursor when scrolling. NOTE: Also done better by stay-centered.nvim
 opt.completeopt      = { "menuone", "noinsert", "noselect" }
 opt.list             = true
 opt.listchars        = { tab = '» ', trail = '·', nbsp = '␣' }
@@ -70,8 +70,8 @@ keyset("v", "<S-Right>", ">gv", { desc = "Move Line Right" })
 keyset("v", "<S-Left>", "<gv")
 
 keyset("n", "J", "mzJ`z", { desc = "J but static cursor" })
-keyset("n", "<C-d>", "<C-j>zz", { desc = "Half Page Jump" })
-keyset("n", "<C-u>", "<C-k>zz", { desc = "Half Page Jump" })
+keyset("n", "<C-Down>", "<C-j>zz", { desc = "Half Page Jump" })
+keyset("n", "<C-Up>", "<C-k>zz", { desc = "Half Page Jump" })
 keyset("n", "n", "nzzzv")
 keyset("n", "N", "Nzzzv")
 

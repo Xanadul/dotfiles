@@ -10,6 +10,25 @@ local dracula = {
   end
 }
 
+local dracula_lua = {
+  "https://github.com/Mofiqul/dracula.nvim",
+  lazy= false,
+  name = "dracula_nvim",
+  priority = math.huge,
+  config = function()
+    vim.cmd.colorscheme "dracula"
+    vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+  end
+}
+
+local dracula_starry = {
+  "https://github.com/ray-x/starry.nvim",
+  lazy= false,
+  name = "dracula_starry",
+  priority = math.huge,
+}
+
 local catppuccinLatte = {
   "catppuccin/nvim",
   name = "catppuccin",

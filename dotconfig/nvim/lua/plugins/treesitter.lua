@@ -68,13 +68,13 @@ return {
             enable = true,
             swap_next = {
               ["<leader>rs"] = { query = "@parameter.inner", desc = "Swap with next parameter" },
-              ["<C-right>"] = { query = "@parameter.inner", desc = "Swap with next parameter" },
-              ["<C-down>"] = { query = "@parameter.inner", desc = "Swap with next parameter" },
+              ["<S-Right>"] = { query = "@parameter.inner", desc = "Swap with next parameter" },
+              ["<S-Down>"] = { query = "@parameter.inner", desc = "Swap with next parameter" },
             },
             swap_previous = {
               ["<leader>rS"] = { query = "@parameter.inner", desc = "Swap with previous parameter" },
-              ["<C-left>"] = { query = "@parameter.inner", desc = "Swap with previous parameter" },
-              ["<C-up>"] = { query = "@parameter.inner", desc = "Swap with previous parameter" },
+              ["<S-Left>"] = { query = "@parameter.inner", desc = "Swap with previous parameter" },
+              ["<S-Up>"] = { query = "@parameter.inner", desc = "Swap with previous parameter" },
             },
           },
         },
