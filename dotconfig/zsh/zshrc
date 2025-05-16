@@ -31,11 +31,15 @@ path+=('/var/lib/flatpak/exports/bin')
 ################################################################################
 # Environment Variables
 ################################################################################
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  export SESSION_TYPE=remote/ssh
+  export GPG_TTY=$(tty)
+fi
 
 export LBIN=~/.local/bin
 export SCREENSHOTS=~/Pictures/Screenshots
 export PAGER=moar
-export CS=~/University/ComputerScience/2024-WS/
+export CS=~/University/ComputerScience/2025-SS/
 # export FZF_DEFAULT_OPTS="--preview-window 'right:60%:nohidden'" #preview hidden by default?!?!
 export FZF_DEFAULT_OPTS="--preview '~/.config/fzf/preview.sh {}' --layout=reverse --inline-info --preview-window=nohidden"
 export MANPAGER="nvim +Man!"
@@ -47,11 +51,12 @@ export ZSHCONFDIR="${HOME}/.config/zsh"
 
 # ~/.zprofile (for login shells)
 # and ~/.zshrc (for interactive shells) :
-
+which pyenv
+if [[ "${?}" == 0 ]]; then
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init - zsh)"
-
+fi
 # Restart your shell for the changes to take effect.
 
 ################################################################################
@@ -147,6 +152,7 @@ alias rm='rm -I --preserve-root'
 alias mv='mv -i'
 alias cp='cp -i'
 alias ln='ln -i'
+alias sshfs='sshfs -o ServerAliveInterval=15'
 
 alias df='df -hT'
 alias du='du -ch'
