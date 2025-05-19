@@ -51,7 +51,7 @@ export ZSHCONFDIR="${HOME}/.config/zsh"
 
 # ~/.zprofile (for login shells)
 # and ~/.zshrc (for interactive shells) :
-which pyenv
+which pyenv 1>/dev/null 2>&1 
 if [[ "${?}" == 0 ]]; then
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
@@ -67,12 +67,12 @@ alias s='source ~/.zshrc'
 alias :q='exit'
 
 function lf() { #yes, lf is a different program, but muscle memory dictates this name. Also, "ya" is a terrible combination on Colmak
-	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
+  local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
 }
 
 alias rp="rsync -rah --info=progress2"
@@ -269,6 +269,9 @@ source ~/Git/zsh-snap/znap.zsh  # Start Znap
 znap source zsh-users/zsh-autosuggestions
 
 znap source hlissner/zsh-autopair
+
+znap source jeffreytse/zsh-vi-mode
+export ZVM_CURSOR_STYLE_ENABLED=false
 
 znap source unixorn/fzf-zsh-plugin # awesome history fuzzyfind, using ctrl+r
 

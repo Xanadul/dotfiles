@@ -1,7 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
-[██](color_bg1)\
+[█](color_bg1)\
 $os\
 $username\
 $hostname\
@@ -27,17 +27,21 @@ $docker_context\
 $time\
 [](fg:color_bg2)\
 $line_break\
-[██](fg:color_bg1)\
+$character\
 $status\
-$character"""
+[█ ](fg:color_bg1)
+"""
 
 palette = 'dracula'
 
 [palettes.dracula]
 color_fg0 = '#f8f8f2'
 color_fg1 = '#282a36'
+color_green = '#50FA7B'
 color_bg1 = '#6272a4'
 color_bg2 = '#bd93f9'
+color_comment = '#6272a4'
+color_purple = '#bd93f9'
 color_red = '#FF5555'
 
 [palettes.tokionight]
@@ -203,9 +207,16 @@ style = "bg:color_bg1"
 
 [character]
 disabled = false
-success_symbol = '[█](fg:color_bg1)'
-error_symbol = '[█](fg:color_bg1)'
-vimcmd_symbol = '[█](fg:color_bg1)'
+format = '$symbol'
+success_symbol = '[█](fg:color_green)[Insert ](fg:color_fg1 bg:color_green)[](fg:color_green bg:color_bg1)'
+error_symbol = '[█](fg:color_bg1)'
+vimcmd_symbol = '[█](fg:color_purple)[Normal ](fg:color_fg0 bg:color_purple)[](fg:color_purple bg:color_bg1)'
 vimcmd_replace_one_symbol = '[](bold fg:color_purple)'
 vimcmd_replace_symbol = '[](bold fg:color_purple)'
 vimcmd_visual_symbol = '[](bold fg:color_yellow)'
+
+# [character.vim_mode]
+# vimcmd_symbol = '[Normal](fg:color_bg1)'
+# vimcmd_replace_one_symbol = '[](bold fg:color_purple)'
+# vimcmd_replace_symbol = '[](bold fg:color_purple)'
+# vimcmd_visual_symbol = '[](bold fg:color_yellow)'
