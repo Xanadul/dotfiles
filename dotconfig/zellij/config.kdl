@@ -378,7 +378,7 @@ ui {
     hide_session_name true
   }
 }
-show_startup_tips true //For now
+show_startup_tips false //For now
 show_release_notes true
 
 themes {
