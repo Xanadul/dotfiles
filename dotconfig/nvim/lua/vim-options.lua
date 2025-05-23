@@ -11,6 +11,7 @@ opt.shiftwidth = 2   -- use << or >> to inc/decrease indent
 opt.expandtab = true -- true enables spaces for indent
 opt.smartindent = true
 opt.wrap = true
+opt.showmode = false
 --opt.timeoutlen = 300
 
 
