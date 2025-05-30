@@ -68,6 +68,10 @@ fi
 alias s='source ~/.zshrc'
 alias :q='exit'
 
+if [[ "${TERM}" == "xterm-kitty" ]]; then
+  alias ssk="kitten ssh"
+fi
+
 function lf() { #yes, lf is a different program, but muscle memory dictates this name. Also, "ya" is a terrible combination on Colmak
   local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
   yazi "$@" --cwd-file="$tmp"
