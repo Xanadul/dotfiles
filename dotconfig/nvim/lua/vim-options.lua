@@ -1,87 +1,83 @@
-local opt = vim.opt
 local keyset = vim.keymap.set
 
 -- Space key as leader for key-chords (e.g "<leader>cf" meaning press space, then c, then f)
 vim.g.mapleader = " "
 
 -- Tab / Indentation
-opt.tabstop = 2
-opt.softtabstop = 2
-opt.shiftwidth = 2   -- use << or >> to inc/decrease indent
-opt.expandtab = true -- true enables spaces for indent
-opt.smartindent = true
-opt.wrap = true
-opt.showmode = false
---opt.timeoutlen = 300
+vim.opt.tabstop     = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth  = 2   -- use << or >> to inc/decrease indent
+vim.opt.expandtab   = true -- true enables spaces for indent
+vim.opt.smartindent = true
+vim.opt.wrap        = true
+vim.opt.showmode    = false
+--opt.timeoutlen    = 300
 
 
 
 
 -- Search
-opt.hlsearch = false
-opt.incsearch = true
-opt.ignorecase = true
-opt.smartcase = true
+vim.opt.hlsearch   = false
+vim.opt.incsearch  = true
+vim.opt.ignorecase = true
+vim.opt.smartcase  = true
 -- Clear highlights on search when pressing <Esc> in normal mode
+--  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Appearance
-vim.g.have_nerd_font = true
-opt.termguicolors    = true
-opt.relativenumber   = true
-vim.wo.number        = true  -- Relative line numbers
-opt.colorcolumn      = "80" -- Line at character column 110, purely as indicator for long lines.
-opt.signcolumn       = "yes"
-opt.guicursor        = ""
-opt.nu               = true
--- opt.scrolloff        = 10 -- Always show 10 lines above/below cursor when scrolling. NOTE: Also done better by stay-centered.nvim
-opt.completeopt      = { "menuone", "noinsert", "noselect" }
-opt.list             = true
-opt.listchars        = { tab = '» ', trail = '·', nbsp = '␣' }
-opt.inccommand       = 'split'
-opt.cursorline       = true -- Highlight line of cursor
+vim.g.have_nerd_font   = true
+vim.opt.termguicolors  = true
+vim.opt.number         = true
+vim.opt.relativenumber = true
+vim.opt.colorcolumn    = "80" -- Line at character column 110, purely as indicator for long lines.
+vim.opt.signcolumn     = "yes"
+vim.opt.guicursor      = ""
+-- vim.opt.scrolloff   = 10 -- Always show 10 lines above/below cursor when scrolling. NOTE: Also done better by stay-centered.nvim
+vim.opt.completeopt    = { "menuone", "noinsert", "noselect" }
+vim.opt.list           = true
+vim.opt.listchars      = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.inccommand     = 'split'
+vim.opt.cursorline     = true -- Highlight line of cursor
 
 -- Behaviour
-opt.swapfile         = false
-opt.backup           = false
-opt.undodir          = { os.getenv("HOME") .. "/.vim/undodir" }
-opt.undofile         = true
-opt.backspace        = "indent,eol,start"
-opt.splitright       = true
-opt.splitbelow       = true
-opt.autochdir        = false
-opt.breakindent      = true
-opt.iskeyword:append("-")
-opt.mouse:append('a')
-opt.isfname:append("@-@")
-opt.updatetime = 250
-opt.encoding = "UTF-8"
+vim.opt.swapfile    = false
+vim.opt.backup      = false
+vim.opt.undodir     = { os.getenv("HOME") .. "/.vim/undodir" }
+vim.opt.undofile    = true
+vim.opt.backspace   = "indent,eol,start"
+vim.opt.splitright  = true
+vim.opt.splitbelow  = true
+vim.opt.autochdir   = false
+vim.opt.breakindent = true
+vim.opt.updatetime  = 250
+vim.opt.encoding    = "UTF-8"
+vim.opt.iskeyword:append("-")
+vim.opt.mouse:append('a')
+vim.opt.isfname:append("@-@")
 
 
+-- Close Buffer
 keyset("n", "<leader>bc", ':enew<bar>bd #<CR>', { desc = "[C]lose" })
 
--- Clear highlights on search when pressing <Esc> in normal mode
---  See `:help hlsearch`
-keyset('n', '<Esc>', '<cmd>nohlsearch<CR>')
+keyset("v", "<S-Left>",  "<gv",              { desc = "Move Line Left" })
+keyset("v", "<S-Down>",  ":m '>+1<CR>gv=gv", { desc = "Move Line Down", silent = true })
+keyset("v", "<S-Up>",    ":m '<-2<CR>gv=gv", { desc = "Move Line Up",   silent = true })
+keyset("v", "<S-Right>", ">gv",              { desc = "Move Line Right" })
 
-
-keyset("v", "<S-Down>", ":m '>+1<CR>gv=gv", { desc = "Move Line Down", silent = true })
-keyset("v", "<S-Up>", ":m '<-2<CR>gv=gv", { desc = "Move Line Up", silent = true })
-keyset("v", "<S-Right>", ">gv", { desc = "Move Line Right" })
-keyset("v", "<S-Left>", "<gv")
-
-keyset("n", "J", "mzJ`z", { desc = "J but static cursor" })
+-- Static jumps, search and J
+keyset("n", "J",        "mzJ`z",   { desc = "J but static cursor" })
 keyset("n", "<C-Down>", "<C-j>zz", { desc = "Half Page Jump" })
-keyset("n", "<C-Up>", "<C-k>zz", { desc = "Half Page Jump" })
-keyset("n", "n", "nzzzv")
-keyset("n", "N", "Nzzzv")
+keyset("n", "<C-Up>",   "<C-k>zz", { desc = "Half Page Jump" })
+keyset("n", "n",        "nzzzv")
+keyset("n", "N",        "Nzzzv")
 
 -- greatest remap ever
 keyset({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank to Clipboard" })
 keyset({ "n", "v" }, "<leader>Y", [["+Y]], { desc = "Yank to system Clipboard" })
 
 -- next greatest remap ever : asbjornHaland
-keyset("n", "<leader>p", [["dP]], { desc = "Cut to Void" })
+keyset({"n", "v"}, "<leader>d", [["_d]], { desc = "Cut to Void" })
 
 -- Relace word in Document
 keyset("n", "<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace Word in Doc" })
