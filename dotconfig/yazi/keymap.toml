@@ -2,7 +2,7 @@
 # If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
 "$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
 
-[manager]
+[mgr]
 
 keymap = [
 	{ on = [ "<Esc>" ], run = "escape",             desc = "Exit visual mode, clear selected, or cancel search" },
@@ -243,20 +243,32 @@ keymap = [
 	# Help
 	{ on = [ "~" ], run = "help", desc = "Open help" }
 ]
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on   = [ "<C-d>" ]
 run = '''shell 'dragon-drop -x -T "$@"' --confirm'''
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on   = [ "M", "p" ]
 run = '''shell 'XanPlaylistAdd "$@"' --confirm'''
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on   = [ "M", "m" ]
 desc = "MPV Play"
 run = '''shell --block 'mpv "$@"' --confirm'''
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on   = [ "M", "s" ]
 desc = "MPV shuffle"
 run = '''shell --block 'printf -- "--playlist=%s," "$@" | xargs --delimiter=, mpv --shuffle;''''
+[[mgr.prepend_keymap]]
+on = [ "e", "z" ]
+run = "shell -- unzip \"${1}\""
+desc = "Extract Zip"
+[[mgr.prepend_keymap]]
+on = [ "e", "t" ]
+run = "shell -- tar xf \"${1}\""
+desc = "Extract Tar"
+[[mgr.prepend_keymap]]
+on = [ "e", "r" ]
+run = "unrar x \"${1}\""
+desc = "Extract Rar"
 
 
 [completion]

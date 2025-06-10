@@ -222,8 +222,8 @@ config.set("fonts.hints", "bold 18pt JetBrainsMono")
 config.set("tabs.show", "always")
 config.set("tabs.position", "left")
 
-config.set("tabs.max_width", 350)
-config.set("tabs.width", "12%")
+config.set("tabs.max_width", 200)
+config.set("tabs.width", "8%")
 
 config.set("tabs.select_on_remove", "prev")
 
