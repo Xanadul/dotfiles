@@ -33,7 +33,6 @@ return {
       { '<leader>f',   group = '[F]ind' },
       { '<leader>h',   group = '[H]op' },
       { '<leader>b',   group = '[B]uffers' },
-      { '<leader>d',   group = '[D]ocument' },
       { '<leader>r',   group = '[R]ename' },
       { '<leader>w',   group = '[W]orkspace' },
       { '<leader>t',   group = '[T]oggle' },

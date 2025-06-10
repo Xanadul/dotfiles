@@ -8,6 +8,24 @@ return {
   config = function()
     FzfLua = require("fzf-lua")
     local wk = require("which-key")
+
+    local function ast_grep()
+      -- Usage: Type ast-grep search pattern
+      -- eg.: $A == false
+      -- Dependency: ast-grep (not called sg, on arch sg is something else)
+      local query = vim.fn.input("ast-grep query: ", "")
+      FzfLua.fzf_exec(
+        "ast-grep --context 0 --heading never --pattern '" .. query .. "' ",
+        {
+          exec_empty_query = false,
+          actions = {
+            ["default"] = FzfLua.actions.file_edit,
+          },
+          previewer = 'builtin'
+        }
+      )
+    end
+
     wk.add({
       { "<leader>bb",  function() FzfLua.buffers() end,                       desc = '[B]uffer' },
       { "<leader>cci", function() FzfLua.lsp_incoming_calls() end,            desc = "[I]ncoming" },
@@ -24,16 +42,15 @@ return {
       --
       -- -- Find stuff
       { "<leader>fb",  function() FzfLua.buffers() end,                       desc = '[B]uffer' },
-      { '<leader>ff',   function() FzfLua.files({}) end,                         desc = '[F]ile',         mode = 'n' },
+      { '<leader>ff',  function() FzfLua.files({}) end,                       desc = '[F]ile',               mode = 'n' },
       { "<leader>fc",  function() FzfLua.commands() end,                      desc = "[C]ommand" },
       { "<leader>fg",  function() FzfLua.live_grep_native() end,              desc = "[G]rep" },
+      { "<leader>fa",  function() ast_grep() end,                             desc = "[A]ST-Grep" },
       { '<leader>fw',  function() FzfLua.grep_cword() end,                    desc = 'current [W]ord' },
       { '<leader>fW',  function() FzfLua.grep_cWORD() end,                    desc = 'current [W]ORD' },
       { '<leader>fd',  function() FzfLua.diagnostics_workspace() end,         desc = '[D]iagnostics' },
       { '<leader>fr',  function() FzfLua.live_grep_resume() end,              desc = '[R]esume' },
     })
-    FzfLua.setup({
-
-    })
+    FzfLua.setup({})
   end
 }
