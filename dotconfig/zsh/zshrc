@@ -40,6 +40,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 fi
 
 export LBIN=~/.local/bin
+export EDITOR=nvim
 export SCREENSHOTS=~/Pictures/Screenshots
 export PAGER=moar
 export CS=~/University/ComputerScience/2025-SS/
