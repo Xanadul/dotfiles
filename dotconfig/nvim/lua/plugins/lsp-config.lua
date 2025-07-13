@@ -126,14 +126,14 @@ return {
       })
       cmp.setup.cmdline({ '/', '?' }, {
         mapping = cmp.mapping.preset.cmdline(),
-        sources = { {name = 'buffer' }}
+        sources = { { name = 'buffer' } }
       })
       cmp.setup.cmdline(':', {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
-          {name = 'path'}
-        }, {{name = 'cmdline'}}),
-        matching = {disallow_symbol_nonprefix_matching = false}
+          { name = 'path' }
+        }, { { name = 'cmdline' } }),
+        matching = { disallow_symbol_nonprefix_matching = false }
       })
     end
   },
@@ -187,9 +187,10 @@ return {
       -- These are just examples. Replace them with the language
       -- servers you have installed in your system
       require('lspconfig').ruff.setup({})
+      -- vim.lsp.enable("ty")
+      require('lspconfig').pyright.setup({})
       require('lspconfig').gopls.setup({})
       require('lspconfig').jdtls.setup({})
-      require('lspconfig').pyright.setup({})
       require('lspconfig').nil_ls.setup({})
       require('lspconfig').lua_ls.setup({})
       require('lspconfig').marksman.setup({}) --Markdown
@@ -200,13 +201,17 @@ return {
       require('lspconfig').bashls.setup({})
       require('lspconfig').hyprls.setup({})
       require('lspconfig').ols.setup({})
-      require('lspconfig').ltex.setup({
-        settings = {
-          ltex = {
-            language = "en-GB",
-          },
-        },
+      require('lspconfig').qmlls.setup({
+        cmd = {"qmlls6", "-E"}
       })
+      -- require('lspconfig').ltex.setup({
+      --   settings = {
+      --     ltex = {
+      --       language = "en-GB",
+      --       -- language = "de-DE",
+      --     },
+      --   },
+      -- })
       require('lspconfig').kotlin_language_server.setup({})
       require('lspconfig').openscad_lsp.setup({})
       -- require('lspconfig').dartls.setup({})
@@ -270,7 +275,7 @@ return {
         closing_tags = {
           --highlight = "ErrorMsg", -- highlight for the closing tag
           prefix = ">",  -- character to use for close tag e.g. > Widget
-          enabled = true -- set to false to disable
+          enabled = false -- set to false to disable
         },
         outline = {
           open_cmd = "30vnew", -- command to use to open the outline buffer
@@ -319,6 +324,13 @@ return {
       require('tiny-inline-diagnostic').setup()
       vim.diagnostic.config({ virtual_text = false }) -- Only if needed in your configuration, if you already have native LSP diagnostics
     end
-  }
+  },
+  {
+    "code-biscuits/nvim-biscuits",
+    config = function ()
+      require('nvim-biscuits').setup()
+      
+    end
+  },
 
 }
