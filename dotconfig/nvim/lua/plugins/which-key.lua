@@ -74,8 +74,19 @@ return {
       {"<leader>-", decTabWidth, desc = "Decrease Tab Width" },
       {"<leader>tw", toggleWrap, desc = "Toggle linewrap" },
 
-
-
+			-- LSP commands
+         { "k",          '<cmd>lua vim.lsp.buf.hover()<cr>',           desc = 'Information' },
+          { "K",          '<cmd>lua vim.lsp.buf.hover()<cr>',           desc = 'Information' },
+          { "<leader>e",  '<cmd>lua vim.diagnostic.open_float()<cr>',   desc = 'Diagnostics' },
+          { "<leader>k",  '<cmd>lua vim.lsp.buf.signature_help()<cr>',  desc = 'Signature' },
+          { "gd",         '<cmd>lua vim.lsp.buf.definition()<cr>',      desc = 'to [D]efinition' },
+          { "gD",         '<cmd>lua vim.lsp.buf.declaration()<cr>',     desc = 'to [D]eklaration' },
+          { "gi",         '<cmd>lua vim.lsp.buf.implementation()<cr>',  desc = 'to [I]mplementations' },
+          { "go",         '<cmd>lua vim.lsp.buf.type_definition()<cr>', desc = 'to type definition' },
+          { "gr",         '<cmd>lua vim.lsp.buf.references()<cr>',      desc = 'to [R]efereces' },
+          { "gs",         '<cmd>lua vim.lsp.buf.signature_help()<cr>',  desc = 'to [Signature]' },
+          { "<leader>ca", '<cmd>lua vim.lsp.buf.code_action()<cr>',     desc = '[A]ction' },
+          { "<leader>cf", '<cmd>lua vim.lsp.buf.format()<cr>',          desc = '[F]ormat' },
     }
   end,
 }

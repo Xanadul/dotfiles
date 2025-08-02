@@ -46,9 +46,10 @@ return {
       { "<leader>fc",  function() FzfLua.commands() end,                      desc = "[C]ommand" },
       { "<leader>fg",  function() FzfLua.live_grep_native() end,              desc = "[G]rep" },
       { "<leader>fa",  function() ast_grep() end,                             desc = "[A]ST-Grep" },
-      { '<leader>fw',  function() FzfLua.grep_cword() end,                    desc = 'current [W]ord' },
+      { '<leader>fw',  function() FzfLua.grep_cword() end,                    desc = 'current [w]ord' },
       { '<leader>fW',  function() FzfLua.grep_cWORD() end,                    desc = 'current [W]ORD' },
-      { '<leader>fd',  function() FzfLua.diagnostics_workspace() end,         desc = '[D]iagnostics' },
+      { '<leader>fd',  function() FzfLua.diagnostics_document() end,         desc = '[d]iagnostics Document' },
+      { '<leader>fD',  function() FzfLua.diagnostics_workspace() end,         desc = '[D]iagnostics Workspace' },
       { '<leader>fr',  function() FzfLua.live_grep_resume() end,              desc = '[R]esume' },
     })
     FzfLua.setup({})
