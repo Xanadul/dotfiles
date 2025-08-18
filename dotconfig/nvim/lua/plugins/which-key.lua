@@ -39,7 +39,6 @@ return {
       { '<leader>t',   group = '[T]oggle' },
       { "g",           group = "[G]o" },
       { "<leader>e",   group = "[E]dit" },
-      { '<leader>h',   group = 'Git [H]unk',                         mode = { 'n', 'v' } },
 
       -- Navigate vim panes better
       { "<c-Left>",    ":wincmd h<CR>" },
@@ -88,6 +87,7 @@ return {
       { "gs",          '<cmd>lua vim.lsp.buf.signature_help()<cr>',  desc = 'to [Signature]' },
       { "<leader>ca",  '<cmd>lua vim.lsp.buf.code_action()<cr>',     desc = '[A]ction' },
       { "<leader>cf",  '<cmd>lua vim.lsp.buf.format()<cr>',          desc = '[F]ormat' },
+      { "<leader>cr",  '<cmd>lua vim.lsp.buf.rename()<cr>',          desc = '[R]ename' },
     }
   end,
 }

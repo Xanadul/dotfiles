@@ -32,7 +32,7 @@ return {
       { "<leader>cco", function() FzfLua.lsp_outgoing_calls() end,            desc = "[O]utgoing" },
       { "<leader>cd",  function() FzfLua.lsp_definitions() end,               desc = "[D]efinitions" },
       { "<leader>ci",  function() FzfLua.lsp_implementations() end,           desc = "[I]mplementations" },
-      { "<leader>cr",  function() FzfLua.lsp_references() end,                desc = "[R]eferences" },
+      { "<leader>ccr",  function() FzfLua.lsp_references() end,                desc = "[R]eferences" },
       { "<leader>cs",  function() FzfLua.lsp_document_symbols() end,          desc = "[S]ymbols" },
       { '<leader>ws',  function() FzfLua.lsp_dynamic_workspace_symbols() end, desc = '[W]orkspace [S]ymbols' },
       { '<leader>D',   function() FzfLua.lsp_typedefs() end,                  desc = 'Type [D]efinition' },
@@ -42,13 +42,13 @@ return {
       --
       -- -- Find stuff
       { "<leader>fb",  function() FzfLua.buffers() end,                       desc = '[B]uffer' },
-      { '<leader>ff',  function() FzfLua.files({}) end,                       desc = '[F]ile',               mode = 'n' },
+      { '<leader>ff',  function() FzfLua.files({}) end,                       desc = '[F]ile',                 mode = 'n' },
       { "<leader>fc",  function() FzfLua.commands() end,                      desc = "[C]ommand" },
       { "<leader>fg",  function() FzfLua.live_grep_native() end,              desc = "[G]rep" },
       { "<leader>fa",  function() ast_grep() end,                             desc = "[A]ST-Grep" },
       { '<leader>fw',  function() FzfLua.grep_cword() end,                    desc = 'current [w]ord' },
       { '<leader>fW',  function() FzfLua.grep_cWORD() end,                    desc = 'current [W]ORD' },
-      { '<leader>fd',  function() FzfLua.diagnostics_document() end,         desc = '[d]iagnostics Document' },
+      { '<leader>fd',  function() FzfLua.diagnostics_document() end,          desc = '[d]iagnostics Document' },
       { '<leader>fD',  function() FzfLua.diagnostics_workspace() end,         desc = '[D]iagnostics Workspace' },
       { '<leader>fr',  function() FzfLua.live_grep_resume() end,              desc = '[R]esume' },
     })
