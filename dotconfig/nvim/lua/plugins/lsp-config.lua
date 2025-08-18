@@ -1,14 +1,49 @@
 return {
   {
     'saghen/blink.cmp',
-    lazy = false,
-    dependencies = { 'rafamadriz/friendly-snippets', 'neovim/nvim-lspconfig' },
+    dependencies = {
+      'neovim/nvim-lspconfig',
+      {
+        "L3MON4D3/LuaSnip",
+        version = "v2.*",
+        build = "make install_jsregexp",
+        config = function()
+          require("luasnip").setup({ enable_audosnippets = true })
+          vim.lsp.config('hledger_ls', {
+            cmd = { "/usr/bin/hledger-language-server" },
+            filetypes = { "ledger", "hledger", "journal" },
+            root_dir = require("lspconfig.util").root_pattern(".git", "*.journal"),
+            settings = {},
+          })
+
+          vim.lsp.enable('hledger')
+        end
+      },
+    },
     version = '1.*',
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {
       keymap = { preset = 'default' }, -- C-y to accept
+      snippets = {
+        preset = 'luasnip'
+      },
       completion = {
+        list = {
+          selection = {
+            auto_insert = false,
+          },
+        },
+        menu = {
+          draw = {
+            columns = {
+              { "kind_icon" },
+              { "label",      "label_description", gap = 1 },
+              { "kind" },
+              { "source_name" },
+            }
+          }
+        },
         documentation = { auto_show = true }
       },
       sources = { default = { 'lsp', 'path', 'snippets' } },
@@ -18,12 +53,6 @@ return {
       },
     },
     opts_extend = { "sources.default" },
-  },
-  {
-    'VonHeikemen/lsp-zero.nvim',
-    branch = 'v4.x',
-    lazy = true,
-    config = false,
   },
   {
     "folke/lazydev.nvim",
@@ -36,18 +65,15 @@ return {
       },
     },
   },
-  -- -- Small GUI in lower right for LSP notifications
-  { 'j-hui/fidget.nvim',   opts = {} },
-  --
-  -- { 'onsails/lspkind.nvim' },
-  --
-  --
-  -- -- Ledger
+
+  -- Small GUI in lower right for LSP notifications
+  { 'j-hui/fidget.nvim', opts = {} },
+
   {
     "ledger/vim-ledger"
   },
-  --
-  -- -- Flutter (TODO: Fix highlights)
+
+  -- Flutter (TODO: Fix highlights)
   {
     "akinsho/flutter-tools.nvim",
     dependencies = {
@@ -62,7 +88,7 @@ return {
         closing_tags = {
           --highlight = "ErrorMsg", -- highlight for the closing tag
           prefix = ">",  -- character to use for close tag e.g. > Widget
-          enabled = false -- set to false to disable
+          enabled = true -- set to false to disable
         },
         outline = {
           open_cmd = "30vnew", -- command to use to open the outline buffer
@@ -83,7 +109,7 @@ return {
             showTodos = false,
             completeFunctionCalls = true,
             renameFilesWithClasses = "prompt", -- "always"
-            enableSnippets = true,
+            enableSnippets = false,
             lineLength = 80,
             updateImportsOnRename = true, -- Whether to update imports and other directives when files are renamed. Required for `FlutterRename` command.
           }
@@ -100,8 +126,7 @@ return {
       }
     end,
   },
-  --
-  -- -- Better inline diagnostics
+  -- Better inline diagnostics
   {
     "rachartier/tiny-inline-diagnostic.nvim",
     -- event = "LspAttach", -- Or `LspAttach`
@@ -112,12 +137,24 @@ return {
       vim.diagnostic.config({ virtual_text = false }) -- Only if needed in your configuration, if you already have native LSP diagnostics
     end
   },
-  -- -- {
-  -- --   "code-biscuits/nvim-biscuits",
-  -- --   config = function ()
-  -- --     require('nvim-biscuits').setup()
-  -- --
-  -- --   end
-  -- -- },
-  --
+
+  {
+    "code-biscuits/nvim-biscuits",
+    config = function()
+      require('nvim-biscuits').setup({
+        cursor_line_only = false,
+        default_config = {
+          max_length = 15,
+          min_distance = 5,
+          prefix_string = "> ",
+        },
+        language_config = {
+          dart = {
+            disabled = true
+          },
+        },
+      })
+    end
+  }
+
 }
