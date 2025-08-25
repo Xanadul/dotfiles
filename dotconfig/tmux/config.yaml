@@ -1,0 +1,212 @@
+# yaml-language-server: $schema=config.schema.yaml
+command_alias_start_index: 200
+keybindings:
+  root_table: M-Space
+  prefix_table: Space
+title:
+  style: align=centre,bold
+  prefix: tmux
+  prefix_style: fg=green,align=centre,bold
+position:
+  x: R
+  y: P
+custom_variables:
+  - name: log_info
+    value: "#[fg=green,italics] [info]#[default]#[italics]"
+macros:
+  - name: reload-config
+    commands:
+      - display "#{log_info} Loading config... "
+      - source-file $XDG-CONFIG-HOME/.tmux.conf
+      - display -p "\n\n... Press ENTER to continue"
+  - name: restart-pane
+    commands:
+      - display "#{log_info} Restarting pane"
+      - "respawnp -k -c #{pane_current_path}"
+items:
+  - name: Run
+    key: space
+    command: command-prompt
+  - separator: true
+  - name: +Windows
+    key: w
+    menu:
+      - name: Choose
+        key: w
+        command: choose-tree -Zw
+      - name: Previous
+        key: b
+        command: previous-window
+      - name: Next
+        key: n
+        command: next-window
+      - name: Create
+        key: c
+        command: "neww -c #{pane_current_path}"
+      - separator: true
+      - name: "0"
+        key: "0"
+        command: "select-window -t :=0"
+      - name: "1"
+        key: "1"
+        command: select-window -t :=1
+      - name: "2"
+        key: "2"
+        command: select-window -t :=2
+      - name: "3"
+        key: "3"
+        command: select-window -t :=3
+      - name: "4"
+        key: "4"
+        command: select-window -t :=4
+      - name: "5"
+        key: "5"
+        command: select-window -t :=5
+      - name: "6"
+        key: "6"
+        command: select-window -t :=6
+      - name: "7"
+        key: "7"
+        command: select-window -t :=7
+      - name: "8"
+        key: "8"
+        command: select-window -t :=8
+      - name: "9"
+        key: "9"
+        command: select-window -t :=9
+      - separator: true
+      - name: Split horizontal
+        key: /
+        command: "splitw -h -c #{pane_current_path}"
+      - name: Split vertical
+        key: "-"
+        command: "splitw -v -c #{pane_current_path}"
+      - name: Rotate
+        key: o
+        command: rotatew
+        transient: true
+      - name: Rotate reverse
+        key: O
+        command: rotatew -D
+        transient: true
+      - separator: true
+      - name: Rename
+        key: R
+        command: command-prompt -I "#W" "renamew -- \"%%\""
+      - name: Kill
+        key: x
+        command: 'confirm -p "Kill window #W? (y/n)" killw'
+  - name: +Panes
+    key: p
+    menu:
+      - name: Split horizontal
+        key: /
+        command: "splitw -h -c #{pane_current_path}"
+      - name: Split vertical
+        key: "-"
+        command: "splitw -v -c #{pane_current_path}"
+      - name: Zoom
+        key: z
+        command: resizep -Z
+      - name: Break
+        key: "!"
+        command: break-pane
+      - separator: true
+      - name: Mark
+        key: m
+        command: selectp -m
+      - name: Unmark
+        key: M
+        command: selectp -M
+      - name: Capture
+        key: C
+        command: capture-pane
+      - name: Respawn pane
+        key: R
+        macro: restart-pane
+      - name: Kill
+        key: x
+        command: 'confirm -p "Kill pane #P? (y/n)" killp'
+  - name: +Buffers
+    key: b
+    menu:
+      - name: Choose
+        key: b
+        command: choose-buffer -Z
+      - name: List
+        key: l
+        command: lsb
+      - name: Paste
+        key: p
+        command: pasteb
+  - name: +Sessions
+    key: s
+    menu:
+      - name: Choose
+        key: s
+        command: choose-tree -Zs
+      - name: New
+        key: N
+        command: new
+      - name: Rename
+        key: r
+        command: rename
+  - name: +Client
+    key: C
+    menu:
+      - name: +Plugins
+        key: P
+        menu:
+          - name: Install
+            key: i
+            command:
+              run-shell $TMUX_PLUGIN_MANAGER_PATH/tpm/bindings/install_plugins
+          - name: Update
+            key: u
+            command:
+              run-shell $TMUX_PLUGIN_MANAGER_PATH/tpm/bindings/update_plugins
+          - name: Clean
+            key: c
+            command:
+              run-shell $TMUX_PLUGIN_MANAGER_PATH/tpm/bindings/clean_plugins
+      - name: Detach
+        key: D
+        command: detach
+      - name: Suspend
+        key: Z
+        command: suspendc
+      - separator: true
+      - name: Reload config
+        key: r
+        macro: reload-config
+      - name: Customize
+        key: ","
+        command: customize-mode -Z
+  - name: +Floats
+    key: f
+    menu:
+      - name: Git
+        key: g
+        command: display-popup -d "#{pane_current_path}" -w 80% -h 80% -E lazygit
+      - name: Docker
+        key: d
+        command: display-popup -d "#{pane_current_path}" -w 80% -h 80% -E lazydocker
+      - name: Qalc
+        key: q
+        command: display-popup -E 'qalc'
+      - name: Python
+        key: p
+        command: display-popup -E "ipython"
+      - name: Yazi
+        key: y
+        command: display-popup -d "#{pane_current_path}" -w 90% -h 90% -E "yazi"
+      - name: Terminal
+        key: t
+        command: display-popup -d "#{pane_current_path}" -w 75% -h 75% -E "zsh"
+  - separator: true
+  - name: Show messages
+    key: "~"
+    command: show-messages
+  - name: +Keys
+    key: "?"
+    command: list-keys -N

@@ -1,0 +1,53 @@
+unmapAll
+
+# Hints
+map f LinkHints.activate
+map F LinkHints.activateOpenInNewTab
+map <c-s-f> LinkHints.activateOpenInNewForegroundTab
+
+# Scrolling
+map <left> scrollLeft
+map <down> scrollDown
+map <up> scrollUp
+map <right> scrollRight
+map <pagedown> scrollPageDown
+map <pageup> scrollPageUp
+map gg scrollToTop
+map G scrollToBottom
+
+# Yanking
+map yy copyCurrentUrl
+map yt copyCurrentTitle
+map p openCopiedUrlInNewTab
+
+# Mode
+map i enterInsertMode
+map v enterVisualMode
+map V enterVisualLineMode
+
+# Tabs
+map <space>t Vomnibar.activateInNewTab
+map <space>n Vomnibar.activateInNewTab
+map <space>bn Vomnibar.activateInNewTab
+map <space>bt Vomnibar.activateInNewTab
+map <space>bb Vomnibar.activateTabs
+map <space>. Vomnibar.activateEditUrl
+map <space>bo Vomnibar.activate
+map <space>bh Vomnibar.activateHistory
+map r reload
+map R reload (use hard)
+map <space>bc removeTab
+map u reopenTab
+map <c-down> nextTab
+map <c-up> previousTab
+map <s-down> moveTabLeft
+map <s-up> moveTabRight
+
+# Find
+map / enterFindMode
+map n performFind
+map b performBackwardsFind
+
+# History
+map <c-left> goBack
+map <c-right> goForward
