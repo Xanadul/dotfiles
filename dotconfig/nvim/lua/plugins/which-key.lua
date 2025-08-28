@@ -40,19 +40,9 @@ return {
       { "g",           group = "[G]o" },
       { "<leader>e",   group = "[E]dit" },
 
-      -- Navigate vim panes better
-      { "<c-Left>",    ":wincmd h<CR>" },
-      { "<c-Down>",    ":wincmd j<CR>" },
-      { "<c-Up>",      ":wincmd k<CR>" },
-      { "<c-Right>",   ":wincmd l<CR>" },
-      { "<c-h>",       ":wincmd h<CR>" },
-      { "<c-j>",       ":wincmd j<CR>" },
-      { "<c-k>",       ":wincmd k<CR>" },
-      { "<c-l>",       ":wincmd l<CR>" },
-
       -- Create and resize panes
-      { "<leader>wh",  ':vsplit<CR>',                                desc = "Split right" },
-      { "<leader>wv",  ':split<CR>',                                 desc = "Split down" },
+      { "<leader>w/",  ':vsplit<CR>',                                desc = "Split right" },
+      { "<leader>w-",  ':split<CR>',                                 desc = "Split down" },
       { "<leader>wc",  ':quit<CR>',                                  desc = "Close split" },
       { "<C-S-Up>",    ':resize +1<CR>',                             desc = "Increase H Split Size" },
       { "<C-S-Down>",  ':resize -1<CR>',                             desc = "Decrease H Split Size" },

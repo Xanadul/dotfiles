@@ -152,6 +152,9 @@ return {
           dart = {
             disabled = true
           },
+          markdown = {
+            disabled = true
+          }
         },
       })
     end

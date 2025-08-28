@@ -114,6 +114,9 @@ vim.lsp.enable('zls')
 vim.lsp.enable('clangd')
 vim.lsp.enable('bashls')
 vim.lsp.enable('hyprls')
+vim.lsp.enable('html')
+vim.lsp.enable('tinymist')
+vim.lsp.enable('arduino_language_server')
 
 
 
